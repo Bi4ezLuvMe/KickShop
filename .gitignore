@@ -1,0 +1,10 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
