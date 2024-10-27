@@ -10,8 +10,8 @@ namespace KickShop.Controllers
     public class CartController : Controller
     {
         private readonly KickShopDbContext context;
-        private readonly UserManager<IdentityUser> userManager;
-        public CartController(KickShopDbContext _context,UserManager<IdentityUser>_userManager)
+        private readonly UserManager<ApplicationUser> userManager;
+        public CartController(KickShopDbContext _context,UserManager<ApplicationUser>_userManager)
         {
             this.context = _context;
             this.userManager = _userManager;

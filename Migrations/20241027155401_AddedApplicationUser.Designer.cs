@@ -4,6 +4,7 @@ using KickShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KickShop.Migrations
 {
     [DbContext(typeof(KickShopDbContext))]
-    partial class KickShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027155401_AddedApplicationUser")]
+    partial class AddedApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +44,7 @@ namespace KickShop.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -125,19 +128,19 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            BrandId = new Guid("2f29a8bb-a06b-4def-9cdd-9d464ddfcad1"),
+                            BrandId = new Guid("10fc2f80-c63b-4c0c-bfc7-472b4f4af4e8"),
                             Country = "USA",
                             Name = "Everlast"
                         },
                         new
                         {
-                            BrandId = new Guid("dfa3ca54-32fa-4c45-aa35-e6863e9ca76c"),
+                            BrandId = new Guid("f875996a-d95b-4539-a0af-843b85d50ac3"),
                             Country = "France",
                             Name = "Venum"
                         },
                         new
                         {
-                            BrandId = new Guid("4949008e-7ba0-48df-9347-aae4867936c7"),
+                            BrandId = new Guid("6e5dd27c-e9a8-4cfd-9e7d-ad63b8215f60"),
                             Country = "Germany",
                             Name = "Adidas"
                         });
@@ -194,19 +197,19 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = new Guid("6e2fbefe-bf81-4da3-98c7-9628016dfd61"),
+                            CategoryId = new Guid("dc2f95f0-793c-45b7-95f5-cfc2ebbfb418"),
                             ImageUrl = "/images/gloves-category.jpg",
                             Name = "Gloves"
                         },
                         new
                         {
-                            CategoryId = new Guid("6001f938-c6c1-4def-ad9c-a3e45281bbdb"),
+                            CategoryId = new Guid("9374212f-7d1d-4be1-b05d-9b2de9c43f49"),
                             ImageUrl = "/images/protective-gear-category.jpg",
                             Name = "Protective Gear"
                         },
                         new
                         {
-                            CategoryId = new Guid("3f8f66a7-5c6d-4983-ad74-8dcc75945f27"),
+                            CategoryId = new Guid("9c37c417-9dd6-44d0-a2cf-aa76762e3161"),
                             ImageUrl = "/images/apparel-category.jpg",
                             Name = "Apparel"
                         });
@@ -305,9 +308,9 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("c58ca0a1-e18c-4c7f-a99c-769188c37264"),
-                            BrandId = new Guid("2f29a8bb-a06b-4def-9cdd-9d464ddfcad1"),
-                            CategoryId = new Guid("6e2fbefe-bf81-4da3-98c7-9628016dfd61"),
+                            ProductId = new Guid("435f522b-7750-44f0-8dda-d74629427649"),
+                            BrandId = new Guid("10fc2f80-c63b-4c0c-bfc7-472b4f4af4e8"),
+                            CategoryId = new Guid("dc2f95f0-793c-45b7-95f5-cfc2ebbfb418"),
                             Description = "High-quality kickboxing gloves for training and competition.",
                             ImageUrl = "/images/gloves.jpg",
                             Name = "Kickboxing Gloves",
@@ -317,9 +320,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("d476c971-89ac-4509-b07e-d5422818dc0b"),
-                            BrandId = new Guid("dfa3ca54-32fa-4c45-aa35-e6863e9ca76c"),
-                            CategoryId = new Guid("6e2fbefe-bf81-4da3-98c7-9628016dfd61"),
+                            ProductId = new Guid("3a75ab89-c959-4cad-8485-dcfc9a044a01"),
+                            BrandId = new Guid("f875996a-d95b-4539-a0af-843b85d50ac3"),
+                            CategoryId = new Guid("dc2f95f0-793c-45b7-95f5-cfc2ebbfb418"),
                             Description = "Durable shin guards for protection during sparring.",
                             ImageUrl = "/images/shin-guards.jpg",
                             Name = "Shin Guards",
@@ -329,9 +332,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("04cfdfcb-9790-456c-abb4-7aaf6e037573"),
-                            BrandId = new Guid("4949008e-7ba0-48df-9347-aae4867936c7"),
-                            CategoryId = new Guid("6001f938-c6c1-4def-ad9c-a3e45281bbdb"),
+                            ProductId = new Guid("a6e7e1ff-75ca-4a25-83db-5fa08d6e064c"),
+                            BrandId = new Guid("6e5dd27c-e9a8-4cfd-9e7d-ad63b8215f60"),
+                            CategoryId = new Guid("9374212f-7d1d-4be1-b05d-9b2de9c43f49"),
                             Description = "Protective headgear for safety during training.",
                             ImageUrl = "/images/headgear.jpg",
                             Name = "Headgear",
@@ -341,9 +344,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("301733be-a3ca-4137-9477-b5b95884b2b1"),
-                            BrandId = new Guid("2f29a8bb-a06b-4def-9cdd-9d464ddfcad1"),
-                            CategoryId = new Guid("3f8f66a7-5c6d-4983-ad74-8dcc75945f27"),
+                            ProductId = new Guid("bf005e8b-217d-4213-bd9c-497fbbc66d7b"),
+                            BrandId = new Guid("10fc2f80-c63b-4c0c-bfc7-472b4f4af4e8"),
+                            CategoryId = new Guid("9c37c417-9dd6-44d0-a2cf-aa76762e3161"),
                             Description = "Comfortable shorts designed for kickboxing training.",
                             ImageUrl = "/images/shorts.jpg",
                             Name = "Kickboxing Shorts",
@@ -353,9 +356,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("2533d885-0647-40e7-924a-5ceec911716c"),
-                            BrandId = new Guid("dfa3ca54-32fa-4c45-aa35-e6863e9ca76c"),
-                            CategoryId = new Guid("6001f938-c6c1-4def-ad9c-a3e45281bbdb"),
+                            ProductId = new Guid("72675002-8534-4774-9ee6-8e5f729aece5"),
+                            BrandId = new Guid("f875996a-d95b-4539-a0af-843b85d50ac3"),
+                            CategoryId = new Guid("9374212f-7d1d-4be1-b05d-9b2de9c43f49"),
                             Description = "Essential mouth guard for protecting your teeth.",
                             ImageUrl = "/images/mouth-guard.jpg",
                             Name = "Mouth Guard",

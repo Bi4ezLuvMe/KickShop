@@ -23,7 +23,7 @@ namespace KickShop.Models
         [Comment("The Customer Who Created The Shopping Cart")]
         [Required]
         [ForeignKey("CustomerId")]
-        public IdentityUser Customer { get; set; }
+        public ApplicationUser Customer { get; set; }
         [Comment("The Date When The Shopping Cart Was Created")]
         public string DateCreated { get; set; }
         public List<CartItem> CartItems { get; set; }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "MQCwluMs0SS6NlJHt1vazZX1T8lDcvr2kkcPZg6mosg=",
+  "Hash": "YhH9MAwCIxEu6TX014Mj+VI7LF+l70Ld1ITeIffd9uM=",
   "Source": "KickShop",
   "BasePath": "_content/KickShop",
   "Mode": "Default",
@@ -1345,6 +1345,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\protective-gear-category.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\images\\Screenshot 2024-03-31 225818.png",
+      "SourceId": "KickShop",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\",
+      "BasePath": "_content/KickShop",
+      "RelativePath": "images/Screenshot 2024-03-31 225818.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Screenshot 2024-03-31 225818.png"
     },
     {
       "Identity": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\images\\shin-guards.jpg",

@@ -13,7 +13,7 @@ namespace KickShop.Models
         [Comment("The Customer Who Placed The Order")]
         [ForeignKey("CustomerId")]
         [Required]
-        public IdentityUser Customer { get; set; } = null!;
+        public ApplicationUser Customer { get; set; } = null!;
         [Comment("Foreign Key To The Order Entity. Also Primary Key")]
         [Required]
         public Guid OrderId { get; set; }

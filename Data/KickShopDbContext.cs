@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 
 namespace KickShop.Data
 {
-    public class KickShopDbContext : IdentityDbContext<IdentityUser>
+    public class KickShopDbContext : IdentityDbContext<ApplicationUser>
     {
         public KickShopDbContext(DbContextOptions<KickShopDbContext> options) : base(options)
         {
@@ -25,7 +25,7 @@ namespace KickShop.Data
 
             builder.Entity<CustomerOrder>().HasKey(co => new { co.OrderId, co.CustomerId });
 
-            // Seed Categories
+            
             var category1Id = Guid.NewGuid();
             var category2Id = Guid.NewGuid();
             var category3Id = Guid.NewGuid();
@@ -36,7 +36,7 @@ namespace KickShop.Data
                 new Category { CategoryId = category3Id, Name = "Apparel", ImageUrl = "/images/apparel-category.jpg" }
             );
 
-            // Seed Brands
+            
             var brand1Id = Guid.NewGuid();
             var brand2Id = Guid.NewGuid();
             var brand3Id = Guid.NewGuid();
@@ -47,7 +47,7 @@ namespace KickShop.Data
                 new Brand { BrandId = brand3Id, Name = "Adidas", Country = "Germany" }
             );
 
-            // Seed Products
+            
             builder.Entity<Product>().HasData(
                 new Product() { Name = "Kickboxing Gloves", Description = "High-quality kickboxing gloves for training and competition.", Price = 49.99M, ImageUrl = "/images/gloves.jpg", BrandId = brand1Id, CategoryId = category1Id,StockQuantity =5,Sizes = new List<Sizes> {Sizes.XS, Sizes.S,Sizes.M,Sizes.L } },
                 new Product() { Name = "Shin Guards", Description = "Durable shin guards for protection during sparring.", Price = 35.99M, ImageUrl = "/images/shin-guards.jpg", BrandId = brand2Id, CategoryId = category1Id, StockQuantity = 6, Sizes = new List<Sizes> { Sizes.XS, Sizes.S, Sizes.M, Sizes.L } },
