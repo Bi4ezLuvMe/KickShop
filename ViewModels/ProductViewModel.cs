@@ -1,15 +1,18 @@
-﻿using KickShop.Models;
+﻿
+
+using KickShop.Models;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace KickShop.ViewModels
 {
-    public class ProductDetailsViewModel
+    public class ProductViewModel
     {
         public required Guid ProductId { get; set; }
         public required string Name { get; set; }
-        public required string ImageUrl { get; set; }
         public required string Description { get; set; }
         public required decimal Price { get; set; }
-        public required int Quantity { get; set; }
-        public required List<Product> RelatedProducts { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? Action { get; set; }
     }
 }

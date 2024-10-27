@@ -9,20 +9,25 @@ namespace KickShop.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> logger;
         private readonly KickShopDbContext context;
 
-        public HomeController(ILogger<HomeController> _logger,KickShopDbContext _context)
+        public HomeController(KickShopDbContext _context)
         {
-            this.logger = _logger;
             this.context = _context;
         }
 
         public async Task<IActionResult> Index()
         {
-            List<Product> products = await context.Products.Take(3).ToListAsync();
+            List<ProductViewModel> productModels = await context.Products.Take(3).Select(p=>new ProductViewModel() 
+            {
+                ProductId = p.ProductId,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                ImageUrl = p.ImageUrl,
+            }).ToListAsync();
 
-            return View(products);
+            return View(productModels);
         }
     }
 }

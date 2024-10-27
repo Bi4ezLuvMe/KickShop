@@ -4,12 +4,12 @@ namespace KickShop.ViewModels
 {
     public class CartItemViewModel
     {
-        public Guid ProductId { get; set; }
-        public string ProductName { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
-        public decimal TotalPrice { get; set; }
-        public string ImageUrl { get; set; }
+        public required Guid ProductId { get; set; }
+        public required string ProductName { get; set; }
+        public required int Quantity { get; set; }
+        public required decimal Price { get; set; }
+        public required decimal TotalPrice { get; set; }
+        public string? ImageUrl { get; set; }
     }
 
 
