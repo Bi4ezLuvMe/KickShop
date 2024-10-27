@@ -4535,11 +4535,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lubos\\Documents\\GitHub\\SoftUni\\11.ASP.NET Advanced\\KickShop.csproj",
+      "projectUniqueName": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\KickShop.csproj",
       "projectName": "KickShop",
-      "projectPath": "C:\\Users\\lubos\\Documents\\GitHub\\SoftUni\\11.ASP.NET Advanced\\KickShop.csproj",
+      "projectPath": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\KickShop.csproj",
       "packagesPath": "C:\\Users\\lubos\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lubos\\Documents\\GitHub\\SoftUni\\11.ASP.NET Advanced\\obj\\",
+      "outputPath": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lubos\\AppData\\Roaming\\NuGet\\NuGet.Config",

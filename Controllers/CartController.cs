@@ -16,12 +16,13 @@ namespace KickShop.Controllers
             this.context = _context;
             this.userManager = _userManager;
         }
-        public IActionResult Index()
-        {
-            var cart = GetUserCart();  // Assume this method gets the user's current cart
 
-            // Map CartItems from the model to CartItemViewModel
-            var cartItemsViewModel = cart.CartItems.Select(item => new CartItemViewModel
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var cart = await GetUserCart();  
+
+            var cartItemsViewModel = cart.CartItems.Select(item => new CartItemViewModel()
             {
                 ProductId = item.ProductId,
                 ProductName = item.Product.Name,
@@ -31,87 +32,115 @@ namespace KickShop.Controllers
                 ImageUrl = item.Product.ImageUrl
             }).ToList();
 
-            // Create the CartViewModel
             var cartViewModel = new CartViewModel
             {
                 CartItems = cartItemsViewModel,
-                CartTotal = cartItemsViewModel.Sum(i => i.TotalPrice)
+                CartTotal = cartItemsViewModel.Sum(ci => ci.TotalPrice)
             };
 
             return View(cartViewModel);
         }
-
-
         [HttpPost]
-        public async Task<IActionResult> AddToCart(Guid productId, int quantity)
+        public async Task<IActionResult> AddToCart(string productId, int quantity)
         {
-            var cart = GetUserCart();
-            var product = context.Products.FirstOrDefault(p => p.ProductId == productId);
+            Guid? productGuid = IsIdValid(productId);
+
+            if(productGuid is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            var cart = await GetUserCart();
+            var product = await context.Products.FirstOrDefaultAsync(p => p.ProductId == productGuid);
 
             if (product == null)
             {
                 return NotFound("Product not found");
             }
 
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productGuid);
 
             if (cartItem != null)
             {
-                // Update quantity if the product is already in the cart
                 cartItem.Quantity += quantity;
             }
             else
             {
-                // Add new cart item
-                var newCartItem = new CartItem
+                var newCartItem = new CartItem()
                 {
-                    CartItemId = Guid.NewGuid(),
-                    ProductId = productId,
+                    ProductId = (Guid)productGuid,
                     Quantity = quantity,
                     ShoppingCartId = cart.ShoppingCartId
                 };
+
                 cart.CartItems.Add(newCartItem);
+
                 await context.CartsItems.AddAsync(newCartItem);
             }
 
             await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
-        }
-        private ShoppingCart GetUserCart()
-        {
-            var userId = userManager.GetUserId(User); // Get the current user's ID
-            var cart = context.ShoppingCarts.Include(c => c.CartItems)
-                                      .ThenInclude(ci => ci.Product)
-                                      .FirstOrDefault(c => c.CustomerId == userId);
-
-            // If no cart exists for the user, create a new one
-            if (cart == null)
-            {
-                cart = new ShoppingCart { CustomerId = userId };
-                 context.ShoppingCarts.Add(cart);
-                 context.SaveChanges();
-            }
-
-            return cart;
+            return RedirectToAction(nameof(Index));
         }
         [HttpPost]
         public async Task<IActionResult>RemoveFromCart(string id)
         {
-            Guid guidId;
-            if(!Guid.TryParse(id,out guidId))
+            Guid? guidId = IsIdValid(id);
+
+            if (guidId is null) 
             {
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction(nameof(Index));
             }
-            ShoppingCart cart = await context.ShoppingCarts.FirstOrDefaultAsync(x => x.CustomerId == userManager.GetUserId(User));
-            CartItem cartItem = await context.CartsItems.FirstOrDefaultAsync(x => x.ProductId == guidId && x.ShoppingCartId == cart.ShoppingCartId);
+
+            ShoppingCart? cart = await GetUserCart();
+            CartItem? cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == guidId);
+
             if (cartItem is null)
             {
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction(nameof(Index));
             }
+
             context.CartsItems.Remove(cartItem);
             await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<ShoppingCart> GetUserCart()
+        {
+            var userId = userManager.GetUserId(User); 
+
+            var cart = await context.ShoppingCarts.Include(c => c.CartItems)
+                                      .ThenInclude(ci => ci.Product)
+                                      .FirstOrDefaultAsync(c => c.CustomerId == userId);
+
+            if (cart is null)
+            {
+                cart = new ShoppingCart()
+                { 
+                    CustomerId = userId 
+                };
+
+                 await context.ShoppingCarts.AddAsync(cart);
+                 await context.SaveChangesAsync();
+            }
+
+            return cart;
+        }
+        private Guid? IsIdValid(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+
+            Guid guidId;
+
+            if(!Guid.TryParse(id,out guidId))
+            {
+                return null;
+            }
+
+            return guidId;
         }
     }
 }
