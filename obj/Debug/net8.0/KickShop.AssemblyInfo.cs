@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KickShop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eedd4c62f577cef1661b262c5eeb5d6950c6fd3f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9c7ef367c3fad7c39d2b94d1fa77f56594143563")]
 [assembly: System.Reflection.AssemblyProductAttribute("KickShop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KickShop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

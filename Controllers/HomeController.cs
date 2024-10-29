@@ -25,6 +25,7 @@ namespace KickShop.Controllers
                 Description = p.Description,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
+                CategoryId = p.CategoryId.ToString(),
             }).ToListAsync();
 
             return View(productModels);

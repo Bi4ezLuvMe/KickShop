@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\images\\headgear.jpg"
     },
     {
+      "Id": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\images\\logo.jpg",
+      "PackagePath": "staticwebassets\\images\\logo.jpg"
+    },
+    {
       "Id": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\images\\mouth-guard.jpg",
       "PackagePath": "staticwebassets\\images\\mouth-guard.jpg"
     },

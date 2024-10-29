@@ -13,6 +13,6 @@ namespace KickShop.ViewModels
         public required string Description { get; set; }
         public required decimal Price { get; set; }
         public string? ImageUrl { get; set; }
-        public string? Action { get; set; }
+        public required string CategoryId { get; set; }
     }
 }

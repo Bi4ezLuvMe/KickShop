@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "YhH9MAwCIxEu6TX014Mj+VI7LF+l70Ld1ITeIffd9uM=",
+  "Hash": "McEZ7NJKaA6k5Oc7e0mLXP/d/pzoRFiKc2139YKLlYA=",
   "Source": "KickShop",
   "BasePath": "_content/KickShop",
   "Mode": "Default",
@@ -1307,6 +1307,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\headgear.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\images\\logo.jpg",
+      "SourceId": "KickShop",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\",
+      "BasePath": "_content/KickShop",
+      "RelativePath": "images/logo.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\logo.jpg"
     },
     {
       "Identity": "C:\\Users\\lubos\\Documents\\GitHub\\KickShop\\wwwroot\\images\\mouth-guard.jpg",
