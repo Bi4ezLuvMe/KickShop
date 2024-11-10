@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KickShop.Models", "Data\Kic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KickShop.Data", "Data\KickShop.Data\KickShop.Data.csproj", "{739FE195-3E70-4EE6-BD0D-00B34A4C2AB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KickShop.Services", "KickShop.Services\KickShop.Services.csproj", "{D6FA49E3-94E4-4C8F-8BE1-78FE59CEAF30}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KickShop.Services", "Web\KickShop.Services\KickShop.Services.csproj", "{D6FA49E3-94E4-4C8F-8BE1-78FE59CEAF30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
