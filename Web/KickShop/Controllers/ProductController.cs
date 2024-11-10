@@ -4,7 +4,6 @@ using KickShop.Services.Service_Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using KickShop.Models;
-using KickShop.ViewModels.Product;
 
 namespace KickShop.Controllers
 {

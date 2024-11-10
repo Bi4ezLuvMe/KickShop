@@ -11,9 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\KickShop.Data.Models\KickShop.Models.csproj" />
-    <ProjectReference Include="..\Data\KickShop.Data\KickShop.Data.csproj" />
-    <ProjectReference Include="..\Web\KickShop.ViewModels\KickShop.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Data\KickShop.Data\KickShop.Data.csproj" />
+    <ProjectReference Include="..\KickShop.ViewModels\KickShop.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

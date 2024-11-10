@@ -1,7 +1,6 @@
 using KickShop.Data;
 using KickShop.Services;
 using KickShop.Services.Service_Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace KickShop
