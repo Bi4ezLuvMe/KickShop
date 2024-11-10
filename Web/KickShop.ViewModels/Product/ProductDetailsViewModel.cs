@@ -1,6 +1,4 @@
-﻿using KickShop.Models;
-
-namespace KickShop.ViewModels
+﻿namespace KickShop.ViewModels
 {
     public class ProductDetailsViewModel
     {
@@ -10,6 +8,6 @@ namespace KickShop.ViewModels
         public required string Description { get; set; }
         public required decimal Price { get; set; }
         public required int Quantity { get; set; }
-        public required List<Product> RelatedProducts { get; set; }
+        public required List<Models.Product> RelatedProducts { get; set; }
     }
 }

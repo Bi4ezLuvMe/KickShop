@@ -50,6 +50,9 @@ namespace KickShop.Models
         [Required]
         [ForeignKey("BrandId")]
         public Brand Brand { get; set; } = null!;
+        [Comment("Soft Delete Property")]
+        [Required]
+        public bool IsDeleted { get; set; } = false;
         [Comment("The Size Of The Product")]
         [Required]
         public List<Sizes> Sizes { get; set; }

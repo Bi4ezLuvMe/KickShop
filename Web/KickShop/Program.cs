@@ -1,4 +1,6 @@
 using KickShop.Data;
+using KickShop.Services;
+using KickShop.Services.Service_Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +21,11 @@ namespace KickShop
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<KickShopDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IBrandService, BrandService>();
+
 
             var app = builder.Build();
 

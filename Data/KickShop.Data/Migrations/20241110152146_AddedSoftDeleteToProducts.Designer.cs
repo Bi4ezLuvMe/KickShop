@@ -4,6 +4,7 @@ using KickShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KickShop.Migrations
 {
     [DbContext(typeof(KickShopDbContext))]
-    partial class KickShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241110152146_AddedSoftDeleteToProducts")]
+    partial class AddedSoftDeleteToProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -125,19 +128,19 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            BrandId = new Guid("2f29a8bb-a06b-4def-9cdd-9d464ddfcad1"),
+                            BrandId = new Guid("290f0574-7b2a-4d21-bcfc-e438a52556ea"),
                             Country = "USA",
                             Name = "Everlast"
                         },
                         new
                         {
-                            BrandId = new Guid("dfa3ca54-32fa-4c45-aa35-e6863e9ca76c"),
+                            BrandId = new Guid("b9c88443-9a16-474b-b986-26d085e408af"),
                             Country = "France",
                             Name = "Venum"
                         },
                         new
                         {
-                            BrandId = new Guid("4949008e-7ba0-48df-9347-aae4867936c7"),
+                            BrandId = new Guid("e311e947-9041-4518-826f-636fbb5ad8f1"),
                             Country = "Germany",
                             Name = "Adidas"
                         });
@@ -194,19 +197,19 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = new Guid("6e2fbefe-bf81-4da3-98c7-9628016dfd61"),
+                            CategoryId = new Guid("ed739c29-d90e-4ec0-9a17-be3a2ea76fc3"),
                             ImageUrl = "/images/gloves-category.jpg",
                             Name = "Gloves"
                         },
                         new
                         {
-                            CategoryId = new Guid("6001f938-c6c1-4def-ad9c-a3e45281bbdb"),
+                            CategoryId = new Guid("a925f449-c1a2-46f0-b24e-318b5d10f4ce"),
                             ImageUrl = "/images/protective-gear-category.jpg",
                             Name = "Protective Gear"
                         },
                         new
                         {
-                            CategoryId = new Guid("3f8f66a7-5c6d-4983-ad74-8dcc75945f27"),
+                            CategoryId = new Guid("fb46f256-0cb6-43c3-92c4-117cae0dcd06"),
                             ImageUrl = "/images/apparel-category.jpg",
                             Name = "Apparel"
                         });
@@ -275,6 +278,10 @@ namespace KickShop.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("URL To The Product Image");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasComment("Soft Delete Property");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -305,11 +312,12 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("c58ca0a1-e18c-4c7f-a99c-769188c37264"),
-                            BrandId = new Guid("2f29a8bb-a06b-4def-9cdd-9d464ddfcad1"),
-                            CategoryId = new Guid("6e2fbefe-bf81-4da3-98c7-9628016dfd61"),
+                            ProductId = new Guid("893b0a39-9a9a-4b7a-9bee-099ec8a8914e"),
+                            BrandId = new Guid("290f0574-7b2a-4d21-bcfc-e438a52556ea"),
+                            CategoryId = new Guid("ed739c29-d90e-4ec0-9a17-be3a2ea76fc3"),
                             Description = "High-quality kickboxing gloves for training and competition.",
                             ImageUrl = "/images/gloves.jpg",
+                            IsDeleted = false,
                             Name = "Kickboxing Gloves",
                             Price = 49.99m,
                             Sizes = "[0,1,2,3]",
@@ -317,11 +325,12 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("d476c971-89ac-4509-b07e-d5422818dc0b"),
-                            BrandId = new Guid("dfa3ca54-32fa-4c45-aa35-e6863e9ca76c"),
-                            CategoryId = new Guid("6e2fbefe-bf81-4da3-98c7-9628016dfd61"),
+                            ProductId = new Guid("98bf588d-929a-4a39-b69c-cf40b3b1a26c"),
+                            BrandId = new Guid("b9c88443-9a16-474b-b986-26d085e408af"),
+                            CategoryId = new Guid("ed739c29-d90e-4ec0-9a17-be3a2ea76fc3"),
                             Description = "Durable shin guards for protection during sparring.",
                             ImageUrl = "/images/shin-guards.jpg",
+                            IsDeleted = false,
                             Name = "Shin Guards",
                             Price = 35.99m,
                             Sizes = "[0,1,2,3]",
@@ -329,11 +338,12 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("04cfdfcb-9790-456c-abb4-7aaf6e037573"),
-                            BrandId = new Guid("4949008e-7ba0-48df-9347-aae4867936c7"),
-                            CategoryId = new Guid("6001f938-c6c1-4def-ad9c-a3e45281bbdb"),
+                            ProductId = new Guid("cf66fd8c-2f3d-47f1-ac0c-f04e02cbf06e"),
+                            BrandId = new Guid("e311e947-9041-4518-826f-636fbb5ad8f1"),
+                            CategoryId = new Guid("a925f449-c1a2-46f0-b24e-318b5d10f4ce"),
                             Description = "Protective headgear for safety during training.",
                             ImageUrl = "/images/headgear.jpg",
+                            IsDeleted = false,
                             Name = "Headgear",
                             Price = 59.99m,
                             Sizes = "[0,1,2,3]",
@@ -341,11 +351,12 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("301733be-a3ca-4137-9477-b5b95884b2b1"),
-                            BrandId = new Guid("2f29a8bb-a06b-4def-9cdd-9d464ddfcad1"),
-                            CategoryId = new Guid("3f8f66a7-5c6d-4983-ad74-8dcc75945f27"),
+                            ProductId = new Guid("21bd88aa-8908-4039-9986-c81b1153f000"),
+                            BrandId = new Guid("290f0574-7b2a-4d21-bcfc-e438a52556ea"),
+                            CategoryId = new Guid("fb46f256-0cb6-43c3-92c4-117cae0dcd06"),
                             Description = "Comfortable shorts designed for kickboxing training.",
                             ImageUrl = "/images/shorts.jpg",
+                            IsDeleted = false,
                             Name = "Kickboxing Shorts",
                             Price = 29.99m,
                             Sizes = "[0,1,2,3]",
@@ -353,11 +364,12 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("2533d885-0647-40e7-924a-5ceec911716c"),
-                            BrandId = new Guid("dfa3ca54-32fa-4c45-aa35-e6863e9ca76c"),
-                            CategoryId = new Guid("6001f938-c6c1-4def-ad9c-a3e45281bbdb"),
+                            ProductId = new Guid("3b0c1a1b-62eb-4333-8560-e16b536ba9ed"),
+                            BrandId = new Guid("b9c88443-9a16-474b-b986-26d085e408af"),
+                            CategoryId = new Guid("a925f449-c1a2-46f0-b24e-318b5d10f4ce"),
                             Description = "Essential mouth guard for protecting your teeth.",
                             ImageUrl = "/images/mouth-guard.jpg",
+                            IsDeleted = false,
                             Name = "Mouth Guard",
                             Price = 12.99m,
                             Sizes = "[0,1,2,3]",

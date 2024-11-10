@@ -1,270 +1,157 @@
-﻿using KickShop.Data;
-using KickShop.Models;
-using KickShop.Models.Enums;
+﻿using KickShop.Models.Enums;
 using KickShop.ViewModels;
+using KickShop.Services.Service_Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using KickShop.Models;
+using KickShop.ViewModels.Product;
 
 namespace KickShop.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly KickShopDbContext context;
-        public ProductController(KickShopDbContext _context)
+        private readonly IProductService productService;
+        private readonly ICategoryService categoryService;
+        private readonly IBrandService brandService;
+
+        public ProductController(IProductService _productService, ICategoryService _categoryService, IBrandService _brandService)
         {
-            this.context = _context;
+            this.productService = _productService;
+            this.categoryService = _categoryService;
+            this.brandService = _brandService;
         }
+
         [HttpGet]
         public async Task<IActionResult> Add()
         {
             ProductAddViewModel model = new ProductAddViewModel();
-
-            ViewBag.Categories = new SelectList(context.Categories, "CategoryId", "Name");
-            ViewBag.Brands = new SelectList(context.Brands, "BrandId", "Name");
-            ViewBag.Sizes = new List<string> { Sizes.S.ToString(), Sizes.M.ToString(), Sizes.L.ToString(), Sizes.XL.ToString()};
-
+            await PopulateDropdowns();
             return View(model);
         }
+
         [HttpPost]
-        public async Task<IActionResult>Add(ProductAddViewModel model)
+        public async Task<IActionResult> Add(ProductAddViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = new SelectList(context.Categories, "CategoryId", "Name");
-                ViewBag.Brands = new SelectList(context.Brands, "BrandId", "Name");
-                ViewBag.Sizes = new List<string> { Sizes.S.ToString(), Sizes.M.ToString(), Sizes.L.ToString(), Sizes.XL.ToString() };
-
+                await PopulateDropdowns();
                 return View(model);
             }
-            Product product = new Product()
-            {
-                ProductId = model.ProductId,
-                Name = model.Name,
-                Description = model.Description,
-                Price = model.Price,
-                StockQuantity = model.StockQuantity,
-                CategoryId = model.CategoryId,
-                BrandId = model.BrandId,
-                Sizes = model.Sizes
-            };
 
-            await context.Products.AddAsync(product);
-            await context.SaveChangesAsync();
-
+            await productService.AddProductAsync(model);
             return RedirectToAction(nameof(All));
         }
+
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            Guid? guidId = IsIdValid(id);
+            ProductEditViewModel? model = await productService.GetProductForEditAsync(id);
 
-            if(guidId is null)
+            if (model == null)
             {
                 return RedirectToAction(nameof(All));
             }
 
-            Product? product = await context.Products.FindAsync(guidId);
-
-            if(product is null)
-            {
-                return RedirectToAction(nameof(All));
-            }
-
-            ProductEditViewModel model = new ProductEditViewModel()
-            {
-                ProductId = product.ProductId,
-                Name = product.Name,
-                Description = product.Description,
-                BrandId= product.BrandId,
-                CategoryId = product.CategoryId,
-                ImageUrl = product.ImageUrl,
-                Price= product.Price,
-                Sizes = product.Sizes,
-                StockQuantity = product.StockQuantity,
-            };
-
-            ViewBag.Categories = new SelectList(context.Categories, "CategoryId", "Name");
-            ViewBag.Brands = new SelectList(context.Brands, "BrandId", "Name");
-            ViewBag.Sizes = ViewBag.Sizes = Enum.GetValues(typeof(KickShop.Models.Enums.Sizes)).Cast<KickShop.Models.Enums.Sizes>().ToList();
-
+            await PopulateDropdowns();
             return View(model);
         }
+
         [HttpPost]
-        public async Task<IActionResult>Edit(ProductEditViewModel model)
+        public async Task<IActionResult> Edit(ProductEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = new SelectList(context.Categories, "CategoryId", "Name");
-                ViewBag.Brands = new SelectList(context.Brands, "BrandId", "Name");
-                ViewBag.Sizes = new List<string> { Sizes.S.ToString(), Sizes.M.ToString(), Sizes.L.ToString(), Sizes.XL.ToString() };
-
+                await PopulateDropdowns();
                 return View(model);
             }
 
-            Product? product = await context.Products.FindAsync(model.ProductId);
+            bool updated = await productService.UpdateProductAsync(model);
 
-            if (product is null)
+            if (!updated)
             {
                 return RedirectToAction(nameof(All));
             }
 
-            product.Name = model.Name;
-            product.Description = model.Description;
-            product.BrandId = model.BrandId;
-            product.CategoryId = model.CategoryId;
-            product.ImageUrl = model.ImageUrl;
-            product.Price = model.Price;
-            product.Sizes = model.Sizes;
-            product.StockQuantity = model.StockQuantity;
-
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Details),new { id = model.ProductId.ToString() });
+            return RedirectToAction(nameof(Details), new { id = model.ProductId });
         }
+
         [HttpGet]
         public async Task<IActionResult> All(string sortOrder)
         {
-            List<ProductViewModel> productModels = await context.Products.Select(p => new ProductViewModel()
-            {
-                ProductId = p.ProductId,
-                Name = p.Name,
-                Description = p.Description,
-                ImageUrl = p.ImageUrl,
-                Price = p.Price,
-                CategoryId = p.CategoryId.ToString(),
-            }).ToListAsync();
-
-            productModels = SortOrder(productModels, sortOrder);
-
+            List<Product> products = await productService.GetAllProductsAsync(sortOrder);
             ViewBag.Action = nameof(All);
-
-            return View(productModels);  
+            return View(products);
         }
+
         [HttpGet]
         public async Task<IActionResult> Clothing(string sortOrder)
         {
-            List<ProductViewModel> productModels = await context.Products
-                .Include(p=>p.Category)
-                .Where(p=>p.Category.Name == "Apparel")
-                .Select(p => new ProductViewModel()
-            {
-                ProductId = p.ProductId,
-                Name = p.Name,
-                Description = p.Description,
-                ImageUrl = p.ImageUrl,
-                Price = p.Price,
-                    CategoryId = p.CategoryId.ToString(),
-                }).ToListAsync();
-
-            productModels = SortOrder(productModels, sortOrder);
-
+            List<Product> products = await productService.GetAllProductsAsync(sortOrder, "Apparel");
             ViewBag.Action = nameof(Clothing);
-
-            return View(nameof(All),productModels);
+            return View(nameof(All), products);
         }
+
         [HttpGet]
         public async Task<IActionResult> Gloves(string sortOrder)
         {
-            List<ProductViewModel> productModels = await context.Products
-               .Include(p => p.Category)
-               .Where(p => p.Category.Name == "Gloves")
-               .Select(p => new ProductViewModel()
-               {
-                   ProductId = p.ProductId,
-                   Name = p.Name,
-                   Description = p.Description,
-                   ImageUrl = p.ImageUrl,
-                   Price = p.Price,
-                   CategoryId = p.CategoryId.ToString(),
-               }).ToListAsync();
-
-            productModels = SortOrder(productModels, sortOrder);
-
+            List<Product> products = await productService.GetAllProductsAsync(sortOrder, "Gloves");
             ViewBag.Action = nameof(Gloves);
-
-            return View(nameof(All), productModels);
+            return View(nameof(All), products);
         }
+
         [HttpGet]
         public async Task<IActionResult> ProtectiveGear(string sortOrder)
         {
-            List<ProductViewModel> productModels = await context.Products
-               .Include(p => p.Category)
-               .Where(p => p.Category.Name == "Protective Gear")
-               .Select(p => new ProductViewModel()
-               {
-                   ProductId = p.ProductId,
-                   Name = p.Name,
-                   Description = p.Description,
-                   ImageUrl = p.ImageUrl,
-                   Price = p.Price,
-                   CategoryId = p.CategoryId.ToString(),
-               }).ToListAsync();
-
-            productModels = SortOrder(productModels, sortOrder);
-
+            List<Product> products = await productService.GetAllProductsAsync(sortOrder, "Protective Gear");
             ViewBag.Action = nameof(ProtectiveGear);
-            
-
-            return View(nameof(All), productModels);
+            return View(nameof(All), products);
         }
-        public async Task<IActionResult>Details(string id)
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string id)
         {
-            Guid? guidId = IsIdValid(id);
+            ProductDetailsViewModel? product = await productService.GetProductDetailsAsync(id);
 
-            if(guidId is null)
+            if (product == null)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(All));
             }
 
-            Product? product = await context.Products.FirstOrDefaultAsync(x => x.ProductId == guidId);
-
-            if(product is null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            ProductDetailsViewModel model = new ProductDetailsViewModel()
-            {
-                ProductId = (Guid)guidId,
-                Name = product.Name,
-                Price = product.Price,
-                Description = product.Description,
-                ImageUrl = product.ImageUrl,
-                Quantity = product.StockQuantity,
-                RelatedProducts = await context.Products.Where(p => p.CategoryId == product.CategoryId&&p.ProductId!=guidId).ToListAsync()
-            };
-
-            return View(model);
+            return View(product);
         }
-        private Guid? IsIdValid(string id)
+
+        [HttpGet]
+        public async Task<IActionResult> Manage()
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                return null;
-            }
-
-            Guid guidId;
-
-            if (!Guid.TryParse(id, out guidId))
-            {
-                return null;
-            }
-
-            return guidId;
+            List<Product> products = await productService.GetAllProductsAsync(null);
+            return View(products);
         }
-        private List<ProductViewModel> SortOrder(List<ProductViewModel>productModels,string sortOrder)
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
         {
-            switch (sortOrder)
+            ProductDetailsViewModel? product = await productService.GetProductDetailsAsync(id);
+
+            if (product == null)
             {
-                case "asc":
-                    productModels = productModels.OrderBy(pm => pm.Price).ToList();
-                    break;
-                case "desc":
-                    productModels = productModels.OrderByDescending(pm => pm.Price).ToList();
-                    break;
+                return RedirectToAction(nameof(Manage));
             }
-            return productModels;
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            await productService.DeleteProductAsync(id);
+            return RedirectToAction(nameof(Manage));
+        }
+
+        private async Task PopulateDropdowns()
+        {
+            ViewBag.Categories = new SelectList(await categoryService.GetAllCategoriesAsync(), "CategoryId", "Name");
+            ViewBag.Brands = new SelectList(await brandService.GetAllBrandsAsync(), "BrandId", "Name");
+            ViewBag.Sizes = Enum.GetNames(typeof(Sizes)).ToList();
         }
     }
 }

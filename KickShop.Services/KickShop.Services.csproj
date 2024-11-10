@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Data\KickShop.Data.Models\KickShop.Models.csproj" />
+    <ProjectReference Include="..\Data\KickShop.Data\KickShop.Data.csproj" />
+    <ProjectReference Include="..\Web\KickShop.ViewModels\KickShop.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

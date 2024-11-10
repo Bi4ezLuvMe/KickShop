@@ -1,6 +1,7 @@
 using KickShop.Data;
 using KickShop.Models;
 using KickShop.ViewModels;
+using KickShop.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -18,15 +19,7 @@ namespace KickShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<ProductViewModel> productModels = await context.Products.Take(3).Select(p=>new ProductViewModel() 
-            {
-                ProductId = p.ProductId,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price,
-                ImageUrl = p.ImageUrl,
-                CategoryId = p.CategoryId.ToString(),
-            }).ToListAsync();
+            List<Product> productModels = await context.Products.Take(3).ToListAsync();
 
             return View(productModels);
         }

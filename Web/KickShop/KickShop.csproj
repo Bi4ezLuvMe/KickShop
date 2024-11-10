@@ -97,7 +97,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\KickShop.Common\KickShop.Common.csproj" />
     <ProjectReference Include="..\..\Data\KickShop.Data.Models\KickShop.Models.csproj" />
-    <ProjectReference Include="..\..\KickShop.Data\KickShop.Data.csproj" />
+    <ProjectReference Include="..\..\Data\KickShop.Data\KickShop.Data.csproj" />
+    <ProjectReference Include="..\..\KickShop.Services\KickShop.Services.csproj" />
     <ProjectReference Include="..\KickShop.ViewModels\KickShop.ViewModels.csproj" />
   </ItemGroup>
 
