@@ -35,6 +35,8 @@ namespace KickShop.Models
         [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax)]
         public int StockQuantity { get; set; }
         [Comment("URL To The Product Image")]
+        [MinLength(ModelConstants.Product.ImageUrlMinLength)]
+        [MaxLength(ModelConstants.Product.ImageUrlMaxLength)]
         public string? ImageUrl { get; set; }
         [Comment("Foreign Key To The Category Entity")]
         [Required]

@@ -23,5 +23,22 @@ namespace KickShop.Models
         [MinLength(ModelConstants.Brand.CountryMinLength)]
         [MaxLength(ModelConstants.Brand.CountryMaxLength)]
         public string Country { get; set; }
+        [Comment("The Address Of The Brand")]
+        [Required]
+        [MinLength(ModelConstants.Brand.AddressMinLength)]
+        [MaxLength(ModelConstants.Brand.AddressMaxLength)]
+        public string  Address { get; set; }
+        [Comment("The Phone Number Of The Brand")]
+        [Required]
+        [MinLength(ModelConstants.Brand.PhoneNumberMinLength)]
+        [MaxLength(ModelConstants.Brand.PhoneNumberMaxLength)]
+        public string PhoneNumber { get; set; }
+        [Comment("The Image Of The Brand")]
+        [MinLength(ModelConstants.Brand.ImageUrlMinLength)]
+        [MaxLength(ModelConstants.Brand.ImageUrlMaxLength)]
+        public string? ImageUrl { get; set; }
+        [Comment("Soft Delete Property")]
+        [Required]
+        public bool IsDeleted { get; set; } = false;
     }
 }

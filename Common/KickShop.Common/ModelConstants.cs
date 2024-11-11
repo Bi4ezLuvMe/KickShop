@@ -9,6 +9,15 @@
 
             public const int CountryMinLength = 3;
             public const int CountryMaxLength = 100;
+
+            public const int AddressMinLength = 5;
+            public const int AddressMaxLength = 100;
+
+            public const int PhoneNumberMinLength = 5;
+            public const int PhoneNumberMaxLength = 20;
+
+            public const int ImageUrlMinLength = 5;
+            public const int ImageUrlMaxLength = 200;
         }
         public static class CartItem
         {
@@ -19,6 +28,9 @@
         {
             public const int NameMinLength = 3;
             public const int NameMaxLength = 50;
+
+            public const int ImageUrlMinLength = 5;
+            public const int ImageUrlMaxLength = 200;
         }
         public static class Order
         {
@@ -40,6 +52,9 @@
 
             public const int QuantityRangeMin = 0;
             public const int QuantityRangeMax = 1000;
+
+            public const int ImageUrlMinLength = 5;
+            public const int ImageUrlMaxLength = 200;
         }
         public static class ShoppingCart
         {

@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     string? currentSortOrder = ViewBag.SortOrder?.ToString();
     string? action = ViewBag.Action?.ToString();
-    string? categoryId = ViewBag.CategoryId?.ToString();
 }
 
 <div class="container mt-5">
@@ -20,18 +19,6 @@
                     <button type="submit" name="sortOrder" value="desc" class="btn btn-primary @(currentSortOrder == "desc" ? "active" : "")">High to Low</button>
                 </form>
             </div>
-            @if(action == "All")
-            {
-            <div>
-                <a asp-controller="Product" asp-action="Add" class="btn btn-success">Add New Product</a>
-            </div>
-            }
-            else
-            {
-                <div>
-                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@categoryId" class="btn btn-success">Edit Category</a>
-                </div>
-            }
         </div>
     </div>
 

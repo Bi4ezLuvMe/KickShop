@@ -29,7 +29,7 @@ namespace KickShop.Data
             var category3Id = Guid.NewGuid();
 
             builder.Entity<Category>().HasData(
-                new Category { CategoryId = category1Id, Name = "Gloves", ImageUrl = "/images/gloves-category.jpg" },
+                new Category { CategoryId = category1Id, Name = "Gloves", ImageUrl = "/images/gloves-category.jpg"},
                 new Category { CategoryId = category2Id, Name = "Protective Gear", ImageUrl = "/images/protective-gear-category.jpg" },
                 new Category { CategoryId = category3Id, Name = "Apparel", ImageUrl = "/images/apparel-category.jpg" }
             );
@@ -40,9 +40,9 @@ namespace KickShop.Data
             var brand3Id = Guid.NewGuid();
 
             builder.Entity<Brand>().HasData(
-                new Brand { BrandId = brand1Id, Name = "Everlast", Country = "USA" },
-                new Brand { BrandId = brand2Id, Name = "Venum", Country = "France" },
-                new Brand { BrandId = brand3Id, Name = "Adidas", Country = "Germany" }
+                new Brand { BrandId = brand1Id, Name = "Everlast", Country = "USA",ImageUrl = "Everlast-Logo.png",Address = "Everlast Canada c/o ACI Brands Inc. 2616 Sheridan Garden Drive Oakville, ON L6J 7Z2", PhoneNumber = "1-800-668-5593" },
+                new Brand { BrandId = brand2Id, Name = "Venum", Country = "France", ImageUrl = "Venum-Logo.png", Address = "Las Vegas,Nevada", PhoneNumber = "1-888-200-5032" },
+                new Brand { BrandId = brand3Id, Name = "Adidas", Country = "Germany", ImageUrl = "Adidas-Logo.png", Address = "Adi-Dassler-Strasse 1 91074 Herzogenaurach, Germany", PhoneNumber = "+49 9132 84 0" }
             );
 
             

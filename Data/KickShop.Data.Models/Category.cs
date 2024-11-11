@@ -22,6 +22,11 @@ namespace KickShop.Models
         [Comment("Navigation Property for relateed products")]
         public HashSet<Product> Products { get; set; }
         [Comment("Image For The Category")]
+        [MinLength(ModelConstants.Category.ImageUrlMinLength)]
+        [MaxLength(ModelConstants.Category.ImageUrlMaxLength)]
         public string? ImageUrl { get; set; }
+        [Comment("Soft Delete Property")]
+        [Required]
+        public bool IsDeleted { get; set; } = false;
     }
 }
