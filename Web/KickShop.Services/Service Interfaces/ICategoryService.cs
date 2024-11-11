@@ -1,4 +1,5 @@
 ﻿using KickShop.Models;
+using KickShop.ViewModels;
 using System.Web.Mvc;
 
 namespace KickShop.Services.Service_Interfaces
@@ -8,7 +9,10 @@ namespace KickShop.Services.Service_Interfaces
         Task<List<Category>> GetAllCategoriesAsync();
         Task<SelectList> GetCategorySelectListAsync();
         Task<Category?> GetCategoryByIdAsync(Guid id);
-        Task<Category> AddCategoryAsync(Category category);
-        Task<bool> UpdateCategoryAsync(Category category);
+        Task AddCategoryAsync(CategoryAddViewModel category);
+        Task<bool> UpdateCategoryAsync(CategoryEditViewModel category);
+        Task<CategoryViewModel?> GetCategoryDetailsAsync(string id);
+        Task<bool> DeleteCategoryAsync(Guid id);
+        Task<CategoryEditViewModel?> GetCategoryForEditAsync(string id);
     }
 }

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Category>
+
+<div class="manage-container">
+    <h2>Manage Categories</h2>
+    <a asp-action="Add" class="btn btn-primary mb-3">Add New Category</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>
+                        @if (category.ImageUrl != null)
+                        {
+                            <img src="@category.ImageUrl" alt="@category.Name" style="max-width: 100px;" />
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@category.CategoryId" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

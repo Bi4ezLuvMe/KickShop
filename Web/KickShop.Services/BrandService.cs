@@ -88,11 +88,6 @@ namespace KickShop.Services
                 PhoneNumber = brand.PhoneNumber,
             };
         }
-        private Guid? IsIdValid(string id)
-        {
-            if (string.IsNullOrEmpty(id)) return null;
-            return Guid.TryParse(id, out var guidId) ? guidId : null;
-        }
 
         public async Task<BrandEditViewModel?> GetBrandForEditAsync(string id)
         {
@@ -125,6 +120,11 @@ namespace KickShop.Services
             brand.IsDeleted = true;
             await context.SaveChangesAsync();
             return true;
+        }
+        private Guid? IsIdValid(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            return Guid.TryParse(id, out var guidId) ? guidId : null;
         }
     }
 }

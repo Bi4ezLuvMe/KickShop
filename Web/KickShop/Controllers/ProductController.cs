@@ -129,7 +129,7 @@ namespace KickShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            ProductDetailsViewModel? product = await productService.GetProductDetailsAsync(id);
+            Product? product = await productService.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -140,9 +140,9 @@ namespace KickShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(ProductDetailsViewModel model)
+        public async Task<IActionResult> DeleteConfirmed(Product product)
         {
-            await productService.DeleteProductAsync(model.ProductId.ToString());
+            await productService.DeleteProductAsync(product.ProductId.ToString());
             return RedirectToAction(nameof(Manage));
         }
 

@@ -50,10 +50,10 @@
         <div class="mb-3">
             <label class="form-label">Sizes</label>
             <div>
-                @foreach (var size in ViewBag.Sizes)
+                @foreach (var size in Model.Sizes)
                 {
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="Sizes" value="@size" id="@size" @(Model.Sizes.Contains(size) ? "checked" : "") />
+                        <input class="form-check-input" type="checkbox" name="Sizes" value="@size" id="@size" @(ViewBag.Sizes.Contains(size.ToString()) ? "checked" : "") />
                         <label class="form-check-label" for="@size">@size</label>
                     </div>
                 }

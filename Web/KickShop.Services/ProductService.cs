@@ -150,5 +150,17 @@ namespace KickShop.Services
 
             return SortOrder(products, sortOrder);
         }
+
+        public async Task<Product?> GetProductByIdAsync(string id)
+        {
+            Guid? guid = IsIdValid(id);
+
+            if(guid is null)
+            {
+                return null;
+            }
+
+            return await context.Products.Include(p=>p.Brand).Include(p=>p.Category).FirstOrDefaultAsync(p=>!p.IsDeleted&&p.ProductId==guid);
+        }
     }
 }
