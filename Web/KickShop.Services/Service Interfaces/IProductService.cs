@@ -5,7 +5,7 @@ namespace KickShop.Services.Service_Interfaces
 {
     public interface IProductService
     {
-        Task<Product> AddProductAsync(ProductAddViewModel model);
+        Task AddProductAsync(ProductAddViewModel model);
         Task<ProductEditViewModel?> GetProductForEditAsync(string id);
         Task<bool> UpdateProductAsync(ProductEditViewModel model);
         Task<List<Product>> GetAllProductsAsync(string sortOrder);

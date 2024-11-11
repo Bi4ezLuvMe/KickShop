@@ -140,9 +140,9 @@ namespace KickShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(ProductDetailsViewModel model)
         {
-            await productService.DeleteProductAsync(id);
+            await productService.DeleteProductAsync(model.ProductId.ToString());
             return RedirectToAction(nameof(Manage));
         }
 

@@ -15,8 +15,4 @@
     <ProjectReference Include="..\..\Data\KickShop.Data.Models\KickShop.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Brand\" />
-  </ItemGroup>
-
 </Project>

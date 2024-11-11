@@ -20,7 +20,7 @@ namespace KickShop.Services
             this.context = _context;
         }
 
-        public async Task<Product> AddProductAsync(ProductAddViewModel model)
+        public async Task AddProductAsync(ProductAddViewModel model)
         {
             Product product = new Product
             {
@@ -36,8 +36,6 @@ namespace KickShop.Services
 
             await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
-
-            return product;
         }
 
         public async Task<ProductEditViewModel?> GetProductForEditAsync(string id)

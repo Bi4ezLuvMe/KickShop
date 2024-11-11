@@ -1,4 +1,5 @@
 ﻿using KickShop.Models;
+using KickShop.ViewModels;
 using System.Web.Mvc;
 
 namespace KickShop.Services.Service_Interfaces
@@ -8,7 +9,10 @@ namespace KickShop.Services.Service_Interfaces
         Task<List<Brand>> GetAllBrandsAsync();
         Task<SelectList> GetBrandSelectListAsync();
         Task<Brand?> GetBrandByIdAsync(Guid id);
-        Task<Brand> AddBrandAsync(Brand brand);
-        Task<bool> UpdateBrandAsync(Brand brand);
+        Task AddBrandAsync(BrandAddViewModel brand);
+        Task<bool> UpdateBrandAsync(BrandEditViewModel brand);
+        Task<BrandDetailsViewModel?> GetBrandDetailsAsync(string id);
+        Task<BrandEditViewModel?> GetBrandForEditAsync(string id);
+        Task<bool> DeleteBrandAsync(string id);
     }
 }
