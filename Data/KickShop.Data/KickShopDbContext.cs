@@ -17,6 +17,7 @@ namespace KickShop.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<CustomerOrder> CustomersOrders { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ProductImage> ProductsImages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -56,29 +57,39 @@ namespace KickShop.Data
                 new Category { Name = "Protective Gear", ImageUrl = "https://example.com/protectivegear.jpg" }
 
             };
-            //List<Product> products = new List<Product>()
-            //{
-            //     new Product { Name = "RDX Boxing Gloves", Description = "High-quality leather gloves for all training levels.", Price = 49.99m, StockQuantity = 100, ImageUrl = "https://example.com/rdx-gloves.jpg", BrandId = brands[1].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
-            //    new Product { Name = "Hayabusa T3 Boxing Gloves", Description = "Top-notch gloves with exceptional durability.", Price = 89.99m, StockQuantity = 50, ImageUrl = "https://example.com/hayabusa-t3.jpg", BrandId = brands[2].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
-            //    new Product { Name = "Venum Challenger Gloves", Description = "Lightweight and designed for all skill levels.", Price = 39.99m, StockQuantity = 120, ImageUrl = "https://example.com/venum-challenger.jpg", BrandId = brands[3].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
-            //    new Product { Name = "Title Boxing Leather Bag Gloves", Description = "Durable leather gloves for heavy bag workouts.", Price = 59.99m, StockQuantity = 80, ImageUrl = "https://example.com/title-leather.jpg", BrandId = brands[5].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L } },
-            //    new Product { Name = "Century Martial Arts Kickboxing Shorts", Description = "Comfortable shorts designed for kickboxing.", Price = 29.99m, StockQuantity = 75, ImageUrl = "https://example.com/century-shorts.jpg", BrandId = brands[7].BrandId, CategoryId = categories[1].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
-            //    new Product { Name = "Sanabul Essential Shin Guards", Description = "High-quality shin guards for protection and mobility.", Price = 35.99m, StockQuantity = 90, ImageUrl = "https://example.com/sanabul-shin.jpg", BrandId = brands[8].BrandId, CategoryId = categories[2].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
-            //    new Product { Name = "Twins Special Headgear", Description = "Full-face protection with Twins quality.", Price = 89.99m, StockQuantity = 60, ImageUrl = "https://example.com/twins-headgear.jpg", BrandId = brands[9].BrandId, CategoryId = categories[4].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
-            //    new Product { Name = "Everlast Hand Wraps", Description = "Classic wraps for wrist and knuckle protection.", Price = 9.99m, StockQuantity = 200, ImageUrl = "https://example.com/everlast-wraps.jpg", BrandId = brands[0].BrandId, CategoryId = categories[3].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L } },
-            //    new Product { Name = "Ringside Punching Bag", Description = "Heavy-duty bag for all levels of training.", Price = 119.99m, StockQuantity = 40, ImageUrl = "https://example.com/ringside-bag.jpg", BrandId = brands[6].BrandId, CategoryId = categories[6].CategoryId, Sizes = new List<Sizes> { Sizes.L } },
-            //    new Product { Name = "RDX Pro Boxing Shoes", Description = "Lightweight and supportive for agility in the ring.", Price = 69.99m, StockQuantity = 65, ImageUrl = "https://example.com/rdx-shoes.jpg", BrandId = brands[1].BrandId, CategoryId = categories[8].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
-            //    new Product { Name = "Venum Challenger Shin Guards", Description = "High-durability shin guards ideal for intense training.", Price = 45.99m, StockQuantity = 95, ImageUrl = "https://example.com/venum-shin.jpg", BrandId = brands[3].BrandId, CategoryId = categories[2].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
-            //    new Product { Name = "Fairtex Muay Thai Shorts", Description = "Premium Muay Thai shorts with authentic design.", Price = 34.99m, StockQuantity = 90, ImageUrl = "https://example.com/fairtex-shorts.jpg", BrandId = brands[4].BrandId, CategoryId = categories[1].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
-            //    new Product { Name = "Title Boxing Double End Bag", Description = "Perfect for accuracy and reflex training.", Price = 44.99m, StockQuantity = 70, ImageUrl = "https://example.com/title-double.jpg", BrandId = brands[5].BrandId, CategoryId = categories[6].CategoryId, Sizes = new List<Sizes> { Sizes.L } },
-            //    new Product { Name = "Everlast Pro Headgear", Description = "Full-protection headgear with durable padding.", Price = 69.99m, StockQuantity = 50, ImageUrl = "https://example.com/everlast-headgear.jpg", BrandId = brands[0].BrandId, CategoryId = categories[4].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L } }
-            //};
+            List<Product> products = new List<Product>()
+            {
+                new Product { Name = "RDX Boxing Gloves", Description = "High-quality leather gloves for all training levels.", Price = 49.99m, StockQuantity = 100, BrandId = brands[1].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
+                new Product { Name = "Hayabusa T3 Boxing Gloves", Description = "Top-notch gloves with exceptional durability.", Price = 89.99m, StockQuantity = 50, BrandId = brands[2].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
+                new Product { Name = "Venum Challenger Gloves", Description = "Lightweight and designed for all skill levels.", Price = 39.99m, StockQuantity = 120, BrandId = brands[3].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
+                new Product { Name = "Title Boxing Leather Bag Gloves", Description = "Durable leather gloves for heavy bag workouts.", Price = 59.99m, StockQuantity = 80,  BrandId = brands[5].BrandId, CategoryId = categories[0].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L } },
+                new Product { Name = "Century Martial Arts Kickboxing Shorts", Description = "Comfortable shorts designed for kickboxing.", Price = 29.99m, StockQuantity = 75,  BrandId = brands[7].BrandId, CategoryId = categories[1].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
+                new Product { Name = "Sanabul Essential Shin Guards", Description = "High-quality shin guards for protection and mobility.", Price = 35.99m, StockQuantity = 90, BrandId = brands[8].BrandId, CategoryId = categories[2].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
+                new Product { Name = "Twins Special Headgear", Description = "Full-face protection with Twins quality.", Price = 89.99m, StockQuantity = 60,  BrandId = brands[9].BrandId, CategoryId = categories[4].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
+                new Product { Name = "Everlast Hand Wraps", Description = "Classic wraps for wrist and knuckle protection.", Price = 9.99m, StockQuantity = 200,  BrandId = brands[0].BrandId, CategoryId = categories[3].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L } },
+                new Product { Name = "Ringside Punching Bag", Description = "Heavy-duty bag for all levels of training.", Price = 119.99m, StockQuantity = 40,  BrandId = brands[6].BrandId, CategoryId = categories[6].CategoryId, Sizes = new List<Sizes> { Sizes.L } },
+                new Product { Name = "RDX Pro Boxing Shoes", Description = "Lightweight and supportive for agility in the ring.", Price = 69.99m, StockQuantity = 65,  BrandId = brands[1].BrandId, CategoryId = categories[8].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
+                new Product { Name = "Venum Challenger Shin Guards", Description = "High-durability shin guards ideal for intense training.", Price = 45.99m, StockQuantity = 95,  BrandId = brands[3].BrandId, CategoryId = categories[2].CategoryId, Sizes = new List<Sizes> { Sizes.S, Sizes.M, Sizes.L } },
+                new Product { Name = "Fairtex Muay Thai Shorts", Description = "Premium Muay Thai shorts with authentic design.", Price = 34.99m, StockQuantity = 90,  BrandId = brands[4].BrandId, CategoryId = categories[1].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L, Sizes.XL } },
+                new Product { Name = "Title Boxing Double End Bag", Description = "Perfect for accuracy and reflex training.", Price = 44.99m, StockQuantity = 70,  BrandId = brands[5].BrandId, CategoryId = categories[6].CategoryId, Sizes = new List<Sizes> { Sizes.L } },
+                new Product { Name = "Everlast Pro Headgear", Description = "Full-protection headgear with durable padding.", Price = 69.99m, StockQuantity = 50,  BrandId = brands[0].BrandId, CategoryId = categories[4].CategoryId, Sizes = new List<Sizes> { Sizes.M, Sizes.L } }
+            };
+
+            List<ProductImage> productsImages = new List<ProductImage>()
+            {
+            new ProductImage { ImageId = Guid.NewGuid(), ProductId = products[1].ProductId, ImageUrl = "https://example.com/images/gloves1.jpg" },
+            new ProductImage { ImageId = Guid.NewGuid(), ProductId = products[1].ProductId, ImageUrl = "https://example.com/images/gloves2.jpg" },
+            new ProductImage { ImageId = Guid.NewGuid(), ProductId = products[1].ProductId, ImageUrl = "https://example.com/images/shin-guards1.jpg" },
+            new ProductImage { ImageId = Guid.NewGuid(), ProductId = products[1].ProductId, ImageUrl = "https://example.com/images/shin-guards2.jpg" }
+            };
 
             builder.Entity<Brand>().HasData(brands);
 
             builder.Entity<Category>().HasData(categories);
 
-            //builder.Entity<Product>().HasData(products);
+            builder.Entity<Product>().HasData(products);
+
+            builder.Entity<ProductImage>().HasData(productsImages);
         }
     }
 }

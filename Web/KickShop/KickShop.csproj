@@ -24,16 +24,6 @@
   <ItemGroup>
     <None Include="wwwroot\css\site.css" />
     <None Include="wwwroot\favicon.ico" />
-    <None Include="wwwroot\images\apparel-category.jpg" />
-    <None Include="wwwroot\images\gloves-category.jpg" />
-    <None Include="wwwroot\images\gloves.jpg" />
-    <None Include="wwwroot\images\headgear.jpg" />
-    <None Include="wwwroot\images\mouth-guard.jpg" />
-    <None Include="wwwroot\images\protective-gear-category.jpg" />
-    <None Include="wwwroot\images\shin-guards.jpg" />
-    <None Include="wwwroot\images\shopping-cart.png" />
-    <None Include="wwwroot\images\shorts.jpg" />
-    <None Include="wwwroot\images\user.png" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
