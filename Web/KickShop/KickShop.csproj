@@ -92,4 +92,23 @@
     <ProjectReference Include="..\KickShop.ViewModels\KickShop.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Brands\" />
+    <Folder Include="wwwroot\images\Categories\" />
+    <Folder Include="wwwroot\images\Products\hayabusa-boxing-gloves\" />
+    <Folder Include="wwwroot\images\Products\century-kickboxing-shorts\" />
+    <Folder Include="wwwroot\images\Products\everlast-hand-wraps\" />
+    <Folder Include="wwwroot\images\Products\fairtex-muay-thai-shorts\" />
+    <Folder Include="wwwroot\images\Products\everlast-pro-headgear\" />
+    <Folder Include="wwwroot\images\Products\title-boxing-bag\" />
+    <Folder Include="wwwroot\images\Products\venum-challenger-shin-guards\" />
+    <Folder Include="wwwroot\images\Products\rdx-boxing-shoes\" />
+    <Folder Include="wwwroot\images\Products\ringside-punching-bag\" />
+    <Folder Include="wwwroot\images\Products\twins-special-headgear\" />
+    <Folder Include="wwwroot\images\Products\sanabul-shin-guards\" />
+    <Folder Include="wwwroot\images\Products\title-boxing-gloves\" />
+    <Folder Include="wwwroot\images\Products\venum-challenger-gloves\" />
+    <Folder Include="wwwroot\images\Products\rdx-boxing-gloves\" />
+  </ItemGroup>
+
 </Project>

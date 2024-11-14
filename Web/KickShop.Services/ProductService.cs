@@ -97,13 +97,18 @@ namespace KickShop.Services
 
             if (product == null) return null;
 
+            List<ProductImage> images = await context.ProductsImages
+                .Where(pi => pi.ProductId == guidId)
+                .ToListAsync();
+
             return new ProductDetailsViewModel
             {
                 ProductId = product.ProductId,
                 Name = product.Name,
                 Price = product.Price,
                 Description = product.Description,
-                Images = product.Images,
+                Images = images,
+                MainImageUrl = product.MainImageUrl,
                 Quantity = product.StockQuantity,
                 RelatedProducts = await context.Products
                     .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId)
