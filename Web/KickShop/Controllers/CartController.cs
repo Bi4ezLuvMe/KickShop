@@ -29,7 +29,7 @@ namespace KickShop.Controllers
                 Quantity = item.Quantity,
                 Price = item.Product.Price,
                 TotalPrice = item.Product.Price * item.Quantity,
-                ImageUrl = item.Product.ImageUrl
+                MainImageUrl = item.Product.MainImageUrl
             }).ToList();
 
             var cartViewModel = new CartViewModel

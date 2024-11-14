@@ -52,13 +52,15 @@
 
             public const int QuantityRangeMin = 0;
             public const int QuantityRangeMax = 1000;
-
-            public const int ImageUrlMinLength = 5;
-            public const int ImageUrlMaxLength = 200;
         }
         public static class ShoppingCart
         {
             public const string DateTimeFormat = "yyyy/MM/dd HH:mm";
+        }
+        public static class ProductImage
+        {
+            public const int ImageUrlMinLength = 5;
+            public const int ImageUrlMaxLength = 200;
         }
     }
 }

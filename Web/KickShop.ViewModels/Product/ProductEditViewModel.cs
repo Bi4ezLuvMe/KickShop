@@ -24,7 +24,7 @@ namespace KickShop.ViewModels
         [Required]
         [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax)]
         public int StockQuantity { get; set; }
-        public string? ImageUrl { get; set; }
+        public string? MainImageUrl { get; set; }
         [Required]
         public Guid CategoryId { get; set; }
         [Required]

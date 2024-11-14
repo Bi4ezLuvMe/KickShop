@@ -53,7 +53,6 @@ namespace KickShop.Services
                 Description = product.Description,
                 BrandId = product.BrandId,
                 CategoryId = product.CategoryId,
-                ImageUrl = product.ImageUrl,
                 Price = product.Price,
                 Sizes = product.Sizes,
                 StockQuantity = product.StockQuantity,
@@ -69,7 +68,7 @@ namespace KickShop.Services
             product.Description = model.Description;
             product.BrandId = model.BrandId;
             product.CategoryId = model.CategoryId;
-            product.ImageUrl = model.ImageUrl;
+            product.MainImageUrl = model.MainImageUrl;
             product.Price = model.Price;
             product.Sizes = model.Sizes;
             product.StockQuantity = model.StockQuantity;
@@ -104,7 +103,7 @@ namespace KickShop.Services
                 Name = product.Name,
                 Price = product.Price,
                 Description = product.Description,
-                ImageUrl = product.ImageUrl,
+                Images = product.Images,
                 Quantity = product.StockQuantity,
                 RelatedProducts = await context.Products
                     .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId)
