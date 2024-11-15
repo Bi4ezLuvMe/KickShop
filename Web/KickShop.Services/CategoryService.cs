@@ -18,18 +18,9 @@ namespace KickShop.Services
 
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
-            return await context.Categories.Where(c=>!c.IsDeleted).ToListAsync();
-        }
-
-        public async Task<SelectList> GetCategorySelectListAsync()
-        {
-            List<Category> categories = await GetAllCategoriesAsync();
-            return new SelectList(categories, "CategoryId", "Name");
-        }
-
-        public async Task<Category?> GetCategoryByIdAsync(Guid id)
-        {
-            return await context.Categories.FindAsync(id);
+            return await context.Categories
+                .Where(c=>!c.IsDeleted)
+                .ToListAsync();
         }
 
         public async Task AddCategoryAsync(CategoryAddViewModel model)
@@ -46,8 +37,12 @@ namespace KickShop.Services
 
         public async Task<bool> UpdateCategoryAsync(CategoryEditViewModel model)
         {
-            var cateogry = await context.Categories.FindAsync(model.CategoryId);
-            if (cateogry is null) return false;
+            Category? cateogry = await context.Categories.FindAsync(model.CategoryId);
+
+            if (cateogry is null||cateogry.IsDeleted) 
+            { 
+                return false;
+            }
 
             cateogry.Name = model.Name;
             cateogry.ImageUrl = model.ImageUrl;
@@ -55,15 +50,23 @@ namespace KickShop.Services
             await context.SaveChangesAsync();
             return true;
         }
+
         public async Task<CategoryViewModel?> GetCategoryDetailsAsync(string id)
         {
-            var guidId = IsIdValid(id);
-            if (guidId is null) return null;
+            Guid? guidId = IsIdValid(id);
 
-            var category = await context.Categories
+            if (guidId is null)
+            {
+                return null;
+            }
+
+            Category? category = await context.Categories
                 .FirstOrDefaultAsync(c => c.CategoryId == guidId && !c.IsDeleted);
 
-            if (category == null) return null;
+            if (category == null)
+            {
+                return null;
+            }
 
             return new CategoryViewModel()
             {
@@ -75,21 +78,34 @@ namespace KickShop.Services
 
         public async Task<bool> DeleteCategoryAsync(Guid id)
         {
-            var category = await context.Categories.FindAsync(id);
-            if (category is null || category.IsDeleted) return false;
+            Category? category = await context.Categories.FindAsync(id);
+
+            if (category is null || category.IsDeleted)
+            {
+                return false;
+            }
 
             category.IsDeleted = true;
             await context.SaveChangesAsync();
+
             return true;
         }
+
         public async Task<CategoryEditViewModel?> GetCategoryForEditAsync(string id)
         {
-            var guidId = IsIdValid(id);
-            if (guidId is null) return null;
+            Guid? guidId = IsIdValid(id);
+
+            if (guidId is null)
+            {
+                return null;
+            }
 
             Category? category = await context.Categories.FindAsync(guidId);
 
-            if (category is null || category.IsDeleted) return null;
+            if (category is null || category.IsDeleted)
+            {
+                return null;
+            }
 
             return new CategoryEditViewModel
             {
@@ -98,9 +114,13 @@ namespace KickShop.Services
                 ImageUrl = category.ImageUrl,
             };
         }
+
         private Guid? IsIdValid(string id)
         {
-            if (string.IsNullOrEmpty(id)) return null;
+            if (string.IsNullOrEmpty(id))
+            {
+                return null;
+            }
             return Guid.TryParse(id, out var guidId) ? guidId : null;
         }
     }

@@ -40,11 +40,19 @@ namespace KickShop.Services
 
         public async Task<ProductEditViewModel?> GetProductForEditAsync(string id)
         {
-            var guidId = IsIdValid(id);
-            if (guidId is null) return null;
+            Guid? guidId = IsIdValid(id);
+
+            if (guidId is null)
+            {
+                return null;
+            }
 
             Product? product = await context.Products.FindAsync(guidId);
-            if (product is null || product.IsDeleted) return null;
+
+            if (product is null || product.IsDeleted)
+            {
+                return null;
+            }
 
             return new ProductEditViewModel
             {
@@ -61,8 +69,12 @@ namespace KickShop.Services
 
         public async Task<bool> UpdateProductAsync(ProductEditViewModel model)
         {
-            var product = await context.Products.FindAsync(model.ProductId);
-            if (product is null) return false;
+            Product? product = await context.Products.FindAsync(model.ProductId);
+
+            if (product is null||product.IsDeleted)
+            {
+                return false;
+            }
 
             product.Name = model.Name;
             product.Description = model.Description;
@@ -79,7 +91,9 @@ namespace KickShop.Services
 
         public async Task<List<Product>> GetAllProductsAsync(string sortOrder)
         {
-            var products = await context.Products.Include(p => p.Brand).Include(p=>p.Category)
+            var products = await context.Products
+                .Include(p => p.Brand)
+                .Include(p=>p.Category)
                 .Where(p => !p.IsDeleted)
                .ToListAsync();
 
@@ -88,14 +102,21 @@ namespace KickShop.Services
 
         public async Task<ProductDetailsViewModel?> GetProductDetailsAsync(string id)
         {
-            var guidId = IsIdValid(id);
-            if (guidId is null) return null;
+            Guid? guidId = IsIdValid(id);
 
-            var product = await context.Products
+            if (guidId is null)
+            {
+                return null;
+            }
+
+            Product? product = await context.Products
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.ProductId == guidId && !p.IsDeleted);
 
-            if (product == null) return null;
+            if (product == null)
+            {
+                return null;
+            }
 
             List<ProductImage> images = await context.ProductsImages
                 .Where(pi => pi.ProductId == guidId)
@@ -118,53 +139,38 @@ namespace KickShop.Services
 
         public async Task<bool> DeleteProductAsync(string id)
         {
-            var guid = IsIdValid(id);
-            if (guid is null) return false;
+            Guid? guid = IsIdValid(id);
+            if (guid is null)
+            {
+                return false;
+            }
 
-            var product = await context.Products.FindAsync(guid);
-            if (product is null || product.IsDeleted) return false;
+            Product? product = await context.Products.FindAsync(guid);
+
+            if (product is null || product.IsDeleted)
+            {
+                return false;
+            }
 
             product.IsDeleted = true;
             await context.SaveChangesAsync();
+
             return true;
-        }
-
-        private Guid? IsIdValid(string id)
-        {
-            if (string.IsNullOrEmpty(id)) return null;
-            return Guid.TryParse(id, out var guidId) ? guidId : null;
-        }
-
-        private List<Product> SortOrder(List<Product> productModels, string sortOrder)
-        {
-            return sortOrder switch
-            {
-                "asc" => productModels.OrderBy(pm => pm.Price).ToList(),
-                "desc" => productModels.OrderByDescending(pm => pm.Price).ToList(),
-                null => productModels
-            };
-        }
-
-        public async Task<List<Product>> GetAllProductsAsync(string sortOrder, string categoryName)
-        {
-            var products = await context.Products
-                .Include(p=>p.Category)
-                .Where(p => !p.IsDeleted&&p.Category.Name == categoryName)
-               .ToListAsync();
-
-            return SortOrder(products, sortOrder);
         }
 
         public async Task<Product?> GetProductByIdAsync(string id)
         {
             Guid? guid = IsIdValid(id);
 
-            if(guid is null)
+            if (guid is null)
             {
                 return null;
             }
 
-            return await context.Products.Include(p=>p.Brand).Include(p=>p.Category).FirstOrDefaultAsync(p=>!p.IsDeleted&&p.ProductId==guid);
+            return await context.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => !p.IsDeleted && p.ProductId == guid);
         }
 
         public async Task<List<Product>> GetProductsByCategoryAsync(string category,string sortOrder)
@@ -178,6 +184,7 @@ namespace KickShop.Services
 
             return productsByCategory;
         }
+
         public async Task<List<Product>> GetProductsByBrandAsync(string brand, string sortOrder)
         {
             List<Product> productsByBrand = await context.Products
@@ -188,6 +195,25 @@ namespace KickShop.Services
             productsByBrand = SortOrder(productsByBrand, sortOrder);
 
             return productsByBrand;
+        }
+
+        private Guid? IsIdValid(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+            return Guid.TryParse(id, out var guidId) ? guidId : null;
+        }
+
+        private List<Product> SortOrder(List<Product> productModels, string sortOrder)
+        {
+            return sortOrder switch
+            {
+                "asc" => productModels.OrderBy(pm => pm.Price).ToList(),
+                "desc" => productModels.OrderByDescending(pm => pm.Price).ToList(),
+                null => productModels
+            };
         }
     }
 }

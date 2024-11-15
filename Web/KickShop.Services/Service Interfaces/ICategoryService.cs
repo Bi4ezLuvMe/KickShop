@@ -7,8 +7,6 @@ namespace KickShop.Services.Service_Interfaces
     public interface ICategoryService
     {
         Task<List<Category>> GetAllCategoriesAsync();
-        Task<SelectList> GetCategorySelectListAsync();
-        Task<Category?> GetCategoryByIdAsync(Guid id);
         Task AddCategoryAsync(CategoryAddViewModel category);
         Task<bool> UpdateCategoryAsync(CategoryEditViewModel category);
         Task<CategoryViewModel?> GetCategoryDetailsAsync(string id);
