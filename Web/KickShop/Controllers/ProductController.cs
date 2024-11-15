@@ -81,31 +81,13 @@ namespace KickShop.Controllers
             ViewBag.Action = nameof(All);
             return View(products);
         }
-
         [HttpGet]
-        public async Task<IActionResult> Clothing(string sortOrder)
+        public async Task<IActionResult>ByCategory(string category)
         {
-            List<Product> products = await productService.GetAllProductsAsync(sortOrder, "Apparel");
-            ViewBag.Action = nameof(Clothing);
-            return View(nameof(All), products);
+            List<Product> productsByCategory = await productService.GetProductsByCategoryAsync(category);
+            ViewBag.Action(category);
+            return View(productsByCategory);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Gloves(string sortOrder)
-        {
-            List<Product> products = await productService.GetAllProductsAsync(sortOrder, "Gloves");
-            ViewBag.Action = nameof(Gloves);
-            return View(nameof(All), products);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ProtectiveGear(string sortOrder)
-        {
-            List<Product> products = await productService.GetAllProductsAsync(sortOrder, "Protective Gear");
-            ViewBag.Action = nameof(ProtectiveGear);
-            return View(nameof(All), products);
-        }
-
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {

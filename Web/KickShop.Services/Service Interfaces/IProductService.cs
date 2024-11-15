@@ -13,5 +13,6 @@ namespace KickShop.Services.Service_Interfaces
         Task<ProductDetailsViewModel?> GetProductDetailsAsync(string id);
         Task<bool> DeleteProductAsync(string id);
         Task<Product?> GetProductByIdAsync(string id);
+        Task<List<Product>> GetProductsByCategoryAsync(string category);
     }
 }

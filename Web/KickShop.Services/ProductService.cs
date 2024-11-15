@@ -166,5 +166,15 @@ namespace KickShop.Services
 
             return await context.Products.Include(p=>p.Brand).Include(p=>p.Category).FirstOrDefaultAsync(p=>!p.IsDeleted&&p.ProductId==guid);
         }
+
+        public async Task<List<Product>> GetProductsByCategoryAsync(string category)
+        {
+            List<Product> productsByCategory = await context.Products
+                .Include(p => p.Category)
+                .Where(p => p.IsDeleted && p.Category.Name == category)
+                .ToListAsync();
+
+            return productsByCategory;
+        }
     }
 }
