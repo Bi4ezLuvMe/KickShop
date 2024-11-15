@@ -36,7 +36,7 @@
                                     <ul class="dropdown-menu">
                                         @foreach (var category in ViewBag.Categories)
                                         {
-                                            <li><a class="dropdown-item" href="/Products/ByCategory?category=@category">@category</a></li>
+                                            <li><a class="dropdown-item" href="/Product/ByCategory?category=@category">@category</a></li>
                                         }
                                     </ul>
                                 </li>
@@ -46,7 +46,7 @@
                                     <ul class="dropdown-menu">
                                         @foreach (var brand in ViewBag.Brands)
                                         {
-                                            <li><a class="dropdown-item btn" href="/Products/ByBrand?brand=@brand">@brand</a></li>
+                                            <li><a class="dropdown-item btn" href="/Product/ByBrand?brand=@brand">@brand</a></li>
                                         }
                                     </ul>
                                 </li>

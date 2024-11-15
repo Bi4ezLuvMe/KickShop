@@ -167,14 +167,27 @@ namespace KickShop.Services
             return await context.Products.Include(p=>p.Brand).Include(p=>p.Category).FirstOrDefaultAsync(p=>!p.IsDeleted&&p.ProductId==guid);
         }
 
-        public async Task<List<Product>> GetProductsByCategoryAsync(string category)
+        public async Task<List<Product>> GetProductsByCategoryAsync(string category,string sortOrder)
         {
             List<Product> productsByCategory = await context.Products
                 .Include(p => p.Category)
-                .Where(p => p.IsDeleted && p.Category.Name == category)
+                .Where(p => !p.IsDeleted && p.Category.Name == category)
                 .ToListAsync();
 
+            productsByCategory = SortOrder(productsByCategory, sortOrder);
+
             return productsByCategory;
+        }
+        public async Task<List<Product>> GetProductsByBrandAsync(string brand, string sortOrder)
+        {
+            List<Product> productsByBrand = await context.Products
+                .Include(p => p.Brand)
+                .Where(p => !p.IsDeleted && p.Brand.Name == brand)
+                .ToListAsync();
+
+            productsByBrand = SortOrder(productsByBrand, sortOrder);
+
+            return productsByBrand;
         }
     }
 }
