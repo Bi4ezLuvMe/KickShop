@@ -1,14 +1,10 @@
 ﻿using KickShop.Data;
 using KickShop.Models;
+using KickShop.Models.Enums;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace KickShop.Services
 {
     public class ProductService:IProductService
@@ -122,6 +118,14 @@ namespace KickShop.Services
                 .Where(pi => pi.ProductId == guidId)
                 .ToListAsync();
 
+            List<SelectListItem> sizesList = Enum.GetValues(typeof(Sizes))
+                        .Cast<Sizes>()
+                        .Select(s => new SelectListItem
+                        {
+                            Text = s.ToString(),  
+                            Value = s.ToString() 
+                        }).ToList();
+
             return new ProductDetailsViewModel
             {
                 ProductId = product.ProductId,
@@ -131,6 +135,7 @@ namespace KickShop.Services
                 Images = images,
                 MainImageUrl = product.MainImageUrl,
                 Quantity = product.StockQuantity,
+                Sizes = sizesList,
                 RelatedProducts = await context.Products
                     .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId)
                     .ToListAsync()
