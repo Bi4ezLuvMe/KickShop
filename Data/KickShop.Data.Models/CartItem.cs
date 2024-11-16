@@ -28,8 +28,12 @@ namespace KickShop.Models
         [ForeignKey("ProductId")]
         [Required]
         public Product Product { get; set; } = null!;
+        [Comment("The Quantity Of The Product")]
         [Required]
         [Range(ModelConstants.CartItem.QuantityRangeMin, ModelConstants.CartItem.QuantityRangeMax)]
         public int Quantity { get; set; }
+        [Comment("The Selected Size Of The Product")]
+        [Required]
+        public string Size { get; set; }
     }
 }

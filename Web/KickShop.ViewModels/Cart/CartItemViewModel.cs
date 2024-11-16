@@ -9,8 +9,7 @@ namespace KickShop.ViewModels
         public required int Quantity { get; set; }
         public required decimal Price { get; set; }
         public required decimal TotalPrice { get; set; }
+        public required string Size { get; set; }
         public string? MainImageUrl { get; set; }
     }
-
-
 }

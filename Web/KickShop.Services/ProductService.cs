@@ -85,7 +85,7 @@ namespace KickShop.Services
             return true;
         }
 
-        public async Task<List<Product>> GetAllProductsAsync(string sortOrder)
+        public async Task<List<Product>> GetAllProductsAsync(string? sortOrder,string? query)
         {
             var products = await context.Products
                 .Include(p => p.Brand)
@@ -93,6 +93,10 @@ namespace KickShop.Services
                 .Where(p => !p.IsDeleted)
                .ToListAsync();
 
+            if(query is not null)
+            {
+                products = products.Where(p => p.Name.Contains(query)).ToList();
+            }
             return SortOrder(products, sortOrder);
         }
 
@@ -178,7 +182,7 @@ namespace KickShop.Services
                 .FirstOrDefaultAsync(p => !p.IsDeleted && p.ProductId == guid);
         }
 
-        public async Task<List<Product>> GetProductsByCategoryAsync(string category,string sortOrder)
+        public async Task<List<Product>> GetProductsByCategoryAsync(string category,string? sortOrder)
         {
             List<Product> productsByCategory = await context.Products
                 .Include(p => p.Category)
@@ -190,7 +194,7 @@ namespace KickShop.Services
             return productsByCategory;
         }
 
-        public async Task<List<Product>> GetProductsByBrandAsync(string brand, string sortOrder)
+        public async Task<List<Product>> GetProductsByBrandAsync(string brand, string? sortOrder)
         {
             List<Product> productsByBrand = await context.Products
                 .Include(p => p.Brand)
@@ -211,7 +215,7 @@ namespace KickShop.Services
             return Guid.TryParse(id, out var guidId) ? guidId : null;
         }
 
-        private List<Product> SortOrder(List<Product> productModels, string sortOrder)
+        private List<Product> SortOrder(List<Product> productModels, string? sortOrder)
         {
             return sortOrder switch
             {

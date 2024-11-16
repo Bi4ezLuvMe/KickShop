@@ -94,7 +94,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\Brands\" />
-    <Folder Include="wwwroot\images\Categories\" />
     <Folder Include="wwwroot\images\Products\hayabusa-boxing-gloves\" />
     <Folder Include="wwwroot\images\Products\century-kickboxing-shorts\" />
     <Folder Include="wwwroot\images\Products\everlast-hand-wraps\" />

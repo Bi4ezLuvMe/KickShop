@@ -75,10 +75,11 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(string sortOrder)
+        public async Task<IActionResult> All(string sortOrder,string query)
         {
-            List<Product> products = await productService.GetAllProductsAsync(sortOrder);
+            List<Product> products = await productService.GetAllProductsAsync(sortOrder,query);
             ViewBag.Action = nameof(All);
+            ViewBag.Query = query;
             return View(products);
         }
         [HttpGet]
@@ -111,7 +112,7 @@ namespace KickShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Manage()
         {
-            List<Product> products = await productService.GetAllProductsAsync(null);
+            List<Product> products = await productService.GetAllProductsAsync(null,null);
             return View(products);
         }
 

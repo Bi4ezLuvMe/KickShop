@@ -33,7 +33,11 @@
 
             <form method="post" action="/Cart/AddToCart">
                 <input type="hidden" name="productId" value="@Model.ProductId" />
-                    @Html.DropDownListFor(model => model.SelectedSize, Model.Sizes, "Select Size", new { @class = "form-control" })
+                    <div class="form-group">
+                        <label for="size">Size</label>
+                        @Html.DropDownListFor(x=>x.SelectedSize, Model.Sizes, "Select Size", new { @class = "form-control" })
+                        <span asp-validation-for="@Model.SelectedSize" class="text-danger"></span>
+                    </div>
 
                 <div class="form-group">
                     <label for="quantity">Quantity</label>

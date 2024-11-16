@@ -1,5 +1,6 @@
 ﻿using KickShop.Models.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace KickShop.ViewModels
 {
@@ -12,7 +13,8 @@ namespace KickShop.ViewModels
         public required int Quantity { get; set; }
         public string? MainImageUrl { get; set; }
         public required List<SelectListItem> Sizes { get; set; } = new List<SelectListItem>();
-        public string? SelectedSize { get; set; }
+        [Required(ErrorMessage = "Kur")]
+        public string SelectedSize { get; set; } = null!;
         public required List<ProductImage> Images { get; set; } = new List<ProductImage>();
         public required List<Models.Product> RelatedProducts { get; set; } = new List<Models.Product>();
     }

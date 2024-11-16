@@ -20,7 +20,9 @@
             <thead class="thead-light">
                 <tr>
                     <th>Product</th>
+<th>Name</th>
                     <th>Quantity</th>
+                    <th>Size</th>
                     <th>Unit Price</th>
                     <th>Total</th>
                     <th></th>
@@ -32,9 +34,11 @@
                     <tr>
                         <td>
                             <img src="@item.MainImageUrl" alt="@item.ProductName" style="width: 100px; height: 100px;" />
-                            <span>@item.ProductName</span>
+                      
                         </td>
+                        <td>@item.ProductName</td>
                         <td>@item.Quantity</td>
+                        <td>@item.Size</td>
                         <td>@String.Format("{0:C}", item.Price)</td>
                         <td>@String.Format("{0:C}", item.TotalPrice)</td>
                         <td>

@@ -1,5 +1,7 @@
 ﻿using KickShop.Data;
 using KickShop.Models;
+using KickShop.Services;
+using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,12 @@ namespace KickShop.Controllers
     {
         private readonly KickShopDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
-        public CartController(KickShopDbContext _context,UserManager<ApplicationUser>_userManager)
+        private readonly IProductService productService;
+        public CartController(KickShopDbContext _context,UserManager<ApplicationUser>_userManager,IProductService _productService)
         {
             this.context = _context;
             this.userManager = _userManager;
+            this.productService = _productService;
         }
 
         [HttpGet]
@@ -28,6 +32,7 @@ namespace KickShop.Controllers
                 ProductName = item.Product.Name,
                 Quantity = item.Quantity,
                 Price = item.Product.Price,
+                Size = item.Size,
                 TotalPrice = item.Product.Price * item.Quantity,
                 MainImageUrl = item.Product.MainImageUrl
             }).ToList();
@@ -41,9 +46,18 @@ namespace KickShop.Controllers
             return View(cartViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult> AddToCart(string productId, int quantity)
+        public async Task<IActionResult> AddToCart(string productId, int quantity,string selectedSize)
         {
             Guid? productGuid = IsIdValid(productId);
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(modelError.ErrorMessage);
+                }
+                return View("~/Views/Product/Details.cshtml", await productService.GetProductDetailsAsync(productId));
+            }
 
             if(productGuid is null)
             {
@@ -69,6 +83,7 @@ namespace KickShop.Controllers
                 {
                     ProductId = (Guid)productGuid,
                     Quantity = quantity,
+                    Size = selectedSize,
                     ShoppingCartId = cart.ShoppingCartId
                 };
 
