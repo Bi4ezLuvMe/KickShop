@@ -35,9 +35,9 @@ namespace KickShop.Controllers
             return RedirectToAction(nameof(Manage));
         }
         [HttpGet]
-        public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage(string query)
         {
-            List<Brand> brands = await brandService.GetAllBrandsAsync();
+            List<Brand> brands = await brandService.GetAllBrandsAsync(query);
             return View(brands);
         }
         [HttpGet]

@@ -16,11 +16,13 @@ namespace KickShop.Services
             this.context = _context;
         }
 
-        public async Task<List<Category>> GetAllCategoriesAsync()
+        public async Task<List<Category>> GetAllCategoriesAsync(string? query)
         {
-            return await context.Categories
-                .Where(c=>!c.IsDeleted)
+            List<Category> categories = await context.Categories
+                .Where(c => !c.IsDeleted)
                 .ToListAsync();
+
+            return QuerySearch(categories,query);
         }
 
         public async Task AddCategoryAsync(CategoryAddViewModel model)
@@ -122,6 +124,14 @@ namespace KickShop.Services
                 return null;
             }
             return Guid.TryParse(id, out var guidId) ? guidId : null;
+        }
+        private List<Category> QuerySearch(List<Category> categoryModels, string? query)
+        {
+            if (query is null)
+            {
+                return categoryModels;
+            }
+            return categoryModels.Where(p => p.Name.ToLower().Contains(query.ToLower())).ToList();
         }
     }
 }

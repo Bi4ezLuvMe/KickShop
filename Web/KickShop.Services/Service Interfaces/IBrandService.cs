@@ -6,7 +6,7 @@ namespace KickShop.Services.Service_Interfaces
 {
     public interface IBrandService
     {
-        Task<List<Brand>> GetAllBrandsAsync();
+        Task<List<Brand>> GetAllBrandsAsync(string? query);
         Task AddBrandAsync(BrandAddViewModel brand);
         Task<bool> UpdateBrandAsync(BrandEditViewModel brand);
         Task<BrandDetailsViewModel?> GetBrandDetailsAsync(string id);

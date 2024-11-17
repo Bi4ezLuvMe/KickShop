@@ -16,11 +16,13 @@ namespace KickShop.Services
             this.context = _context;
         }
 
-        public async Task<List<Brand>> GetAllBrandsAsync()
+        public async Task<List<Brand>> GetAllBrandsAsync(string? query)
         {
-            return await context.Brands
-                .Where(b=>!b.IsDeleted)
+            List<Brand> brands = await context.Brands
+                .Where(b => !b.IsDeleted)
                 .ToListAsync();
+
+            return QuerySearch(brands,query);
         }
 
         public async Task AddBrandAsync(BrandAddViewModel model)
@@ -143,6 +145,14 @@ namespace KickShop.Services
             }
 
             return Guid.TryParse(id, out var guidId) ? guidId : null;
+        }
+        private List<Brand> QuerySearch(List<Brand> brandModels, string? query)
+        {
+            if (query is null)
+            {
+                return brandModels;
+            }
+            return brandModels.Where(p => p.Name.ToLower().Contains(query.ToLower())).ToList();
         }
     }
 }

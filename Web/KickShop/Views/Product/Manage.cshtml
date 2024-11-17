@@ -1,10 +1,25 @@
 ﻿@model List<Product>
+@{
+    string? query = ViewBag.Query?.ToString();
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+}
+<h2 class="text-center">Manage Products</h2>
 
-<h2>Manage Products</h2>
+<div class="mb-3 d-flex align-items-center justify-content-between">
 
-<div class="mb-3">
-    <a asp-action="Add" class="btn btn-success">Add New Product</a>
+    <form method="get" asp-controller="Product" asp-action="Manage" class="d-flex w-75">
+        <div class="d-flex w-50">
+            <input type="text" name="query" class="form-control search-bar me-2" placeholder="Search for products..." value="@query" />
+            <button type="submit" class="btn btn-primary search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <a asp-action="Add" class="btn btn-success ms-auto">Add New Product</a>
 </div>
+
+
 
 <table class="table table-striped">
     <thead>

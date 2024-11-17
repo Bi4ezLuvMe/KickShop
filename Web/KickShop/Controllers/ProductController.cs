@@ -112,9 +112,9 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage(string query)
         {
-            List<Product> products = await productService.GetAllProductsAsync(null,null);
+            List<Product> products = await productService.GetAllProductsAsync(null,query);
             return View(products);
         }
 
@@ -140,8 +140,8 @@ namespace KickShop.Controllers
 
         private async Task PopulateDropdowns()
         {
-            ViewBag.Categories = new SelectList(await categoryService.GetAllCategoriesAsync(), "CategoryId", "Name");
-            ViewBag.Brands = new SelectList(await brandService.GetAllBrandsAsync(), "BrandId", "Name");
+            ViewBag.Categories = new SelectList(await categoryService.GetAllCategoriesAsync(null), "CategoryId", "Name");
+            ViewBag.Brands = new SelectList(await brandService.GetAllBrandsAsync(null), "BrandId", "Name");
             ViewBag.Sizes = Enum.GetNames(typeof(Sizes)).ToList();
         }
     }
