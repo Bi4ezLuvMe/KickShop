@@ -16,7 +16,7 @@
 
     <div class="d-flex justify-con mb-3">
 
-        <form method="get" asp-controller="Product" asp-action="@(action)" class="d-flex w-100">
+        <form method="get" asp-controller="Product" asp-action="ByCategory"class="d-flex w-100">
             <div class="d-flex">
                 <input type="text" name="query" class="form-control search-bar me-2" placeholder="Search for products..." value="@query" />
                 <button type="submit" class="btn btn-primary search-button">
@@ -29,6 +29,7 @@
                 <button type="submit" name="sortOrder" value="asc" class="btn btn-primary me-2 @(currentSortOrder == "asc" ? "active" : "")">Low to High</button>
                 <button type="submit" name="sortOrder" value="desc" class="btn btn-primary @(currentSortOrder == "desc" ? "active" : "")">High to Low</button>
             </div>
+            <input type="hidden" name="category" value="@action" />
         </form>
 
 

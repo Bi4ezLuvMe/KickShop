@@ -83,17 +83,19 @@ namespace KickShop.Controllers
             return View(products);
         }
         [HttpGet]
-        public async Task<IActionResult>ByCategory(string category,string sortOrder)
+        public async Task<IActionResult>ByCategory(string category,string sortOrder,string query)
         {
-            List<Product> productsByCategory = await productService.GetProductsByCategoryAsync(category,sortOrder);
+            List<Product> productsByCategory = await productService.GetProductsByCategoryAsync(category,sortOrder,query);
             ViewBag.Action= category;
+            ViewBag.Query = query;
             return View(productsByCategory);
         }
         [HttpGet]
-        public async Task<IActionResult> ByBrand(string brand, string sortOrder)
+        public async Task<IActionResult> ByBrand(string brand, string sortOrder, string query)
         {
-            List<Product> productsByBrand = await productService.GetProductsByBrandAsync(brand, sortOrder);
+            List<Product> productsByBrand = await productService.GetProductsByBrandAsync(brand, sortOrder,query);
             ViewBag.Action = brand;
+            ViewBag.Query = query;
             return View(productsByBrand);
         }
         [HttpGet]

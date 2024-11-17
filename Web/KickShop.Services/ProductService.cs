@@ -5,6 +5,7 @@ using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 namespace KickShop.Services
 {
     public class ProductService:IProductService
@@ -76,7 +77,6 @@ namespace KickShop.Services
             product.Description = model.Description;
             product.BrandId = model.BrandId;
             product.CategoryId = model.CategoryId;
-            product.MainImageUrl = model.MainImageUrl;
             product.Price = model.Price;
             product.Sizes = model.Sizes;
             product.StockQuantity = model.StockQuantity;
@@ -87,16 +87,14 @@ namespace KickShop.Services
 
         public async Task<List<Product>> GetAllProductsAsync(string? sortOrder,string? query)
         {
-            var products = await context.Products
+            List<Product> products = await context.Products
                 .Include(p => p.Brand)
                 .Include(p=>p.Category)
                 .Where(p => !p.IsDeleted)
                .ToListAsync();
 
-            if(query is not null)
-            {
-                products = products.Where(p => p.Name.Contains(query)).ToList();
-            }
+            products = QuerySearch(products, query);
+
             return SortOrder(products, sortOrder);
         }
 
@@ -182,28 +180,28 @@ namespace KickShop.Services
                 .FirstOrDefaultAsync(p => !p.IsDeleted && p.ProductId == guid);
         }
 
-        public async Task<List<Product>> GetProductsByCategoryAsync(string category,string? sortOrder)
+        public async Task<List<Product>> GetProductsByCategoryAsync(string category,string? sortOrder,string? query)
         {
             List<Product> productsByCategory = await context.Products
                 .Include(p => p.Category)
                 .Where(p => !p.IsDeleted && p.Category.Name == category)
                 .ToListAsync();
 
-            productsByCategory = SortOrder(productsByCategory, sortOrder);
+            productsByCategory = QuerySearch(productsByCategory, query);
 
-            return productsByCategory;
+            return SortOrder(productsByCategory, sortOrder);
         }
 
-        public async Task<List<Product>> GetProductsByBrandAsync(string brand, string? sortOrder)
+        public async Task<List<Product>> GetProductsByBrandAsync(string brand, string? sortOrder,string? query)
         {
             List<Product> productsByBrand = await context.Products
                 .Include(p => p.Brand)
                 .Where(p => !p.IsDeleted && p.Brand.Name == brand)
                 .ToListAsync();
 
-            productsByBrand = SortOrder(productsByBrand, sortOrder);
+            productsByBrand = QuerySearch(productsByBrand, query);
 
-            return productsByBrand;
+            return SortOrder(productsByBrand, sortOrder);
         }
 
         private Guid? IsIdValid(string id)
@@ -223,6 +221,14 @@ namespace KickShop.Services
                 "desc" => productModels.OrderByDescending(pm => pm.Price).ToList(),
                 null => productModels
             };
+        }
+        private List<Product> QuerySearch(List<Product>productModels,string? query)
+        {
+            if(query is null)
+            {
+                return productModels;
+            }
+            return productModels.Where(p => p.Name.ToLower().Contains(query.ToLower())).ToList();
         }
     }
 }
