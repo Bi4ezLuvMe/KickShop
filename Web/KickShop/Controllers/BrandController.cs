@@ -22,7 +22,7 @@ namespace KickShop.Controllers
             
             return View(model);
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Add(BrandAddViewModel model)
         {
@@ -52,6 +52,7 @@ namespace KickShop.Controllers
 
             return View(brand);
         }
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(BrandDetailsViewModel model)
         {
@@ -83,7 +84,7 @@ namespace KickShop.Controllers
 
             return View(model);
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(BrandEditViewModel model)
         {

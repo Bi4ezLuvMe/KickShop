@@ -23,6 +23,7 @@ namespace KickShop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(CategoryAddViewModel model)
         {
             if (!ModelState.IsValid)
@@ -52,6 +53,7 @@ namespace KickShop.Controllers
             return View(category);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(CategoryViewModel model)
         {
             await categoryService.DeleteCategoryAsync(model.CategoryId);
@@ -72,6 +74,7 @@ namespace KickShop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CategoryEditViewModel model)
         {
             if (!ModelState.IsValid)

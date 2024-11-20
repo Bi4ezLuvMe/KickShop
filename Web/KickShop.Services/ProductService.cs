@@ -5,7 +5,6 @@ using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
 namespace KickShop.Services
 {
     public class ProductService:IProductService
@@ -44,7 +43,7 @@ namespace KickShop.Services
                 return null;
             }
 
-            Product? product = await context.Products.FindAsync(guidId);
+            Product? product = await context.Products.AsNoTracking().FirstOrDefaultAsync(p=>p.ProductId==guidId);
 
             if (product is null || product.IsDeleted)
             {
@@ -90,6 +89,7 @@ namespace KickShop.Services
             List<Product> products = await context.Products
                 .Include(p => p.Brand)
                 .Include(p=>p.Category)
+                .AsNoTracking()
                 .Where(p => !p.IsDeleted)
                .ToListAsync();
 
@@ -108,6 +108,7 @@ namespace KickShop.Services
             }
 
             Product? product = await context.Products
+                .AsNoTracking()
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.ProductId == guidId && !p.IsDeleted);
 
@@ -117,6 +118,7 @@ namespace KickShop.Services
             }
 
             List<ProductImage> images = await context.ProductsImages
+                .AsNoTracking()
                 .Where(pi => pi.ProductId == guidId)
                 .ToListAsync();
 

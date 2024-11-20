@@ -19,6 +19,7 @@ namespace KickShop.Services
         public async Task<List<Brand>> GetAllBrandsAsync(string? query)
         {
             List<Brand> brands = await context.Brands
+                .AsNoTracking()
                 .Where(b => !b.IsDeleted)
                 .ToListAsync();
 
@@ -70,6 +71,7 @@ namespace KickShop.Services
             }
 
             Brand? brand = await context.Brands
+                .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.BrandId == guidId && !b.IsDeleted);
 
             if (brand == null)
@@ -97,7 +99,8 @@ namespace KickShop.Services
                 return null;
             }
 
-            Brand? brand = await context.Brands.FindAsync(guidId);
+            Brand? brand = await context.Brands
+                .AsNoTracking().FirstOrDefaultAsync(b=>b.BrandId==guidId);
 
             if (brand is null || brand.IsDeleted)
             {

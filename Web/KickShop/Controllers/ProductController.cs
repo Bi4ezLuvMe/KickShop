@@ -54,7 +54,7 @@ namespace KickShop.Controllers
             await PopulateDropdowns();
             return View(model);
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(ProductEditViewModel model)
         {
@@ -130,7 +130,7 @@ namespace KickShop.Controllers
 
             return View(product);
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(Product product)
         {

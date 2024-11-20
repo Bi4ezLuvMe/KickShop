@@ -19,6 +19,7 @@ namespace KickShop.Services
         public async Task<List<Category>> GetAllCategoriesAsync(string? query)
         {
             List<Category> categories = await context.Categories
+                .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
@@ -63,6 +64,7 @@ namespace KickShop.Services
             }
 
             Category? category = await context.Categories
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.CategoryId == guidId && !c.IsDeleted);
 
             if (category == null)
@@ -102,7 +104,7 @@ namespace KickShop.Services
                 return null;
             }
 
-            Category? category = await context.Categories.FindAsync(guidId);
+            Category? category = await context.Categories.AsNoTracking().FirstOrDefaultAsync(c=>c.CategoryId==guidId);
 
             if (category is null || category.IsDeleted)
             {

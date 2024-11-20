@@ -97,6 +97,7 @@ namespace KickShop.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult>RemoveFromCart(string id)
         {
             Guid? guidId = IsIdValid(id);

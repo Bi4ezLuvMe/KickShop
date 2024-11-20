@@ -14,6 +14,7 @@ namespace KickShop.Services
         public async Task<List<string>> GetBrandsAsync()
         {
             return await context.Brands
+                .AsNoTracking()
                 .Where(b => !b.IsDeleted)
                 .Select(b => b.Name)
                 .ToListAsync();
@@ -22,6 +23,7 @@ namespace KickShop.Services
         public async Task<List<string>> GetCategoriesAsync()
         {
             return await context.Categories
+                .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .Select(c => c.Name)
                 .ToListAsync();
