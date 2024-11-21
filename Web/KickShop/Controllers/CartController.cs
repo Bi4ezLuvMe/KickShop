@@ -1,162 +1,60 @@
-﻿using KickShop.Data;
-using KickShop.Models;
-using KickShop.Services;
-using KickShop.Services.Service_Interfaces;
-using KickShop.ViewModels;
+﻿using KickShop.Services.Service_Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace KickShop.Controllers
 {
     public class CartController : Controller
     {
-        private readonly KickShopDbContext context;
+        private readonly ICartService cartService;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IProductService productService;
-        public CartController(KickShopDbContext _context,UserManager<ApplicationUser>_userManager,IProductService _productService)
+
+        public CartController(ICartService cartService, UserManager<ApplicationUser> userManager)
         {
-            this.context = _context;
-            this.userManager = _userManager;
-            this.productService = _productService;
+            this.cartService = cartService;
+            this.userManager = userManager;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var cart = await GetUserCart();  
-
-            var cartItemsViewModel = cart.CartItems.Select(item => new CartItemViewModel()
-            {
-                ProductId = item.ProductId,
-                ProductName = item.Product.Name,
-                Quantity = item.Quantity,
-                Price = item.Product.Price,
-                Size = item.Size,
-                TotalPrice = item.Product.Price * item.Quantity,
-                MainImageUrl = item.Product.MainImageUrl
-            }).ToList();
-
-            var cartViewModel = new CartViewModel
-            {
-                CartItems = cartItemsViewModel,
-                CartTotal = cartItemsViewModel.Sum(ci => ci.TotalPrice)
-            };
-
+            var userId = userManager.GetUserId(User);
+            var cartViewModel = await cartService.GetCartViewModelAsync(userId);
             return View(cartViewModel);
         }
+
         [HttpPost]
-        public async Task<IActionResult> AddToCart(string productId, int quantity,string selectedSize)
+        public async Task<IActionResult> AddToCart(string productId, int quantity, string selectedSize)
         {
-            Guid? productGuid = IsIdValid(productId);
+            var userId = userManager.GetUserId(User);
 
-            if (!ModelState.IsValid)
+            try
             {
-                foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(modelError.ErrorMessage);
-                }
-                return View("~/Views/Product/Details.cshtml", await productService.GetProductDetailsAsync(productId));
-            }
-
-            if(productGuid is null)
-            {
+                await cartService.AddToCartAsync(userId, productId, quantity, selectedSize);
                 return RedirectToAction(nameof(Index));
             }
-            var cart = await GetUserCart();
-            var product = await context.Products.FirstOrDefaultAsync(p => p.ProductId == productGuid);
-
-            if (product == null)
+            catch
             {
-                return NotFound("Product not found");
+                return View("~/Views/Product/Details.cshtml");
             }
-
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productGuid);
-
-            if (cartItem != null)
-            {
-                cartItem.Quantity += quantity;
-            }
-            else
-            {
-                var newCartItem = new CartItem()
-                {
-                    ProductId = (Guid)productGuid,
-                    Quantity = quantity,
-                    Size = selectedSize,
-                    ShoppingCartId = cart.ShoppingCartId
-                };
-
-                cart.CartItems.Add(newCartItem);
-
-                await context.CartsItems.AddAsync(newCartItem);
-            }
-
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult>RemoveFromCart(string id)
+        public async Task<IActionResult> RemoveFromCart(string id)
         {
-            Guid? guidId = IsIdValid(id);
+            var userId = userManager.GetUserId(User);
 
-            if (guidId is null) 
+            try
+            {
+                await cartService.RemoveFromCartAsync(userId, id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
             {
                 return RedirectToAction(nameof(Index));
             }
-
-            ShoppingCart? cart = await GetUserCart();
-            CartItem? cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == guidId);
-
-            if (cartItem is null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            context.CartsItems.Remove(cartItem);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<ShoppingCart> GetUserCart()
-        {
-            var userId = userManager.GetUserId(User); 
-
-            var cart = await context.ShoppingCarts.Include(c => c.CartItems)
-                                      .ThenInclude(ci => ci.Product)
-                                      .FirstOrDefaultAsync(c => c.CustomerId == userId);
-
-            if (cart is null)
-            {
-                cart = new ShoppingCart()
-                { 
-                    CustomerId = userId 
-                };
-
-                 await context.ShoppingCarts.AddAsync(cart);
-                 await context.SaveChangesAsync();
-            }
-
-            return cart;
-        }
-        private Guid? IsIdValid(string id)
-        {
-            if (String.IsNullOrEmpty(id))
-            {
-                return null;
-            }
-
-            Guid guidId;
-
-            if(!Guid.TryParse(id,out guidId))
-            {
-                return null;
-            }
-
-            return guidId;
         }
     }
 }

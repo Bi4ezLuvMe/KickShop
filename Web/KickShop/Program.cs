@@ -25,6 +25,9 @@ namespace KickShop
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IBrandService, BrandService>();
             builder.Services.AddScoped<ILayoutPopulateService, LayoutPopulateService>();
+            builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<IHomeService, HomeService>();
+            builder.Services.AddScoped<IProfileService, ProfileService>();
 
             var app = builder.Build();
 
