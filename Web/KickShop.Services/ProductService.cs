@@ -122,8 +122,7 @@ namespace KickShop.Services
                 .Where(pi => pi.ProductId == guidId)
                 .ToListAsync();
 
-            List<SelectListItem> sizesList = Enum.GetValues(typeof(Sizes))
-                        .Cast<Sizes>()
+            List<SelectListItem> sizesList = product.Sizes
                         .Select(s => new SelectListItem
                         {
                             Text = s.ToString(),  

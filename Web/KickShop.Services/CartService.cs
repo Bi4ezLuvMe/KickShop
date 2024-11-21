@@ -49,7 +49,7 @@ namespace KickShop.Services
             }
 
             ShoppingCart cart = await GetUserCartAsync(userId);
-            Product? product = await context.Products.FirstOrDefaultAsync(p => p.ProductId == productGuid);
+            Product? product = await context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == productGuid);
 
             if (product == null)
             {
