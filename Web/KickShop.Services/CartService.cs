@@ -94,6 +94,7 @@ namespace KickShop.Services
             }
         }
 
+
         private async Task<ShoppingCart> GetUserCartAsync(string userId)
         {
             ShoppingCart? cart = await context.ShoppingCarts.Include(c => c.CartItems)

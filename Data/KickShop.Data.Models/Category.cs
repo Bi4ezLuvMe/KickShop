@@ -10,6 +10,7 @@ namespace KickShop.Models
         {
             CategoryId = Guid.NewGuid();
             Products = new HashSet<Product>();
+            IsDeleted = false;
         }
         [Comment("The Unique Identifier")]
         [Key]
@@ -27,6 +28,6 @@ namespace KickShop.Models
         public string? ImageUrl { get; set; }
         [Comment("Soft Delete Property")]
         [Required]
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
     }
 }

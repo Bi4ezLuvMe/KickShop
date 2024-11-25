@@ -12,6 +12,7 @@ namespace KickShop.Models
         {
             ProductId = Guid.NewGuid();
             Images = new List<ProductImage>();
+            IsDeleted = false;
         }
         [Comment("The Unique Identifier")]
         [Key]
@@ -54,7 +55,7 @@ namespace KickShop.Models
         public Brand Brand { get; set; } = null!;
         [Comment("Soft Delete Property")]
         [Required]
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
         [Comment("The Size Of The Product")]
         [Required]
         public List<Sizes> Sizes { get; set; }

@@ -27,7 +27,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav">
                         <div class="dropdown">
-                            <a class="btn dropdown-toggle text-black" id="searchByDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="btn dropdown-toggle text-dark" id="searchByDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 Search By
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="searchByDropdown">
@@ -66,6 +66,9 @@
                                 </ul>
                             </li>
                         }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Orders</a>
+                        </li>
                     </ul>
                         <partial name="_LoginPartial" />
                 </div>

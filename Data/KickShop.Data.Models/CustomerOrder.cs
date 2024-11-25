@@ -7,6 +7,10 @@ namespace KickShop.Models
 {
     public class CustomerOrder
     {
+        public CustomerOrder()
+        {
+            IsDeleted = false;
+        }
         [Comment("Foreign Key To The ASP.NET User Entity. Also Primary Key")]
         [Required]
         public string CustomerId { get; set; } = null!;
@@ -21,5 +25,8 @@ namespace KickShop.Models
         [ForeignKey("OrderId")]
         [Required]
         public Order Order { get; set; } = null!;
+        [Comment("Soft Delete Property")]
+        [Required]
+        public bool IsDeleted { get; set; }
     }
 }

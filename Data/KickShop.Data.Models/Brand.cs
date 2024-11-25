@@ -9,6 +9,7 @@ namespace KickShop.Models
         public Brand()
         {
             BrandId = Guid.NewGuid();
+            IsDeleted = false;
         }
         [Comment("The Unique Identifier")]
         [Key]
@@ -39,6 +40,6 @@ namespace KickShop.Models
         public string? ImageUrl { get; set; }
         [Comment("Soft Delete Property")]
         [Required]
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
     }
 }

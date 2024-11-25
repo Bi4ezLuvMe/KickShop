@@ -1,0 +1,21 @@
+﻿@using KickShop.ViewModels.Order
+@model OrderConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<h2>Order Confirmation</h2>
+
+<div class="order-confirmation">
+    <p><strong>Order ID:</strong> @Model.OrderId</p>
+    <p><strong>Order Date:</strong> @Model.OrderDate</p>
+    <p><strong>Total Amount:</strong>@Model.TotalAmount.ToString("F2") лв.</p>
+</div>
+
+<div class="thank-you">
+    <h3>Thank you for your order!</h3>
+    <p>Your order has been successfully placed.</p>
+</div>
+
+<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Continue Shopping</a>

@@ -4,6 +4,7 @@ using KickShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KickShop.Migrations
 {
     [DbContext(typeof(KickShopDbContext))]
-    partial class KickShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125173138_RemovedTheBillingCountryFromOrderModel")]
+    partial class RemovedTheBillingCountryFromOrderModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +45,7 @@ namespace KickShop.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Image")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -51,6 +55,7 @@ namespace KickShop.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -65,6 +70,7 @@ namespace KickShop.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -143,7 +149,7 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            BrandId = new Guid("87dbf881-2c8d-4654-a3fa-f8d030f31d45"),
+                            BrandId = new Guid("fb49864a-2034-465c-8475-3293a4e50287"),
                             Address = "123 Boxing Blvd, New York, NY",
                             Country = "USA",
                             ImageUrl = "/images/Brands/everlast-logo.png",
@@ -153,7 +159,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("f18554fb-6fae-4a2f-8f7b-916aef7d2fc7"),
+                            BrandId = new Guid("29ab1e43-6441-47c7-9c76-d4e5595258f2"),
                             Address = "456 Sports Ave, London, UK",
                             Country = "UK",
                             ImageUrl = "/images/Brands/rdx-logo.png",
@@ -163,7 +169,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("c8396007-04a1-4ca3-8cd0-6c5c910f2375"),
+                            BrandId = new Guid("8203ff8f-7887-4f6d-b572-95e345cab201"),
                             Address = "789 Fight St, Toronto, ON",
                             Country = "Canada",
                             ImageUrl = "/images/Brands/hayabusa-logo.png",
@@ -173,7 +179,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("110287f3-443a-41c9-bc39-756fd90a34d4"),
+                            BrandId = new Guid("f3b98572-dccf-4c3e-a8af-6f111c6f25ca"),
                             Address = "101 Martial Arts Way, Paris, FR",
                             Country = "France",
                             ImageUrl = "/images/Brands/venum-logo.png",
@@ -183,7 +189,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("7d529bb0-e558-4947-8fd2-3b6472f84dd7"),
+                            BrandId = new Guid("a2250aa6-f7b2-4fb0-a061-7e4b119a270d"),
                             Address = "234 Fighter Rd, Bangkok, TH",
                             Country = "Thailand",
                             ImageUrl = "/images/Brands/fairtex-logo.png",
@@ -193,7 +199,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("07cf0ee3-6555-4e9a-b366-eaa5de6d9f46"),
+                            BrandId = new Guid("f55049ce-5ade-4bc6-ada6-f80d1259ef01"),
                             Address = "345 Punch Ln, Los Angeles, CA",
                             Country = "USA",
                             ImageUrl = "/images/Brands/title-boxing-logo.png",
@@ -203,7 +209,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("ed861016-1e1c-48a4-ad51-1c7a8674eff9"),
+                            BrandId = new Guid("72207e09-81e8-4487-a561-26c98c982797"),
                             Address = "456 Ring Rd, Chicago, IL",
                             Country = "USA",
                             ImageUrl = "/images/Brands/ringside-logo.png",
@@ -213,7 +219,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("c81bae19-8a4b-4d52-8b5d-1160ebf41adf"),
+                            BrandId = new Guid("dd49b911-bb46-4a24-9e1e-452b60f6ee87"),
                             Address = "567 Martial Arts Blvd, Oklahoma City, OK",
                             Country = "USA",
                             ImageUrl = "/images/Brands/century-logo.png",
@@ -223,7 +229,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("1a81d4f2-921b-4822-8379-4394b77fd2e5"),
+                            BrandId = new Guid("40e1aa4a-3254-4529-9b06-56bde4c33c16"),
                             Address = "678 Fighter Ave, Miami, FL",
                             Country = "USA",
                             ImageUrl = "/images/Brands/sanabul-logo.png",
@@ -233,7 +239,7 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            BrandId = new Guid("68a907c7-3c05-4b72-bd8b-dc500742c001"),
+                            BrandId = new Guid("066f6c6a-94b4-4792-b8cd-c816d5c5a46a"),
                             Address = "789 Kick Rd, Phuket, TH",
                             Country = "Thailand",
                             ImageUrl = "/images/Brands/twins-special-logo.png",
@@ -305,70 +311,70 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = new Guid("b25ddb17-a18b-4531-8cf3-2d27af224e4a"),
+                            CategoryId = new Guid("1abab5e2-ecf3-4adf-bba0-89a7ca8208fa"),
                             ImageUrl = "/images/Categegories/boxing-gloves.jfif",
                             IsDeleted = false,
                             Name = "Gloves"
                         },
                         new
                         {
-                            CategoryId = new Guid("d2124e41-b311-4e56-a6d7-d32f67b3368c"),
+                            CategoryId = new Guid("3f596856-d7c9-4093-a17d-570fb1384d39"),
                             ImageUrl = "/images/Categories/clothing.png",
                             IsDeleted = false,
                             Name = "Clothing"
                         },
                         new
                         {
-                            CategoryId = new Guid("235c5d7d-1ba6-4751-a3d7-b0ae27de0f8f"),
+                            CategoryId = new Guid("c47178b2-6495-4721-aa09-1c726ac2d643"),
                             ImageUrl = "/images/Categories/shin-guards.png",
                             IsDeleted = false,
                             Name = "Shinguards"
                         },
                         new
                         {
-                            CategoryId = new Guid("e2f2567e-cb5e-4faf-a931-9371f568f395"),
+                            CategoryId = new Guid("ef0fcbba-94d3-436f-bc5d-6b6ca28e6fc9"),
                             ImageUrl = "/images/Categories/hand-wraps.png",
                             IsDeleted = false,
                             Name = "Hand Wraps"
                         },
                         new
                         {
-                            CategoryId = new Guid("25e75a5f-fcd7-40ab-b6f7-b65cfa620b04"),
+                            CategoryId = new Guid("e2040311-9676-47de-b141-bc53cf23a86a"),
                             ImageUrl = "/images/Categories/head-gear.png",
                             IsDeleted = false,
                             Name = "Headgear"
                         },
                         new
                         {
-                            CategoryId = new Guid("fa8f4dcb-f4b6-484c-bdee-64eed73f6acf"),
+                            CategoryId = new Guid("d7a4a46c-5b3e-4ff8-848b-54094d7a2ee7"),
                             ImageUrl = "/images/Categories/mouth-guard.png",
                             IsDeleted = false,
                             Name = "Mouthguards"
                         },
                         new
                         {
-                            CategoryId = new Guid("654c0f7e-3583-407a-9cd1-90f1478c2ca0"),
+                            CategoryId = new Guid("97eb9081-8c18-48c9-8de6-a44bf32fb805"),
                             ImageUrl = "/images/Categories/punching-bag.png",
                             IsDeleted = false,
                             Name = "Punching Bags"
                         },
                         new
                         {
-                            CategoryId = new Guid("0c2cec2f-adad-42c8-a3b0-f91bf46e7f0f"),
+                            CategoryId = new Guid("3f9c9cf5-b4c0-4045-b0e1-3311fbc4b23f"),
                             ImageUrl = "/images/Categories/training-equipment.png",
                             IsDeleted = false,
                             Name = "Training Equipment"
                         },
                         new
                         {
-                            CategoryId = new Guid("c0d36680-5696-4f2e-94e4-45099a12fe39"),
+                            CategoryId = new Guid("4aad9df9-28c6-46a8-98f1-c4f6cc1bc270"),
                             ImageUrl = "/images/Categories/boxing-shoes.png",
                             IsDeleted = false,
                             Name = "Shoes"
                         },
                         new
                         {
-                            CategoryId = new Guid("1c2e748e-6c81-46ac-9f53-7f636dfcda7d"),
+                            CategoryId = new Guid("2f736787-4467-4d17-9e3a-bb1490ee7f5d"),
                             ImageUrl = "/images/Categories/protective-equipment.jfif",
                             IsDeleted = false,
                             Name = "Protective Gear"
@@ -384,10 +390,6 @@ namespace KickShop.Migrations
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)")
                         .HasComment("Foreign Key To The ASP.NET User Entity. Also Primary Key");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
-                        .HasComment("Soft Delete Property");
 
                     b.HasKey("OrderId", "CustomerId");
 
@@ -405,27 +407,19 @@ namespace KickShop.Migrations
 
                     b.Property<string>("BillingAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("The Billing Address Of The Order");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BillingCity")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("The Billing City Of The Order");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BillingName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("The Billing Name Of The Order");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BillingPostalCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("The Billing PostCode Of The Order");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
-                        .HasComment("Soft Delete Property");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderDate")
                         .IsRequired()
@@ -499,9 +493,9 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("a237f3fc-03fd-41a9-9e4e-d92fc0427c5e"),
-                            BrandId = new Guid("f18554fb-6fae-4a2f-8f7b-916aef7d2fc7"),
-                            CategoryId = new Guid("b25ddb17-a18b-4531-8cf3-2d27af224e4a"),
+                            ProductId = new Guid("a1ca1686-b1d2-4db0-b42f-84c51f07d938"),
+                            BrandId = new Guid("29ab1e43-6441-47c7-9c76-d4e5595258f2"),
+                            CategoryId = new Guid("1abab5e2-ecf3-4adf-bba0-89a7ca8208fa"),
                             Description = "High-quality leather gloves for all training levels.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/rdx-boxing-gloves/rdx-boxing-glove-3.png",
@@ -512,9 +506,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("b8f29bd2-363a-4f64-84c6-e272e838d00e"),
-                            BrandId = new Guid("c8396007-04a1-4ca3-8cd0-6c5c910f2375"),
-                            CategoryId = new Guid("b25ddb17-a18b-4531-8cf3-2d27af224e4a"),
+                            ProductId = new Guid("05fdb469-3891-4f31-8fb2-f531c8509133"),
+                            BrandId = new Guid("8203ff8f-7887-4f6d-b572-95e345cab201"),
+                            CategoryId = new Guid("1abab5e2-ecf3-4adf-bba0-89a7ca8208fa"),
                             Description = "Top-notch gloves with exceptional durability.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/hayabusa-boxing-gloves/hayabusa-boxing-gloves-1.png",
@@ -525,9 +519,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("a0072c0f-2c8c-4782-958a-1d00703fe406"),
-                            BrandId = new Guid("110287f3-443a-41c9-bc39-756fd90a34d4"),
-                            CategoryId = new Guid("b25ddb17-a18b-4531-8cf3-2d27af224e4a"),
+                            ProductId = new Guid("e2fb6902-f7fe-47cc-bbae-7886a7c89360"),
+                            BrandId = new Guid("f3b98572-dccf-4c3e-a8af-6f111c6f25ca"),
+                            CategoryId = new Guid("1abab5e2-ecf3-4adf-bba0-89a7ca8208fa"),
                             Description = "Lightweight and designed for all skill levels.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/venum-challenger-gloves/venum-challenger-gloves-2.png",
@@ -538,9 +532,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("fd2bd1a9-b7ee-41df-b9ff-6ce44bbf2521"),
-                            BrandId = new Guid("07cf0ee3-6555-4e9a-b366-eaa5de6d9f46"),
-                            CategoryId = new Guid("b25ddb17-a18b-4531-8cf3-2d27af224e4a"),
+                            ProductId = new Guid("79868aab-bc98-4628-8443-509173147add"),
+                            BrandId = new Guid("f55049ce-5ade-4bc6-ada6-f80d1259ef01"),
+                            CategoryId = new Guid("1abab5e2-ecf3-4adf-bba0-89a7ca8208fa"),
                             Description = "Durable leather gloves for heavy bag workouts.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/title-boxing-bag/title-boxing-bag-1.png",
@@ -551,9 +545,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("dcddba1b-acc2-4089-b25e-227f99f47c6f"),
-                            BrandId = new Guid("c81bae19-8a4b-4d52-8b5d-1160ebf41adf"),
-                            CategoryId = new Guid("d2124e41-b311-4e56-a6d7-d32f67b3368c"),
+                            ProductId = new Guid("9e2577a1-34d4-4255-8a3a-9736db4f1d0a"),
+                            BrandId = new Guid("dd49b911-bb46-4a24-9e1e-452b60f6ee87"),
+                            CategoryId = new Guid("3f596856-d7c9-4093-a17d-570fb1384d39"),
                             Description = "Comfortable shorts designed for kickboxing.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/century-kickboxing-shorts/century-kickboxing-shorts-1.png",
@@ -564,9 +558,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("60c9bcda-5bd2-420b-86b3-d0294c4e241e"),
-                            BrandId = new Guid("1a81d4f2-921b-4822-8379-4394b77fd2e5"),
-                            CategoryId = new Guid("235c5d7d-1ba6-4751-a3d7-b0ae27de0f8f"),
+                            ProductId = new Guid("7b2bc133-a5e6-43e3-9886-b1b34625e680"),
+                            BrandId = new Guid("40e1aa4a-3254-4529-9b06-56bde4c33c16"),
+                            CategoryId = new Guid("c47178b2-6495-4721-aa09-1c726ac2d643"),
                             Description = "High-quality shin guards for protection and mobility.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/sanabul-shin-guards/sanabul-shin-guards-1.png",
@@ -577,9 +571,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("894613c6-97f7-4a7a-ad74-74ae66a3f84d"),
-                            BrandId = new Guid("68a907c7-3c05-4b72-bd8b-dc500742c001"),
-                            CategoryId = new Guid("25e75a5f-fcd7-40ab-b6f7-b65cfa620b04"),
+                            ProductId = new Guid("e92b007b-5106-42c3-9234-11cf251a7747"),
+                            BrandId = new Guid("066f6c6a-94b4-4792-b8cd-c816d5c5a46a"),
+                            CategoryId = new Guid("e2040311-9676-47de-b141-bc53cf23a86a"),
                             Description = "Full-face protection with Twins quality.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/twins-special-headgear/twins-special-headgear-1.png",
@@ -590,9 +584,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("a83d310d-9c10-4f51-a130-a8d9178e7df6"),
-                            BrandId = new Guid("87dbf881-2c8d-4654-a3fa-f8d030f31d45"),
-                            CategoryId = new Guid("e2f2567e-cb5e-4faf-a931-9371f568f395"),
+                            ProductId = new Guid("8539ecb7-9af5-4bbe-a8d4-a05f517f1a21"),
+                            BrandId = new Guid("fb49864a-2034-465c-8475-3293a4e50287"),
+                            CategoryId = new Guid("ef0fcbba-94d3-436f-bc5d-6b6ca28e6fc9"),
                             Description = "Classic wraps for wrist and knuckle protection.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/everlast-hand-wraps/everlast-hand-wraps-3.png",
@@ -603,9 +597,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("8c5c53e0-5632-4201-8ed2-a348638dafa7"),
-                            BrandId = new Guid("ed861016-1e1c-48a4-ad51-1c7a8674eff9"),
-                            CategoryId = new Guid("654c0f7e-3583-407a-9cd1-90f1478c2ca0"),
+                            ProductId = new Guid("1edcc73b-e2fe-4ba8-a3e7-6795d0f00b03"),
+                            BrandId = new Guid("72207e09-81e8-4487-a561-26c98c982797"),
+                            CategoryId = new Guid("97eb9081-8c18-48c9-8de6-a44bf32fb805"),
                             Description = "Heavy-duty bag for all levels of training.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/ringside-punching-bag/ringside-punching-bag-1.png",
@@ -616,9 +610,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("33e60ab1-75f5-422a-a6b5-6a9461057834"),
-                            BrandId = new Guid("f18554fb-6fae-4a2f-8f7b-916aef7d2fc7"),
-                            CategoryId = new Guid("c0d36680-5696-4f2e-94e4-45099a12fe39"),
+                            ProductId = new Guid("47ab64e1-fd21-435e-b4e4-aa54947a2005"),
+                            BrandId = new Guid("29ab1e43-6441-47c7-9c76-d4e5595258f2"),
+                            CategoryId = new Guid("4aad9df9-28c6-46a8-98f1-c4f6cc1bc270"),
                             Description = "Lightweight and supportive for agility in the ring.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/rdx-boxing-shoes/rdx-boxing-shoes-1.png",
@@ -629,9 +623,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("b0a1b119-967d-4e0f-8383-363e4e4095b4"),
-                            BrandId = new Guid("110287f3-443a-41c9-bc39-756fd90a34d4"),
-                            CategoryId = new Guid("235c5d7d-1ba6-4751-a3d7-b0ae27de0f8f"),
+                            ProductId = new Guid("254fecf8-1739-444c-afb6-af4a29a262f0"),
+                            BrandId = new Guid("f3b98572-dccf-4c3e-a8af-6f111c6f25ca"),
+                            CategoryId = new Guid("c47178b2-6495-4721-aa09-1c726ac2d643"),
                             Description = "High-durability shin guards ideal for intense training.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/venum-challenger-shin-guards/venum-challenger-shin-guards-1.png",
@@ -642,9 +636,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("40eae73d-3f82-4ad1-8af3-a77fab3c5982"),
-                            BrandId = new Guid("7d529bb0-e558-4947-8fd2-3b6472f84dd7"),
-                            CategoryId = new Guid("d2124e41-b311-4e56-a6d7-d32f67b3368c"),
+                            ProductId = new Guid("184fb352-6c6e-4757-b60b-7478e5759508"),
+                            BrandId = new Guid("a2250aa6-f7b2-4fb0-a061-7e4b119a270d"),
+                            CategoryId = new Guid("3f596856-d7c9-4093-a17d-570fb1384d39"),
                             Description = "Premium Muay Thai shorts with authentic design.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/fairtex-muay-thai-shorts/fairtex-muay-thai-shorts-1.png",
@@ -655,9 +649,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("660ab8ef-62a5-49f9-b78f-8e5129b1ad6d"),
-                            BrandId = new Guid("07cf0ee3-6555-4e9a-b366-eaa5de6d9f46"),
-                            CategoryId = new Guid("654c0f7e-3583-407a-9cd1-90f1478c2ca0"),
+                            ProductId = new Guid("77101c8e-a057-4f16-b53d-b558822e12ec"),
+                            BrandId = new Guid("f55049ce-5ade-4bc6-ada6-f80d1259ef01"),
+                            CategoryId = new Guid("97eb9081-8c18-48c9-8de6-a44bf32fb805"),
                             Description = "Perfect for accuracy and reflex training.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/title-boxing-gloves/title-boxing-gloves-1.png",
@@ -668,9 +662,9 @@ namespace KickShop.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("3905538a-060d-42f1-90e7-d6f4f6ea8023"),
-                            BrandId = new Guid("87dbf881-2c8d-4654-a3fa-f8d030f31d45"),
-                            CategoryId = new Guid("25e75a5f-fcd7-40ab-b6f7-b65cfa620b04"),
+                            ProductId = new Guid("a767dd5b-b242-43ac-a857-c0a971b27ace"),
+                            BrandId = new Guid("fb49864a-2034-465c-8475-3293a4e50287"),
+                            CategoryId = new Guid("e2040311-9676-47de-b141-bc53cf23a86a"),
                             Description = "Full-protection headgear with durable padding.",
                             IsDeleted = false,
                             MainImageUrl = "/images/Products/everlast-pro-headgear/everlast-headgear-1.png",
@@ -868,255 +862,255 @@ namespace KickShop.Migrations
                     b.HasData(
                         new
                         {
-                            ImageId = new Guid("b072a725-6f80-4514-9a1d-4d5842b7f2a8"),
+                            ImageId = new Guid("274a3573-4cc3-4c25-a3cd-d1208d00f999"),
                             ImageUrl = "/images/Products/rdx-boxing-gloves/rdx-boxing-glove-1.png",
-                            ProductId = new Guid("a237f3fc-03fd-41a9-9e4e-d92fc0427c5e")
+                            ProductId = new Guid("a1ca1686-b1d2-4db0-b42f-84c51f07d938")
                         },
                         new
                         {
-                            ImageId = new Guid("cbdd51df-869c-4e69-8b96-0d99298d543e"),
+                            ImageId = new Guid("840a5970-aa12-4cdb-9c6d-7f5a5665ff84"),
                             ImageUrl = "/images/Products/rdx-boxing-gloves/rdx-boxing-glove-2.png",
-                            ProductId = new Guid("a237f3fc-03fd-41a9-9e4e-d92fc0427c5e")
+                            ProductId = new Guid("a1ca1686-b1d2-4db0-b42f-84c51f07d938")
                         },
                         new
                         {
-                            ImageId = new Guid("16600136-a5eb-468d-b127-579100467411"),
+                            ImageId = new Guid("03d4cb7a-9c55-4e35-99bd-fbe2a4933f67"),
                             ImageUrl = "/images/Products/rdx-boxing-gloves/rdx-boxing-glove-3.png",
-                            ProductId = new Guid("a237f3fc-03fd-41a9-9e4e-d92fc0427c5e")
+                            ProductId = new Guid("a1ca1686-b1d2-4db0-b42f-84c51f07d938")
                         },
                         new
                         {
-                            ImageId = new Guid("e12c615e-431d-4ffa-99bd-88f748662cd6"),
+                            ImageId = new Guid("9af5e311-6ba8-4f16-9f14-00f7b1f4680e"),
                             ImageUrl = "/images/Products/hayabusa-boxing-gloves/hayabusa-boxing-gloves-1.png",
-                            ProductId = new Guid("b8f29bd2-363a-4f64-84c6-e272e838d00e")
+                            ProductId = new Guid("05fdb469-3891-4f31-8fb2-f531c8509133")
                         },
                         new
                         {
-                            ImageId = new Guid("c503490d-c9b8-4d63-894d-f2142d08b344"),
+                            ImageId = new Guid("406d50a1-5640-4f0e-83a9-978703beae24"),
                             ImageUrl = "/images/Products/hayabusa-boxing-gloves/hayabusa-boxing-gloves-2.png",
-                            ProductId = new Guid("b8f29bd2-363a-4f64-84c6-e272e838d00e")
+                            ProductId = new Guid("05fdb469-3891-4f31-8fb2-f531c8509133")
                         },
                         new
                         {
-                            ImageId = new Guid("507f2f7d-a376-4ae2-a25a-1c418e776ab6"),
+                            ImageId = new Guid("b3304c1d-bc14-4fd2-a916-24458b31fb1e"),
                             ImageUrl = "/images/Products/hayabusa-boxing-gloves/hayabusa-boxing-gloves-3.png",
-                            ProductId = new Guid("b8f29bd2-363a-4f64-84c6-e272e838d00e")
+                            ProductId = new Guid("05fdb469-3891-4f31-8fb2-f531c8509133")
                         },
                         new
                         {
-                            ImageId = new Guid("1ea8d3fb-ffd8-4b63-aa83-5de902a52cec"),
+                            ImageId = new Guid("45e27749-9a74-490c-b778-caa9c3936a41"),
                             ImageUrl = "/images/Products/venum-challenger-gloves/venum-challenger-gloves-1.png",
-                            ProductId = new Guid("a0072c0f-2c8c-4782-958a-1d00703fe406")
+                            ProductId = new Guid("e2fb6902-f7fe-47cc-bbae-7886a7c89360")
                         },
                         new
                         {
-                            ImageId = new Guid("ac0cc2f3-3509-4b2f-b666-a7b81c918a63"),
+                            ImageId = new Guid("6c1c02a0-2da6-48ae-839e-21a74e53fe46"),
                             ImageUrl = "/images/Products/venum-challenger-gloves/venum-challenger-gloves-2.png",
-                            ProductId = new Guid("a0072c0f-2c8c-4782-958a-1d00703fe406")
+                            ProductId = new Guid("e2fb6902-f7fe-47cc-bbae-7886a7c89360")
                         },
                         new
                         {
-                            ImageId = new Guid("04845ee6-3827-47bf-bbe9-83dcc36bf037"),
+                            ImageId = new Guid("d1ef0617-8090-4899-9a01-a3221e89da78"),
                             ImageUrl = "/images/Products/venum-challenger-gloves/venum-challenger-gloves-3.png",
-                            ProductId = new Guid("a0072c0f-2c8c-4782-958a-1d00703fe406")
+                            ProductId = new Guid("e2fb6902-f7fe-47cc-bbae-7886a7c89360")
                         },
                         new
                         {
-                            ImageId = new Guid("d882715d-b3a2-453a-a89e-5f43572cdde8"),
+                            ImageId = new Guid("38027a90-2ab1-4fd7-8a62-f7b114ed7352"),
                             ImageUrl = "/images/Products/title-boxing-bag/title-boxing-bag-1.png",
-                            ProductId = new Guid("fd2bd1a9-b7ee-41df-b9ff-6ce44bbf2521")
+                            ProductId = new Guid("79868aab-bc98-4628-8443-509173147add")
                         },
                         new
                         {
-                            ImageId = new Guid("be9adf42-4a3d-4203-979c-27306a0eb6aa"),
+                            ImageId = new Guid("b414f226-e2c5-4a4c-ae7b-cd2e159499a8"),
                             ImageUrl = "/images/Products/title-boxing-bag/title-boxing-bag-2.png",
-                            ProductId = new Guid("fd2bd1a9-b7ee-41df-b9ff-6ce44bbf2521")
+                            ProductId = new Guid("79868aab-bc98-4628-8443-509173147add")
                         },
                         new
                         {
-                            ImageId = new Guid("96289231-200c-4ed0-8953-8bf9d5c17cfd"),
+                            ImageId = new Guid("214f7ab1-365d-4493-bc49-fb4c1e224116"),
                             ImageUrl = "/images/Products/title-boxing-bag/title-boxing-bag-3.png",
-                            ProductId = new Guid("fd2bd1a9-b7ee-41df-b9ff-6ce44bbf2521")
+                            ProductId = new Guid("79868aab-bc98-4628-8443-509173147add")
                         },
                         new
                         {
-                            ImageId = new Guid("4a559fbb-9f2e-425a-b414-9643047ea641"),
+                            ImageId = new Guid("07e67631-c914-4c6d-99bc-6f9f0c53a6c1"),
                             ImageUrl = "/images/Products/century-kickboxing-shorts/century-kickboxing-shorts-1.png",
-                            ProductId = new Guid("dcddba1b-acc2-4089-b25e-227f99f47c6f")
+                            ProductId = new Guid("9e2577a1-34d4-4255-8a3a-9736db4f1d0a")
                         },
                         new
                         {
-                            ImageId = new Guid("bf1a372a-e448-46df-ac1d-6e13cef0cc0a"),
+                            ImageId = new Guid("e36c6c52-e742-410b-a23f-3233cdbeefa6"),
                             ImageUrl = "/images/Products/century-kickboxing-shorts/century-kickboxing-shorts-2.png",
-                            ProductId = new Guid("dcddba1b-acc2-4089-b25e-227f99f47c6f")
+                            ProductId = new Guid("9e2577a1-34d4-4255-8a3a-9736db4f1d0a")
                         },
                         new
                         {
-                            ImageId = new Guid("ca5be104-a244-4824-b278-45fcbd14ca5a"),
+                            ImageId = new Guid("253f38ec-72c0-42a3-97a5-2b68b40f33cd"),
                             ImageUrl = "/images/Products/century-kickboxing-shorts/century-kickboxing-shorts-3.png",
-                            ProductId = new Guid("dcddba1b-acc2-4089-b25e-227f99f47c6f")
+                            ProductId = new Guid("9e2577a1-34d4-4255-8a3a-9736db4f1d0a")
                         },
                         new
                         {
-                            ImageId = new Guid("4e5a5d86-c32f-4c43-9ff4-60f750c56445"),
+                            ImageId = new Guid("fbb0fd62-0f0f-415d-9811-0e5a6fe74a1a"),
                             ImageUrl = "/images/Products/sanabul-shin-guards/sanabul-shin-guards-1.png",
-                            ProductId = new Guid("60c9bcda-5bd2-420b-86b3-d0294c4e241e")
+                            ProductId = new Guid("7b2bc133-a5e6-43e3-9886-b1b34625e680")
                         },
                         new
                         {
-                            ImageId = new Guid("8810cac7-485e-4ebc-92d9-f97b8a8063f3"),
+                            ImageId = new Guid("29113fc5-119a-418b-b222-dbf6e1b5ecba"),
                             ImageUrl = "/images/Products/sanabul-shin-guards/sanabul-shin-guards-2.png",
-                            ProductId = new Guid("60c9bcda-5bd2-420b-86b3-d0294c4e241e")
+                            ProductId = new Guid("7b2bc133-a5e6-43e3-9886-b1b34625e680")
                         },
                         new
                         {
-                            ImageId = new Guid("39afc354-148f-4321-bf83-04b24cfddc09"),
+                            ImageId = new Guid("1eb982c2-0003-4564-9e8e-0331b2ec2141"),
                             ImageUrl = "/images/Products/sanabul-shin-guards/sanabul-shin-guards-3.png",
-                            ProductId = new Guid("60c9bcda-5bd2-420b-86b3-d0294c4e241e")
+                            ProductId = new Guid("7b2bc133-a5e6-43e3-9886-b1b34625e680")
                         },
                         new
                         {
-                            ImageId = new Guid("0ea7014c-97f6-4a19-8b08-f9b059fa3985"),
+                            ImageId = new Guid("3692639a-b49f-43fc-9f5c-4ef05ead6d2f"),
                             ImageUrl = "/images/Products/twins-special-headgear/twins-special-headgear-1.png",
-                            ProductId = new Guid("894613c6-97f7-4a7a-ad74-74ae66a3f84d")
+                            ProductId = new Guid("e92b007b-5106-42c3-9234-11cf251a7747")
                         },
                         new
                         {
-                            ImageId = new Guid("187a5c29-14b4-4123-a631-aa68d1b805f6"),
+                            ImageId = new Guid("23bb28f5-77bd-4a10-8885-612983a453e5"),
                             ImageUrl = "/images/Products/twins-special-headgear/twins-special-headgear-2.png",
-                            ProductId = new Guid("894613c6-97f7-4a7a-ad74-74ae66a3f84d")
+                            ProductId = new Guid("e92b007b-5106-42c3-9234-11cf251a7747")
                         },
                         new
                         {
-                            ImageId = new Guid("0c6f8b87-66bd-4746-81a3-b38f14e7dbb8"),
+                            ImageId = new Guid("acd78b1a-4034-4cc0-a23f-76ff3c9752d1"),
                             ImageUrl = "/images/Products/twins-special-headgear/twins-shin-headgear-3.png",
-                            ProductId = new Guid("894613c6-97f7-4a7a-ad74-74ae66a3f84d")
+                            ProductId = new Guid("e92b007b-5106-42c3-9234-11cf251a7747")
                         },
                         new
                         {
-                            ImageId = new Guid("90171adc-e7a9-4680-80ac-91a7026e4444"),
+                            ImageId = new Guid("57cd91eb-a414-43c9-8d12-debfd1dbb29d"),
                             ImageUrl = "/images/Products/everlast-hand-wraps/everlast-hand-wraps-1.png",
-                            ProductId = new Guid("a83d310d-9c10-4f51-a130-a8d9178e7df6")
+                            ProductId = new Guid("8539ecb7-9af5-4bbe-a8d4-a05f517f1a21")
                         },
                         new
                         {
-                            ImageId = new Guid("8e64fa31-bcc1-404f-bfc6-454ae196374b"),
+                            ImageId = new Guid("b1f38df7-41cc-46c5-8c39-52028c81e4ae"),
                             ImageUrl = "/images/Products/everlast-hand-wraps/everlast-hand-wraps-2.png",
-                            ProductId = new Guid("a83d310d-9c10-4f51-a130-a8d9178e7df6")
+                            ProductId = new Guid("8539ecb7-9af5-4bbe-a8d4-a05f517f1a21")
                         },
                         new
                         {
-                            ImageId = new Guid("e6b42b87-624f-4ea3-b50c-e82eabf6b6d1"),
+                            ImageId = new Guid("8a2ed08c-f4ac-4d8a-aaae-43a26345f003"),
                             ImageUrl = "/images/Products/everlast-hand-wraps/everlast-hand-wraps-3.png",
-                            ProductId = new Guid("a83d310d-9c10-4f51-a130-a8d9178e7df6")
+                            ProductId = new Guid("8539ecb7-9af5-4bbe-a8d4-a05f517f1a21")
                         },
                         new
                         {
-                            ImageId = new Guid("6c68e807-0cd8-4c65-ae59-ac9d5032a9dd"),
+                            ImageId = new Guid("8af0069f-0975-4aed-acbc-ada4aea197b7"),
                             ImageUrl = "/images/Products/ringside-punching-bag/ringside-punching-bag-1.png",
-                            ProductId = new Guid("8c5c53e0-5632-4201-8ed2-a348638dafa7")
+                            ProductId = new Guid("1edcc73b-e2fe-4ba8-a3e7-6795d0f00b03")
                         },
                         new
                         {
-                            ImageId = new Guid("c7b2aabf-a963-4474-abeb-d3bcca2459f2"),
+                            ImageId = new Guid("934cfd85-1722-49fb-b1cc-b0299b428d04"),
                             ImageUrl = "/images/Products/ringside-punching-bag/ringside-punching-bag-2.png",
-                            ProductId = new Guid("8c5c53e0-5632-4201-8ed2-a348638dafa7")
+                            ProductId = new Guid("1edcc73b-e2fe-4ba8-a3e7-6795d0f00b03")
                         },
                         new
                         {
-                            ImageId = new Guid("c1f133ec-eab1-4c85-a12c-d745a2a2d55b"),
+                            ImageId = new Guid("07863c4f-d2f9-4a6c-92da-d8167f1f23dd"),
                             ImageUrl = "/images/Products/ringside-punching-bag/ringside-punching-bag-3.png",
-                            ProductId = new Guid("8c5c53e0-5632-4201-8ed2-a348638dafa7")
+                            ProductId = new Guid("1edcc73b-e2fe-4ba8-a3e7-6795d0f00b03")
                         },
                         new
                         {
-                            ImageId = new Guid("f9ad83e7-9445-4d43-b906-b9ddf1afcef0"),
+                            ImageId = new Guid("de48f1b6-7501-4e17-a6df-5467dfdfe13b"),
                             ImageUrl = "/images/Products/rdx-boxing-shoes/rdx-boxing-shoes-1.png",
-                            ProductId = new Guid("33e60ab1-75f5-422a-a6b5-6a9461057834")
+                            ProductId = new Guid("47ab64e1-fd21-435e-b4e4-aa54947a2005")
                         },
                         new
                         {
-                            ImageId = new Guid("ca80141b-bcfa-424b-a876-18a3f58fce82"),
+                            ImageId = new Guid("91beb3bb-1fd3-408a-a6a2-036cdfa09872"),
                             ImageUrl = "/images/Products/rdx-boxing-shoes/rdx-boxing-shoes-2.png",
-                            ProductId = new Guid("33e60ab1-75f5-422a-a6b5-6a9461057834")
+                            ProductId = new Guid("47ab64e1-fd21-435e-b4e4-aa54947a2005")
                         },
                         new
                         {
-                            ImageId = new Guid("ee97fd1c-f166-47ed-9227-e289fcf7415c"),
+                            ImageId = new Guid("830ec297-ca79-49fe-8e59-4c06bcd69d89"),
                             ImageUrl = "/images/Products/rdx-boxing-shoes/rdx-boxing-shoes-3.png",
-                            ProductId = new Guid("33e60ab1-75f5-422a-a6b5-6a9461057834")
+                            ProductId = new Guid("47ab64e1-fd21-435e-b4e4-aa54947a2005")
                         },
                         new
                         {
-                            ImageId = new Guid("2d91a990-e13c-4ff9-8c2b-59f1e1e2f9c4"),
+                            ImageId = new Guid("302f1dcd-9088-422c-a6ea-5c409ec42ae3"),
                             ImageUrl = "/images/Products/venum-challenger-shin-guards/venum-challenger-shin-guards-1.png",
-                            ProductId = new Guid("b0a1b119-967d-4e0f-8383-363e4e4095b4")
+                            ProductId = new Guid("254fecf8-1739-444c-afb6-af4a29a262f0")
                         },
                         new
                         {
-                            ImageId = new Guid("e65a4c07-6aa3-4d16-aadf-ae563d83071d"),
+                            ImageId = new Guid("61212ebf-20fa-4a3a-b48a-7d31b264fa40"),
                             ImageUrl = "/images/Products/venum-challenger-shin-guards/venum-challenger-shin-guards-2.png",
-                            ProductId = new Guid("b0a1b119-967d-4e0f-8383-363e4e4095b4")
+                            ProductId = new Guid("254fecf8-1739-444c-afb6-af4a29a262f0")
                         },
                         new
                         {
-                            ImageId = new Guid("d37e9a21-27e5-47d3-b4f5-4b3706b89268"),
+                            ImageId = new Guid("28526d47-118b-49ae-8669-9a8445112526"),
                             ImageUrl = "/images/Products/venum-challenger-shin-guards/venum-challenger-shin-guards-3.png",
-                            ProductId = new Guid("b0a1b119-967d-4e0f-8383-363e4e4095b4")
+                            ProductId = new Guid("254fecf8-1739-444c-afb6-af4a29a262f0")
                         },
                         new
                         {
-                            ImageId = new Guid("c69a17a7-6bcf-4ede-9008-891f4ff98f4a"),
+                            ImageId = new Guid("faae7f28-1118-401a-9ac7-c5fbc1fdbe38"),
                             ImageUrl = "/images/Products/fairtex-muay-thai-shorts/fairtex-muay-thai-shorts-1.png",
-                            ProductId = new Guid("40eae73d-3f82-4ad1-8af3-a77fab3c5982")
+                            ProductId = new Guid("184fb352-6c6e-4757-b60b-7478e5759508")
                         },
                         new
                         {
-                            ImageId = new Guid("fc45e725-7838-4032-9882-8df1212ac486"),
+                            ImageId = new Guid("db071a02-6d67-4ebf-acbc-e162fb9acabc"),
                             ImageUrl = "/images/Products/fairtex-muay-thai-shorts/fairtex-muay-thai-shorts-2.png",
-                            ProductId = new Guid("40eae73d-3f82-4ad1-8af3-a77fab3c5982")
+                            ProductId = new Guid("184fb352-6c6e-4757-b60b-7478e5759508")
                         },
                         new
                         {
-                            ImageId = new Guid("9ce0ab17-7567-43f6-a709-29089f85e1d1"),
+                            ImageId = new Guid("c426e664-2138-4e45-859e-635f98f79c9e"),
                             ImageUrl = "/images/Products/fairtex-muay-thai-shorts/fairtex-muay-thai-shorts-3.png",
-                            ProductId = new Guid("40eae73d-3f82-4ad1-8af3-a77fab3c5982")
+                            ProductId = new Guid("184fb352-6c6e-4757-b60b-7478e5759508")
                         },
                         new
                         {
-                            ImageId = new Guid("a7273c9b-dc7b-4404-8dae-ad44d71b5f8c"),
+                            ImageId = new Guid("85fa2087-7b82-41be-9b06-8509751ca042"),
                             ImageUrl = "/images/Products/title-boxing-gloves/title-boxing-gloves-1.png",
-                            ProductId = new Guid("660ab8ef-62a5-49f9-b78f-8e5129b1ad6d")
+                            ProductId = new Guid("77101c8e-a057-4f16-b53d-b558822e12ec")
                         },
                         new
                         {
-                            ImageId = new Guid("c9bb1b09-02bb-4df5-9b70-03deac93e1ab"),
+                            ImageId = new Guid("dd9423ea-0b1c-4c2c-8fb4-f8548d049f44"),
                             ImageUrl = "/images/Products/title-boxing-gloves/title-boxing-gloves-2.png",
-                            ProductId = new Guid("660ab8ef-62a5-49f9-b78f-8e5129b1ad6d")
+                            ProductId = new Guid("77101c8e-a057-4f16-b53d-b558822e12ec")
                         },
                         new
                         {
-                            ImageId = new Guid("4d798757-37a1-4c0f-b8b6-4470737e8a04"),
+                            ImageId = new Guid("ccd56e84-2756-40e7-b2c5-9de6a922a44f"),
                             ImageUrl = "/images/Products/title-boxing-gloves/title-boxing-gloves-3.png",
-                            ProductId = new Guid("660ab8ef-62a5-49f9-b78f-8e5129b1ad6d")
+                            ProductId = new Guid("77101c8e-a057-4f16-b53d-b558822e12ec")
                         },
                         new
                         {
-                            ImageId = new Guid("32ee6e7c-18a6-4a4f-8479-4e91ed00a43c"),
+                            ImageId = new Guid("175caa7b-cb13-4088-835d-cc1047d50b3c"),
                             ImageUrl = "/images/Products/everlasr-pro-headgear/everlast-headgear-1.png",
-                            ProductId = new Guid("3905538a-060d-42f1-90e7-d6f4f6ea8023")
+                            ProductId = new Guid("a767dd5b-b242-43ac-a857-c0a971b27ace")
                         },
                         new
                         {
-                            ImageId = new Guid("06969107-a194-4a22-948a-970e852d7a97"),
+                            ImageId = new Guid("3094514e-8d92-4f15-bef2-aac5505449ec"),
                             ImageUrl = "/images/Products/everlasr-pro-headgear/everlast-headgear-2.png",
-                            ProductId = new Guid("3905538a-060d-42f1-90e7-d6f4f6ea8023")
+                            ProductId = new Guid("a767dd5b-b242-43ac-a857-c0a971b27ace")
                         },
                         new
                         {
-                            ImageId = new Guid("db2ba12a-1896-48a4-b74a-9e122c394bd9"),
+                            ImageId = new Guid("b6377182-d60e-40c1-9713-34bbbe5d5c22"),
                             ImageUrl = "/images/Products/everlasr-pro-headgear/everlast-headgear-3.png",
-                            ProductId = new Guid("3905538a-060d-42f1-90e7-d6f4f6ea8023")
+                            ProductId = new Guid("a767dd5b-b242-43ac-a857-c0a971b27ace")
                         });
                 });
 
