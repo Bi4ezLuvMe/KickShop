@@ -14,31 +14,26 @@ namespace KickShop.Controllers
     {
         private readonly ICartService cartService;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly KickShopDbContext context;
 
-        public CartController(ICartService cartService, UserManager<ApplicationUser> userManager,KickShopDbContext _context)
+        public CartController(ICartService cartService, UserManager<ApplicationUser> userManager)
         {
             this.cartService = cartService;
             this.userManager = userManager;
-            this.context = _context;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = userManager.GetUserId(User);
-            var cartViewModel = await cartService.GetCartViewModelAsync(userId);
+            var cartViewModel = await cartService.GetCartViewModelAsync(GetUserId());
             return View(cartViewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddToCart(string productId, int quantity, string selectedSize)
         {
-            var userId = userManager.GetUserId(User);
-
             try
             {
-                await cartService.AddToCartAsync(userId, productId, quantity, selectedSize);
+                await cartService.AddToCartAsync(GetUserId(), productId, quantity, selectedSize);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -51,11 +46,9 @@ namespace KickShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveFromCart(string id)
         {
-            var userId = userManager.GetUserId(User);
-
             try
             {
-                await cartService.RemoveFromCartAsync(userId, id);
+                await cartService.RemoveFromCartAsync(GetUserId(), id);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -66,24 +59,16 @@ namespace KickShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Checkout()
         {
-            var userId = userManager.GetUserId(User);
-
-            var cart = await GetUserCartAsync(userId);
-
-            if (cart.CartItems.Count == 0)
+            try
             {
-                TempData["Message"] = "Your cart is empty!";
+                var checkoutViewModel = await cartService.GetCheckoutSummaryAsync(GetUserId());
+                return View(checkoutViewModel);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Message"] = ex.Message;
                 return RedirectToAction("Index", "Cart");
             }
-
-            var checkoutViewModel = new CheckoutSummaryViewModel
-            {
-                ProductCount = cart.CartItems.Count,
-                TotalPrice = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price),
-                BillingAddress = new BillingAddressViewModel()
-            };
-
-            return View(checkoutViewModel);
         }
 
         [HttpPost]
@@ -91,82 +76,23 @@ namespace KickShop.Controllers
         public async Task<IActionResult> PlaceOrder(CheckoutViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View("Checkout", model);
-            }
 
-            var userId = userManager.GetUserId(User);
-
-            var cart = await GetUserCartAsync(userId);
-
-            if (cart.CartItems.Count == 0)
+            try
             {
-                TempData["Message"] = "Your cart is empty!";
+                await cartService.PlaceOrderAsync(GetUserId(), model);
+                TempData["Message"] = "Order placed successfully!";
+                return RedirectToAction("OrderConfirmation");
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Message"] = ex.Message;
                 return RedirectToAction("Index", "Cart");
             }
-
-            // Create Order
-            var order = new Order
-            {
-                TotalAmount = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price),
-                BillingAddress = model.BillingAddress.Address,
-                BillingCity = model.BillingAddress.City,
-                BillingName = model.BillingAddress.FullName,
-                BillingPostalCode = model.BillingAddress.ZipCode,
-            };
-
-            await context.Orders.AddAsync(order);
-
-            // Link Order to Customer
-            var customerOrder = new CustomerOrder
-            {
-                CustomerId = userId,
-                OrderId = order.OrderId
-            };
-
-            await context.CustomersOrders.AddAsync(customerOrder);
-
-            // Clear Cart
-            context.CartsItems.RemoveRange(cart.CartItems);
-            await context.SaveChangesAsync();
-
-            TempData["Message"] = "Order placed successfully!";
-            return RedirectToAction("OrderConfirmation", new { orderId = order.OrderId });
         }
-
-        [HttpGet]
-        public async Task<IActionResult> OrderConfirmation(Guid orderId)
+        private string GetUserId()
         {
-            var order = await context.Orders.FindAsync(orderId);
-
-            if (order == null)
-            {
-                return NotFound("Order not found!");
-            }
-
-            var model = new OrderConfirmationViewModel
-            {
-                OrderId = order.OrderId,
-                OrderDate = order.OrderDate,
-                TotalAmount = order.TotalAmount
-            };
-
-            return View(model);
-        }
-        private async Task<ShoppingCart> GetUserCartAsync(string userId)
-        {
-            ShoppingCart? cart = await context.ShoppingCarts.Include(c => c.CartItems)
-                              .ThenInclude(ci => ci.Product)
-                              .FirstOrDefaultAsync(c => c.CustomerId == userId);
-
-            if (cart == null)
-            {
-                cart = new ShoppingCart { CustomerId = userId };
-                await context.ShoppingCarts.AddAsync(cart);
-                await context.SaveChangesAsync();
-            }
-
-            return cart;
+            return userManager.GetUserId(User);
         }
     }
 }

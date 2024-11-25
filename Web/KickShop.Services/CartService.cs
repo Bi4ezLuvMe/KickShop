@@ -2,6 +2,9 @@
 using KickShop.Models;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
+using KickShop.ViewModels.Cart;
+using KickShop.ViewModels.Order;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -12,10 +15,12 @@ namespace KickShop.Services
     public class CartService : ICartService
     {
         private readonly KickShopDbContext context;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public CartService(KickShopDbContext context)
+        public CartService(KickShopDbContext _context, UserManager<ApplicationUser> _userManager)
         {
-            this.context = context;
+            this.context = _context;
+            this.userManager = _userManager;
         }
 
         public async Task<CartViewModel> GetCartViewModelAsync(string userId)
@@ -94,6 +99,50 @@ namespace KickShop.Services
             }
         }
 
+        public async Task<CheckoutSummaryViewModel> GetCheckoutSummaryAsync(string userId)
+        {
+            var cart = await GetUserCartAsync(userId);
+
+            if (!cart.CartItems.Any())
+                throw new InvalidOperationException("Cart is empty!");
+
+            return new CheckoutSummaryViewModel
+            {
+                ProductCount = cart.CartItems.Count,
+                TotalPrice = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price),
+                BillingAddress = new BillingAddressViewModel()
+            };
+        }
+
+        public async Task PlaceOrderAsync(string userId, CheckoutViewModel model)
+        {
+            var cart = await GetUserCartAsync(userId);
+
+            if (!cart.CartItems.Any())
+                throw new InvalidOperationException("Cart is empty!");
+
+            var order = new Order
+            {
+                TotalAmount = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price),
+                BillingAddress = model.BillingAddress.Address,
+                BillingCity = model.BillingAddress.City,
+                BillingName = model.BillingAddress.FullName,
+                BillingPostalCode = model.BillingAddress.ZipCode,
+            };
+
+            await context.Orders.AddAsync(order);
+
+            var customerOrder = new CustomerOrder
+            {
+                CustomerId = userId,
+                OrderId = order.OrderId
+            };
+
+            await context.CustomersOrders.AddAsync(customerOrder);
+
+            context.CartsItems.RemoveRange(cart.CartItems);
+            await context.SaveChangesAsync();
+        }
 
         private async Task<ShoppingCart> GetUserCartAsync(string userId)
         {

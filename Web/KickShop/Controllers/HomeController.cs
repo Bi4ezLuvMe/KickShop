@@ -1,5 +1,6 @@
 using KickShop.Data;
 using KickShop.Models;
+using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using KickShop.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
@@ -10,16 +11,16 @@ namespace KickShop.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly KickShopDbContext context;
+        private readonly IHomeService homeService;
 
-        public HomeController(KickShopDbContext _context)
+        public HomeController(IHomeService _homeService)
         {
-            this.context = _context;
+            this.homeService = _homeService;
         }
 
         public async Task<IActionResult> Index()
         {
-            List<Product> productModels = await context.Products.Take(3).ToListAsync();
+            List<Product> productModels = await homeService.GetFeaturedProducts();
 
             return View(productModels);
         }
