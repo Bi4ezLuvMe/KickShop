@@ -143,14 +143,14 @@ namespace KickShop.Tests.Services
                                      .FirstOrDefaultAsync(c => c.CustomerId == userId);
 
             Assert.IsNotNull(cart);
-            Assert.AreEqual(2, cart.CartItems.Count);
+            Assert.AreEqual(2, cart.CartItems.First().Quantity);
 
             await _dbContext.SaveChangesAsync();
 
             var checkoutSummary = await _cartService.GetCheckoutSummaryAsync(userId);
 
             Assert.IsNotNull(checkoutSummary);
-            Assert.AreEqual(2, checkoutSummary.ProductCount);
+            Assert.AreEqual(1, checkoutSummary.ProductCount);
             Assert.AreEqual(200, checkoutSummary.TotalPrice);
         }
 

@@ -1,6 +1,7 @@
 ﻿using KickShop.Models;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KickShop.Controllers
@@ -15,6 +16,7 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add()
         {
             CategoryAddViewModel model = new CategoryAddViewModel();
@@ -24,6 +26,7 @@ namespace KickShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add(CategoryAddViewModel model)
         {
             if (!ModelState.IsValid)
@@ -35,12 +38,14 @@ namespace KickShop.Controllers
             return RedirectToAction(nameof(Manage));
         }
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Manage(string query)
         {
             List<Category> categories = await categoryService.GetAllCategoriesAsync(query);
             return View(categories);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(string id)
         {
             CategoryViewModel? category = await categoryService.GetCategoryDetailsAsync(id);
@@ -54,6 +59,7 @@ namespace KickShop.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(CategoryViewModel model)
         {
             await categoryService.DeleteCategoryAsync(model.CategoryId);
@@ -61,6 +67,7 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(string id)
         {
             CategoryEditViewModel? model = await categoryService.GetCategoryForEditAsync(id);
@@ -75,6 +82,7 @@ namespace KickShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(CategoryEditViewModel model)
         {
             if (!ModelState.IsValid)

@@ -2,6 +2,7 @@
 using KickShop.Services;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KickShop.Controllers
@@ -16,6 +17,7 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add()
         {
             BrandAddViewModel model = new BrandAddViewModel();
@@ -24,6 +26,7 @@ namespace KickShop.Controllers
         }
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add(BrandAddViewModel model)
         {
             if (!ModelState.IsValid)
@@ -35,12 +38,14 @@ namespace KickShop.Controllers
             return RedirectToAction(nameof(Manage));
         }
         [HttpGet]
+        [Authorize(Roles ="Admin,Manager")]
         public async Task<IActionResult> Manage(string query)
         {
             List<Brand> brands = await brandService.GetAllBrandsAsync(query);
             return View(brands);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(string id)
         {
             BrandDetailsViewModel? brand = await brandService.GetBrandDetailsAsync(id);
@@ -54,6 +59,7 @@ namespace KickShop.Controllers
         }
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(BrandDetailsViewModel model)
         {
             await brandService.DeleteBrandAsync(model.BrandId.ToString());
@@ -73,6 +79,7 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(string id)
         {
             BrandEditViewModel? model = await brandService.GetBrandForEditAsync(id);
@@ -86,6 +93,7 @@ namespace KickShop.Controllers
         }
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(BrandEditViewModel model)
         {
             if (!ModelState.IsValid)

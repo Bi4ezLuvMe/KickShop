@@ -9,4 +9,5 @@ public class ProfileViewModel
     public string Phone { get; set; }
     public IFormFile ImageFile { get; set; } 
     public string Image { get; set; }
+    public IList<string> Roles { get; set; } = new List<string>();
 }

@@ -1,4 +1,5 @@
 ﻿using KickShop.Services.Service_Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 public class OrderController : Controller
@@ -19,6 +20,7 @@ public class OrderController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> Delete(Guid id)
     {
         try

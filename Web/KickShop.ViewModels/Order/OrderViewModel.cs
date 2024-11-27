@@ -10,6 +10,5 @@
         public string BillingAddress { get; set; }
         public string BillingCity { get; set; }
         public string BillingPostalCode { get; set; }
-        public string BillingCountry { get; set; }
     }
 }

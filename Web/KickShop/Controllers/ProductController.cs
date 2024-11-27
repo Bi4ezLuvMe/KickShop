@@ -4,6 +4,7 @@ using KickShop.Services.Service_Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using KickShop.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KickShop.Controllers
 {
@@ -21,6 +22,7 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add()
         {
             ProductAddViewModel model = new ProductAddViewModel();
@@ -29,6 +31,7 @@ namespace KickShop.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add(ProductAddViewModel model)
         {
             if (!ModelState.IsValid)
@@ -42,6 +45,7 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(string id)
         {
             ProductEditViewModel? model = await productService.GetProductForEditAsync(id);
@@ -56,6 +60,7 @@ namespace KickShop.Controllers
         }
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(ProductEditViewModel model)
         {
             if (!ModelState.IsValid)
@@ -107,11 +112,12 @@ namespace KickShop.Controllers
             {
                 return RedirectToAction(nameof(All));
             }
-
+            //return View("~/Views/Shared/Errors/InternalServerError.cshtml");
             return View(product);
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Manage(string query)
         {
             List<Product> products = await productService.GetAllProductsAsync(null,query);
@@ -119,6 +125,7 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(string id)
         {
             Product? product = await productService.GetProductByIdAsync(id);
@@ -132,6 +139,7 @@ namespace KickShop.Controllers
         }
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(Product product)
         {
             await productService.DeleteProductAsync(product.ProductId.ToString());

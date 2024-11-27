@@ -16,7 +16,7 @@ namespace KickShop.Services
             this.context = _context;
         }
 
-        public async Task AddProductAsync(ProductAddViewModel model)
+        public async Task<Product> AddProductAsync(ProductAddViewModel model)
         {
             Product product = new Product
             {
@@ -32,6 +32,8 @@ namespace KickShop.Services
 
             await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
+
+            return product;
         }
 
         public async Task<ProductEditViewModel?> GetProductForEditAsync(string id)
@@ -89,7 +91,6 @@ namespace KickShop.Services
             List<Product> products = await context.Products
                 .Include(p => p.Brand)
                 .Include(p=>p.Category)
-                .AsNoTracking()
                 .Where(p => !p.IsDeleted)
                .ToListAsync();
 
