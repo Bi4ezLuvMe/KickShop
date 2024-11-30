@@ -33,10 +33,22 @@ namespace KickShop.Services
                 Name = model.Name,
                 Address = model.Address,
                 PhoneNumber = model.PhoneNumber,
-                ImageUrl = model.ImageUrl,
                 Country = model.Country,
             };
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                string fileName = Guid.NewGuid() + Path.GetExtension(model.Image.FileName);
+                string filePath = Path.Combine("wwwroot/images/Categories", fileName);
 
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                brand.ImageUrl = "/images/Categories/" + fileName;
+            }
             await context.Brands.AddAsync(brand);
             await context.SaveChangesAsync();
         }
@@ -54,9 +66,31 @@ namespace KickShop.Services
             brand.Address = model.Address;
             brand.BrandId = model.BrandId;
             brand.PhoneNumber = model.PhoneNumber;
-            brand.ImageUrl = model.ImageUrl;
             brand.Country = model.Country;
 
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                if (!string.IsNullOrEmpty(brand.ImageUrl))
+                {
+                    string oldFilePath = Path.Combine("wwwroot", brand.ImageUrl.TrimStart('/'));
+                    if (File.Exists(oldFilePath))
+                    {
+                        File.Delete(oldFilePath);
+                    }
+                }
+
+                string fileName = Guid.NewGuid() + Path.GetExtension(model.Image.FileName);
+                string filePath = Path.Combine("wwwroot/images/Categories", fileName);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                brand.ImageUrl = "/images/Categories/" + fileName;
+            }
             await context.SaveChangesAsync();
             return true;
         }
@@ -87,6 +121,7 @@ namespace KickShop.Services
                 Address = brand.Address,
                 ImageUrl = brand.ImageUrl,
                 PhoneNumber = brand.PhoneNumber,
+                Description = brand.Description
             };
         }
 
@@ -113,7 +148,7 @@ namespace KickShop.Services
                 Name = brand.Name,
                 Address = brand.Address,
                 PhoneNumber = brand.PhoneNumber,
-                ImageUrl = brand.ImageUrl,
+                OldImageUrl = brand.ImageUrl,
                 Country = brand.Country,
             };
         }

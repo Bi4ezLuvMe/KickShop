@@ -18,6 +18,8 @@
 
             public const int ImageUrlMinLength = 5;
             public const int ImageUrlMaxLength = 200;
+
+            public const int DescriptionMaxLength = 1000;
         }
         public static class CartItem
         {

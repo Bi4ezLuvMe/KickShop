@@ -3,6 +3,9 @@ using KickShop.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using KickShop.Models;
+using KickShop.ViewModels.Product;
 
 namespace KickShop.ViewModels
 {
@@ -25,11 +28,13 @@ namespace KickShop.ViewModels
         [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax)]
         public int StockQuantity { get; set; }
         public string? MainImageUrl { get; set; }
+        public List<IFormFile>? Images { get; set; }
+        public List<string>? ExistingImages { get; set; }
         [Required]
         public Guid CategoryId { get; set; }
         [Required]
         public Guid BrandId { get; set; }
         [Required]
-        public List<Sizes> Sizes { get; set; }
+        public List<ProductSizeViewModel> Sizes { get; set; } = new List<ProductSizeViewModel>();
     }
 }

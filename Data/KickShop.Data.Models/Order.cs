@@ -38,6 +38,9 @@ namespace KickShop.Models
         [Comment("Soft Delete Property")]
         [Required]
         public bool IsDeleted { get; set; }
+        [Comment("The Status Of The Order")]
+        [Required]
+        public string Status { get; set; }
         public List<CustomerOrder> CustomerOrders { get; set; }
     }
 }

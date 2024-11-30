@@ -31,25 +31,25 @@
             <form asp-action="PlaceOrder" method="post">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label asp-for="BillingAddress.FullName" class="form-label">Full Name</label>
+                        <label asp-for="BillingAddress.FullName" class="form-label">Full Name*</label>
                         <input asp-for="BillingAddress.FullName" class="form-control" required />
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label asp-for="BillingAddress.Email" class="form-label">Email</label>
+                        <label asp-for="BillingAddress.Email" class="form-label">Email*</label>
                         <input asp-for="BillingAddress.Email" type="email" class="form-control" required />
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="BillingAddress.Address" class="form-label">Address</label>
+                    <label asp-for="BillingAddress.Address" class="form-label">Address*</label>
                     <input asp-for="BillingAddress.Address" class="form-control" required />
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label asp-for="BillingAddress.City" class="form-label">City</label>
+                        <label asp-for="BillingAddress.City" class="form-label">City*</label>
                         <input asp-for="BillingAddress.City" class="form-control" required />
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label asp-for="BillingAddress.ZipCode" class="form-label">Zip Code</label>
+                        <label asp-for="BillingAddress.ZipCode" class="form-label">Zip Code*</label>
                         <input asp-for="BillingAddress.ZipCode" class="form-control" required />
                     </div>
                 </div>

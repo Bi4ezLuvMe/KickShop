@@ -1,4 +1,5 @@
 ﻿using KickShop.Common;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace KickShop.ViewModels
@@ -11,10 +12,9 @@ namespace KickShop.ViewModels
         [Required]
         [MinLength(ModelConstants.Category.NameMinLength)]
         [MaxLength(ModelConstants.Category.NameMaxLength)]
-        public string Name { get; set; }
-
-        [MinLength(ModelConstants.Category.ImageUrlMinLength)]
-        [MaxLength(ModelConstants.Category.ImageUrlMaxLength)]
-        public string? ImageUrl { get; set; }
+        public string Name { get; set; } = null!;
+        [Required(ErrorMessage ="Kur")]
+        public IFormFile Image { get; set; } = null!;
+       
     }
 }

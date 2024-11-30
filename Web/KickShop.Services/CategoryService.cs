@@ -31,24 +31,58 @@ namespace KickShop.Services
             Category category = new Category()
             {
                 Name = model.Name,
-                ImageUrl = model.ImageUrl,
             };
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                string fileName = Guid.NewGuid() + Path.GetExtension(model.Image.FileName);
+                string filePath = Path.Combine("wwwroot/images/Categories", fileName);
 
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                category.ImageUrl = "/images/Categories/" + fileName;
+            }
             await context.Categories.AddAsync(category);
             await context.SaveChangesAsync();
         }
 
         public async Task<bool> UpdateCategoryAsync(CategoryEditViewModel model)
         {
-            Category? cateogry = await context.Categories.FindAsync(model.CategoryId);
+            Category? category = await context.Categories.FindAsync(model.CategoryId);
 
-            if (cateogry is null||cateogry.IsDeleted) 
+            if (category is null||category.IsDeleted) 
             { 
                 return false;
             }
 
-            cateogry.Name = model.Name;
-            cateogry.ImageUrl = model.ImageUrl;
+            category.Name = model.Name;
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                if (!string.IsNullOrEmpty(category.ImageUrl))
+                {
+                    string oldFilePath = Path.Combine("wwwroot", category.ImageUrl.TrimStart('/'));
+                    if (File.Exists(oldFilePath))
+                    {
+                        File.Delete(oldFilePath);
+                    }
+                }
+
+                string fileName = Guid.NewGuid() + Path.GetExtension(model.Image.FileName);
+                string filePath = Path.Combine("wwwroot/images/Categories", fileName);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                category.ImageUrl = "/images/Categories/" + fileName;
+            }
 
             await context.SaveChangesAsync();
             return true;
@@ -104,7 +138,7 @@ namespace KickShop.Services
                 return null;
             }
 
-            Category? category = await context.Categories.AsNoTracking().FirstOrDefaultAsync(c=>c.CategoryId==guidId);
+            Category? category = await context.Categories.FirstOrDefaultAsync(c=>c.CategoryId==guidId);
 
             if (category is null || category.IsDeleted)
             {
@@ -115,7 +149,6 @@ namespace KickShop.Services
             {
                 CategoryId= category.CategoryId,
                 Name = category.Name,
-                ImageUrl = category.ImageUrl,
             };
         }
 

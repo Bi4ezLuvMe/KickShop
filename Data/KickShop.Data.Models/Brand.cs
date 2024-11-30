@@ -24,6 +24,8 @@ namespace KickShop.Models
         [MinLength(ModelConstants.Brand.CountryMinLength)]
         [MaxLength(ModelConstants.Brand.CountryMaxLength)]
         public string Country { get; set; }
+        [MaxLength(ModelConstants.Brand.DescriptionMaxLength)]
+        public string? Description { get; set; }
         [Comment("The Address Of The Brand")]
         [Required]
         [MinLength(ModelConstants.Brand.AddressMinLength)]

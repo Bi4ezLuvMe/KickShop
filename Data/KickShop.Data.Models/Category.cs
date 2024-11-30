@@ -25,7 +25,7 @@ namespace KickShop.Models
         [Comment("Image For The Category")]
         [MinLength(ModelConstants.Category.ImageUrlMinLength)]
         [MaxLength(ModelConstants.Category.ImageUrlMaxLength)]
-        public string? ImageUrl { get; set; }
+        public string ImageUrl { get; set; }
         [Comment("Soft Delete Property")]
         [Required]
         public bool IsDeleted { get; set; }

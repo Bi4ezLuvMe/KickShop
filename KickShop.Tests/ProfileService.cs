@@ -1,8 +1,10 @@
-﻿using KickShop.Services;
+﻿using KickShop.Data;
+using KickShop.Services;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -16,6 +18,7 @@ namespace KickShop.Tests
         private IProfileService profileService;
         private Mock<UserManager<ApplicationUser>> userManagerMock;
         private SignInManager<ApplicationUser> signInManager;
+        private KickShopDbContext context;
 
         [SetUp]
         public void Setup()
@@ -23,36 +26,42 @@ namespace KickShop.Tests
             userManagerMock = new Mock<UserManager<ApplicationUser>>(Mock.Of<IUserStore<ApplicationUser>>(),
                 null, new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var httpContextAccessor = Mock.Of<IHttpContextAccessor>();
-            var userClaimsPrincipalFactory = Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>();
+            IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>();
+            IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory = Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>();
             signInManager = new SignInManager<ApplicationUser>(
                 userManagerMock.Object,
                 httpContextAccessor,
                 userClaimsPrincipalFactory,
                 null, null, null);
 
-            profileService = new ProfileService(userManagerMock.Object, signInManager);
+            DbContextOptions<KickShopDbContext> options = new DbContextOptionsBuilder<KickShopDbContext>()
+              .UseInMemoryDatabase(Guid.NewGuid().ToString())
+              .Options;
+
+            context = new KickShopDbContext(options);
+            profileService = new ProfileService(userManagerMock.Object, signInManager,context);
+        }
+        [TearDown]
+        public void Teardown()
+        {
+            context.Dispose();
         }
 
         [Test]
         public async Task GetProfileAsync_ReturnsNull_WhenUserNotFound()
         {
-            // Arrange
-            var userId = Guid.NewGuid().ToString(); // Non-existing user
+            string userId = Guid.NewGuid().ToString();
             userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync((ApplicationUser)null);
 
-            // Act
-            var result = await profileService.GetProfileAsync(userId);
+            ProfileViewModel result = await profileService.GetProfileAsync(userId);
 
-            // Assert
             Assert.IsNull(result);
         }
 
         [Test]
         public async Task GetProfileAsync_ReturnsProfile_WhenUserFound()
         {
-            // Arrange
-            var user = new ApplicationUser
+            ApplicationUser user = new ApplicationUser
             {
                 Id = "123",
                 UserName = "testuser",
@@ -64,10 +73,8 @@ namespace KickShop.Tests
 
             userManagerMock.Setup(um => um.FindByIdAsync("123")).ReturnsAsync(user);
 
-            // Act
-            var result = await profileService.GetProfileAsync(user.Id);
+            ProfileViewModel result = await profileService.GetProfileAsync(user.Id);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(user.Id, result.UserId);
             Assert.AreEqual(user.UserName, result.UserName);
@@ -76,8 +83,7 @@ namespace KickShop.Tests
         [Test]
         public async Task GetProfileForEditAsync_ReturnsProfileEditModel_WhenUserFound()
         {
-            // Arrange
-            var user = new ApplicationUser
+            ApplicationUser user = new ApplicationUser
             {
                 Id = "123",
                 UserName = "testuser",
@@ -89,10 +95,8 @@ namespace KickShop.Tests
 
             userManagerMock.Setup(um => um.FindByIdAsync("123")).ReturnsAsync(user);
 
-            // Act
-            var result = await profileService.GetProfileForEditAsync(user.Id);
+            ProfileEditViewModel result = await profileService.GetProfileForEditAsync(user.Id);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(user.UserName, result.UserName);
             Assert.AreEqual(user.Email, result.Email);
@@ -101,8 +105,7 @@ namespace KickShop.Tests
         [Test]
         public async Task UpdateProfileAsync_ReturnsTrue_WhenProfileUpdatedSuccessfully()
         {
-            // Arrange
-            var user = new ApplicationUser
+            ApplicationUser user = new ApplicationUser
             {
                 Id = "123",
                 UserName = "testuser",
@@ -114,7 +117,7 @@ namespace KickShop.Tests
             userManagerMock.Setup(um => um.FindByIdAsync("123")).ReturnsAsync(user);
             userManagerMock.Setup(um => um.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
-            var model = new ProfileEditViewModel
+            ProfileEditViewModel model = new ProfileEditViewModel
             {
                 UserName = "updateduser",
                 Email = "updated@domain.com",
@@ -122,10 +125,8 @@ namespace KickShop.Tests
                 Phone = "987654321"
             };
 
-            // Act
-            var result = await profileService.UpdateProfileAsync(user.Id, model);
+            bool result = await profileService.UpdateProfileAsync(user.Id, model);
 
-            // Assert
             Assert.IsTrue(result);
         }
     }

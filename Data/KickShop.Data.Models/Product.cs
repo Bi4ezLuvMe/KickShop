@@ -13,6 +13,7 @@ namespace KickShop.Models
             ProductId = Guid.NewGuid();
             Images = new List<ProductImage>();
             IsDeleted = false;
+            Sizes = new List<ProductSize>();
         }
         [Comment("The Unique Identifier")]
         [Key]
@@ -37,7 +38,7 @@ namespace KickShop.Models
         [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax)]
         public int StockQuantity { get; set; }
         [Comment("List Of Product Image Entitis Which Hold The Image Url")]
-        public List<ProductImage> Images { get; set; }
+        public List<ProductImage>? Images { get; set; }
         public string? MainImageUrl { get; set; }
         [Comment("Foreign Key To The Category Entity")]
         [Required]
@@ -58,6 +59,6 @@ namespace KickShop.Models
         public bool IsDeleted { get; set; }
         [Comment("The Size Of The Product")]
         [Required]
-        public List<Sizes> Sizes { get; set; }
+        public List<ProductSize> Sizes { get; set; }
     }
 }

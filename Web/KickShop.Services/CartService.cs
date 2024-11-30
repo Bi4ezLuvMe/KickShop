@@ -114,7 +114,7 @@ namespace KickShop.Services
             };
         }
 
-        public async Task PlaceOrderAsync(string userId, CheckoutViewModel model)
+        public async Task<Guid> PlaceOrderAsync(string userId, CheckoutViewModel model)
         {
             var cart = await GetUserCartAsync(userId);
 
@@ -128,6 +128,7 @@ namespace KickShop.Services
                 BillingCity = model.BillingAddress.City,
                 BillingName = model.BillingAddress.FullName,
                 BillingPostalCode = model.BillingAddress.ZipCode,
+                Status = "Sent"
             };
 
             await context.Orders.AddAsync(order);
@@ -142,6 +143,8 @@ namespace KickShop.Services
 
             context.CartsItems.RemoveRange(cart.CartItems);
             await context.SaveChangesAsync();
+
+            return order.OrderId;
         }
 
         private async Task<ShoppingCart> GetUserCartAsync(string userId)

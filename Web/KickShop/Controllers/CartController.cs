@@ -1,6 +1,8 @@
 ﻿using KickShop.Data;
 using KickShop.Models;
+using KickShop.Services;
 using KickShop.Services.Service_Interfaces;
+using KickShop.ViewModels;
 using KickShop.ViewModels.Cart;
 using KickShop.ViewModels.Order;
 using Microsoft.AspNetCore.Identity;
@@ -13,12 +15,16 @@ namespace KickShop.Controllers
     public class CartController : Controller
     {
         private readonly ICartService cartService;
+        private readonly IProductService productService;
+        private readonly IOrderService orderService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public CartController(ICartService cartService, UserManager<ApplicationUser> userManager)
+        public CartController(ICartService cartService, UserManager<ApplicationUser> userManager,IOrderService orderService,IProductService productService)
         {
             this.cartService = cartService;
             this.userManager = userManager;
+            this.orderService = orderService;
+            this.productService = productService;
         }
 
         [HttpGet]
@@ -31,6 +37,16 @@ namespace KickShop.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCart(string productId, int quantity, string selectedSize)
         {
+            if (string.IsNullOrEmpty(selectedSize))
+            {
+                TempData["SizeError"] = "Please Select A Size.";
+            }
+
+            if (!ModelState.IsValid || !string.IsNullOrEmpty(TempData["SizeError"]?.ToString()))
+            {
+                return RedirectToAction("Details", "Product", new { id = productId });
+            }
+
             try
             {
                 await cartService.AddToCartAsync(GetUserId(), productId, quantity, selectedSize);
@@ -38,7 +54,7 @@ namespace KickShop.Controllers
             }
             catch
             {
-                return View("~/Views/Product/Details.cshtml");
+                return RedirectToAction("Details", "Product", new { id = productId });
             }
         }
 
@@ -80,15 +96,21 @@ namespace KickShop.Controllers
 
             try
             {
-                await cartService.PlaceOrderAsync(GetUserId(), model);
+                Guid orderId = await cartService.PlaceOrderAsync(GetUserId(), model);
                 TempData["Message"] = "Order placed successfully!";
-                return RedirectToAction("OrderConfirmation");
+                return RedirectToAction("OrderConfirmation",new {orderId = orderId });
             }
             catch (InvalidOperationException ex)
             {
                 TempData["Message"] = ex.Message;
                 return RedirectToAction("Index", "Cart");
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> OrderConfirmation(Guid orderId)
+        {
+            OrderConfirmationViewModel model = await orderService.GetOrderConfirmationAsync(orderId);
+            return View(model);
         }
         private string GetUserId()
         {

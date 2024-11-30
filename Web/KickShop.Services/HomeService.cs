@@ -19,7 +19,7 @@ namespace KickShop.Services
         }
         public async Task<List<Product>> GetFeaturedProducts()
         {
-            return await context.Products.Take(3).ToListAsync();
+            return await context.Products.Where(p=>!p.IsDeleted).Take(3).ToListAsync();
         }
     }
 }

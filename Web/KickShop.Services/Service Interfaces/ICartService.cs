@@ -12,6 +12,6 @@ namespace KickShop.Services.Service_Interfaces
         Task AddToCartAsync(string userId, string productId, int quantity, string selectedSize);
         Task RemoveFromCartAsync(string userId, string productId);
         Task<CheckoutSummaryViewModel> GetCheckoutSummaryAsync(string userId);
-        Task PlaceOrderAsync(string userId, CheckoutViewModel model);
+        Task<Guid> PlaceOrderAsync(string userId, CheckoutViewModel model);
     }
 }

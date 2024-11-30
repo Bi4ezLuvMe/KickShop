@@ -13,39 +13,39 @@ namespace KickShop.Tests.Services
     [TestFixture]
     public class CategoryServiceTests
     {
-        private KickShopDbContext dbContext;
+        private KickShopDbContext context;
         private CategoryService categoryService;
 
         [SetUp]
         public void SetUp()
         {
-            var options = new DbContextOptionsBuilder<KickShopDbContext>()
+            DbContextOptions<KickShopDbContext> options = new DbContextOptionsBuilder<KickShopDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            dbContext = new KickShopDbContext(options);
+            context = new KickShopDbContext(options);
 
-            dbContext.Categories.AddRange(
+            context.Categories.AddRange(
                 new Category { CategoryId = Guid.NewGuid(), Name = "Boxing", IsDeleted = false },
                 new Category { CategoryId = Guid.NewGuid(), Name = "MMA", IsDeleted = false },
                 new Category { CategoryId = Guid.NewGuid(), Name = "Muay Thai", IsDeleted = true }
             );
-            dbContext.SaveChanges();
+            context.SaveChanges();
 
-            categoryService = new CategoryService(dbContext);
+            categoryService = new CategoryService(context);
         }
 
         [TearDown]
         public void TearDown()
         {
-            dbContext.Database.EnsureDeleted();
-            dbContext.Dispose();
+            context.Database.EnsureDeleted();
+            context.Dispose();
         }
 
         [Test]
         public async Task GetAllCategoriesAsync_ReturnsNonDeletedCategories()
         {
-            var result = await categoryService.GetAllCategoriesAsync(null);
+            List<Category> result = await categoryService.GetAllCategoriesAsync(null);
             Assert.AreEqual(2, result.Count);
             Assert.IsTrue(result.All(c => !c.IsDeleted));
         }
@@ -53,7 +53,7 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task GetAllCategoriesAsync_WithQuery_FiltersCategories()
         {
-            var result = await categoryService.GetAllCategoriesAsync("Box");
+            List<Category> result = await categoryService.GetAllCategoriesAsync("Box");
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual("Boxing", result.First().Name);
         }
@@ -61,9 +61,9 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task AddCategoryAsync_AddsNewCategory()
         {
-            var model = new CategoryAddViewModel { Name = "Kickboxing", ImageUrl = "url" };
+            CategoryAddViewModel model = new CategoryAddViewModel { Name = "Kickboxing"};
             await categoryService.AddCategoryAsync(model);
-            var categories = await dbContext.Categories.ToListAsync();
+            List<Category> categories = await context.Categories.ToListAsync();
             Assert.AreEqual(4, categories.Count);
             Assert.IsTrue(categories.Any(c => c.Name == "Kickboxing"));
         }
@@ -71,10 +71,10 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task UpdateCategoryAsync_UpdatesExistingCategory()
         {
-            var categoryId = dbContext.Categories.First().CategoryId;
-            var model = new CategoryEditViewModel { CategoryId = categoryId, Name = "Updated Boxing", ImageUrl = "updated-url" };
-            var result = await categoryService.UpdateCategoryAsync(model);
-            var updatedCategory = await dbContext.Categories.FindAsync(categoryId);
+            Guid categoryId = context.Categories.First().CategoryId;
+            CategoryEditViewModel model = new CategoryEditViewModel { CategoryId = categoryId, Name = "Updated Boxing" };
+            bool result = await categoryService.UpdateCategoryAsync(model);
+            Category updatedCategory = await context.Categories.FindAsync(categoryId);
             Assert.IsTrue(result);
             Assert.AreEqual("Updated Boxing", updatedCategory.Name);
             Assert.AreEqual("updated-url", updatedCategory.ImageUrl);
@@ -83,17 +83,17 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task UpdateCategoryAsync_ReturnsFalseIfCategoryNotFound()
         {
-            var model = new CategoryEditViewModel { CategoryId = Guid.NewGuid(), Name = "Non-existent", ImageUrl = "url" };
-            var result = await categoryService.UpdateCategoryAsync(model);
+            CategoryEditViewModel model = new CategoryEditViewModel { CategoryId = Guid.NewGuid(), Name = "Non-existent"};
+            bool result = await categoryService.UpdateCategoryAsync(model);
             Assert.IsFalse(result);
         }
 
         [Test]
         public async Task DeleteCategoryAsync_SoftDeletesCategory()
         {
-            var categoryId = dbContext.Categories.First().CategoryId;
-            var result = await categoryService.DeleteCategoryAsync(categoryId);
-            var deletedCategory = await dbContext.Categories.FindAsync(categoryId);
+            Guid categoryId = context.Categories.First().CategoryId;
+            bool result = await categoryService.DeleteCategoryAsync(categoryId);
+            Category deletedCategory = await context.Categories.FindAsync(categoryId);
             Assert.IsTrue(result);
             Assert.IsTrue(deletedCategory.IsDeleted);
         }
@@ -101,15 +101,15 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task DeleteCategoryAsync_ReturnsFalseIfCategoryNotFound()
         {
-            var result = await categoryService.DeleteCategoryAsync(Guid.NewGuid());
+            bool result = await categoryService.DeleteCategoryAsync(Guid.NewGuid());
             Assert.IsFalse(result);
         }
 
         [Test]
         public async Task GetCategoryDetailsAsync_ReturnsCategoryViewModel()
         {
-            var categoryId = dbContext.Categories.First().CategoryId;
-            var result = await categoryService.GetCategoryDetailsAsync(categoryId.ToString());
+            Guid categoryId = context.Categories.First().CategoryId;
+            CategoryViewModel result = await categoryService.GetCategoryDetailsAsync(categoryId.ToString());
             Assert.IsNotNull(result);
             Assert.AreEqual(categoryId, result.CategoryId);
         }

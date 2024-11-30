@@ -28,6 +28,7 @@
 
         <div class="col-md-6">
             <h1>@Model.Name</h1>
+            <a asp-controller="Brand" asp-action="Details" asp-route-id="@Model.BrandId" class="mb-3">About The Brand</a>
             <p>@Model.Description</p>
             <h3 class="text-primary">@(Model.Price) лв.</h3>
 
@@ -35,9 +36,12 @@
                 <input type="hidden" name="productId" value="@Model.ProductId" />
                     <div class="form-group">
                         <label for="size">Size</label>
-                        @Html.DropDownListFor(x=>x.SelectedSize, Model.Sizes, "Select Size", new { @class = "form-control" })
-                        <span asp-validation-for="@Model.SelectedSize" class="text-danger"></span>
+                        <select asp-for="SelectedSize" asp-items="Model.Sizes" class="form-control">
+                            <option value="">Select Size</option>
+                        </select>
+                        <span asp-validation-for="SelectedSize" class="text-danger"></span>
                     </div>
+
 
                 <div class="form-group">
                     <label for="quantity">Quantity</label>
@@ -86,7 +90,7 @@
             margin-left:10em;
         }
         .black-arrow {
-            filter: invert(1); /* Makes the arrow icons black */
+            filter: invert(1); 
         }
 }
 </style>

@@ -3,9 +3,11 @@ using KickShop.Models;
 using KickShop.Models.Enums;
 using KickShop.Services;
 using KickShop.ViewModels;
+using KickShop.ViewModels.Product;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,13 +16,12 @@ namespace KickShop.Tests
     [TestFixture]
     public class ProductServiceTests
     {
-        private DbContextOptions<KickShopDbContext> _options;
+        private DbContextOptions<KickShopDbContext> options;
 
         [SetUp]
         public void Setup()
         {
-            // Set up an in-memory database for testing
-            _options = new DbContextOptionsBuilder<KickShopDbContext>()
+            options = new DbContextOptionsBuilder<KickShopDbContext>()
                 .UseInMemoryDatabase(databaseName: "KickShopTest")
                 .Options;
         }
@@ -28,11 +29,9 @@ namespace KickShop.Tests
         [Test]
         public async Task GetProductForEditAsync_ReturnsProductForEdit()
         {
-            // Arrange
-            using var context = new KickShopDbContext(_options);
-            var productService = new ProductService(context);
-
-            var product = new Product
+            using KickShopDbContext context = new KickShopDbContext(options);
+            ProductService productService = new ProductService(context);
+            Product product = new Product
             {
                 ProductId = Guid.NewGuid(),
                 Name = "Test Product",
@@ -41,16 +40,20 @@ namespace KickShop.Tests
                 StockQuantity = 10,
                 CategoryId = Guid.NewGuid(),
                 BrandId = Guid.NewGuid(),
-                Sizes = new List<Sizes> {Sizes.S }
+            };
+            ProductSize productSize = new ProductSize()
+            {
+                ProductId = product.ProductId,
+                Size = Sizes.S,
+                Quantity = 2
             };
 
             context.Products.Add(product);
+            context.ProductsSizes.Add(productSize);
             await context.SaveChangesAsync();
 
-            // Act
-            var result = await productService.GetProductForEditAsync(product.ProductId.ToString());
+            ProductEditViewModel result = await productService.GetProductForEditAsync(product.ProductId.ToString());
 
-            // Assert
             Assert.NotNull(result);
             Assert.AreEqual("Test Product", result.Name);
         }
@@ -58,11 +61,10 @@ namespace KickShop.Tests
         [Test]
         public async Task AddProductAsync_AddsProductSuccessfully()
         {
-            // Arrange
-            using var context = new KickShopDbContext(_options);
-            var productService = new ProductService(context);
+            using KickShopDbContext context = new KickShopDbContext(options);
+            ProductService productService = new ProductService(context);
 
-            var productAddViewModel = new ProductAddViewModel
+            ProductAddViewModel productAddViewModel = new ProductAddViewModel
             {
                 Name = "New Product",
                 Description = "New Product Description",
@@ -70,13 +72,10 @@ namespace KickShop.Tests
                 StockQuantity = 20,
                 CategoryId = Guid.NewGuid(),
                 BrandId = Guid.NewGuid(),
-                Sizes = new List<Sizes> { Sizes.S }
             };
 
-            // Act
-            var result = await productService.AddProductAsync(productAddViewModel);
+            Product result = await productService.AddProductAsync(productAddViewModel);
 
-            // Assert
             Assert.NotNull(result);
             Assert.AreEqual("New Product", result.Name);
         }
@@ -84,11 +83,10 @@ namespace KickShop.Tests
         [Test]
         public async Task UpdateProductAsync_UpdatesProductSuccessfully()
         {
-            // Arrange
-            using var context = new KickShopDbContext(_options);
-            var productService = new ProductService(context);
+            using KickShopDbContext context = new KickShopDbContext(options);
+            ProductService productService = new ProductService(context);
 
-            var product = new Product
+            Product product = new Product
             {
                 ProductId = Guid.NewGuid(),
                 Name = "Test Product",
@@ -97,13 +95,18 @@ namespace KickShop.Tests
                 StockQuantity = 10,
                 CategoryId = Guid.NewGuid(),
                 BrandId = Guid.NewGuid(),
-                Sizes = new List<Sizes> { Sizes.S }
             };
-
+            ProductSize productSize = new ProductSize()
+            {
+                ProductId = product.ProductId,
+                Size = Sizes.S,
+                Quantity = 2
+            };
             context.Products.Add(product);
+            context.ProductsSizes.Add(productSize);
             await context.SaveChangesAsync();
 
-            var productEditModel = new ProductEditViewModel
+            ProductEditViewModel productEditModel = new ProductEditViewModel
             {
                 ProductId = product.ProductId,
                 Name = "Updated Product",
@@ -112,20 +115,26 @@ namespace KickShop.Tests
                 StockQuantity = 10,
                 CategoryId = Guid.NewGuid(),
                 BrandId = Guid.NewGuid(),
-                Sizes = new List<Sizes> {Sizes.L }
+                Sizes = new List<ProductSizeViewModel>()
+                {
+                   new ProductSizeViewModel()
+                   {
+                       Size = "L",
+                       Quantity =2
+                   }
+                }
             };
-            var updatedProduct = await productService.UpdateProductAsync(productEditModel);
 
-            // Assert
+            bool updatedProduct = await productService.UpdateProductAsync(productEditModel);
+
             Assert.IsTrue(updatedProduct);
         }
 
         [Test]
         public async Task GetAllProductsAsync_ReturnsSortedAndFilteredProducts()
         {
-            // Arrange
-            using var context = new KickShopDbContext(_options);
-            var productService = new ProductService(context);
+            using KickShopDbContext context = new KickShopDbContext(options);
+            ProductService productService = new ProductService(context);
 
             Category category = new Category
             {
@@ -142,19 +151,18 @@ namespace KickShop.Tests
                 PhoneNumber = "asdfasdfasdf",
             };
 
-            var product1 = new Product
+            Product product1 = new Product
             {
                 Name = "Product Query A",
                 Description = "Description A",
                 Price = 100,
                 StockQuantity = 10,
-                CategoryId =category.CategoryId,
+                CategoryId = category.CategoryId,
                 BrandId = brand.BrandId,
-                Sizes = new List<Sizes> { Sizes.S },
                 IsDeleted = false
             };
 
-            var product2 = new Product
+            Product product2 = new Product
             {
                 Name = "Product Query B",
                 Description = "Description B",
@@ -162,20 +170,31 @@ namespace KickShop.Tests
                 StockQuantity = 5,
                 CategoryId = category.CategoryId,
                 BrandId = brand.BrandId,
-                Sizes = new List<Sizes> { Sizes.S },
                 IsDeleted = false
+            };
+            ProductSize productSize1 = new ProductSize()
+            {
+                ProductId = product1.ProductId,
+                Size = Sizes.S,
+                Quantity = 2
+            };
+            ProductSize productSize2 = new ProductSize()
+            {
+                ProductId = product2.ProductId,
+                Size = Sizes.S,
+                Quantity = 2
             };
 
             await context.Products.AddAsync(product1);
             await context.Products.AddAsync(product2);
+            await context.ProductsSizes.AddAsync(productSize1);
+            await context.ProductsSizes.AddAsync(productSize2);
             await context.Brands.AddAsync(brand);
             await context.Categories.AddAsync(category);
             await context.SaveChangesAsync();
 
-            // Act
-            var products = await productService.GetAllProductsAsync(null,"Product Query");
+            List<Product> products = await productService.GetAllProductsAsync(null, "Product Query");
 
-            // Assert
             Assert.NotNull(products);
             Assert.AreEqual(2, products.Count());
             Assert.IsTrue(products.Any(p => p.Name == "Product Query A"));
@@ -185,11 +204,10 @@ namespace KickShop.Tests
         [Test]
         public async Task DeleteProductAsync_DeletesProductSuccessfully()
         {
-            // Arrange
-            using var context = new KickShopDbContext(_options);
-            var productService = new ProductService(context);
+            using KickShopDbContext context = new KickShopDbContext(options);
+            ProductService productService = new ProductService(context);
 
-            var product = new Product
+            Product product = new Product
             {
                 ProductId = Guid.NewGuid(),
                 Name = "Product to Delete",
@@ -198,18 +216,23 @@ namespace KickShop.Tests
                 StockQuantity = 10,
                 CategoryId = Guid.NewGuid(),
                 BrandId = Guid.NewGuid(),
-                Sizes = new List<Sizes> { Sizes.S }
+            };
+            ProductSize productSize = new ProductSize()
+            {
+                ProductId = product.ProductId,
+                Size = Sizes.S,
+                Quantity = 2
             };
 
-            context.Products.Add(product);
+            await context.Products.AddAsync(product);
+            await context.ProductsSizes.AddAsync(productSize);
             await context.SaveChangesAsync();
 
-            // Act
             await productService.DeleteProductAsync(product.ProductId.ToString());
 
-            // Assert
-            var deletedProduct = await context.Products
-                                               .FirstOrDefaultAsync(p => p.ProductId == product.ProductId&&!p.IsDeleted);
+            Product deletedProduct = await context.Products
+                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId && !p.IsDeleted);
+
             Assert.Null(deletedProduct);
         }
     }

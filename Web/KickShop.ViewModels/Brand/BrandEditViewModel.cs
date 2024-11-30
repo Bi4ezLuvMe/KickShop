@@ -1,4 +1,5 @@
 ﻿using KickShop.Common;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,8 +30,8 @@ namespace KickShop.ViewModels
         [MaxLength(ModelConstants.Brand.PhoneNumberMaxLength)]
         public string PhoneNumber { get; set; }
 
-        [MinLength(ModelConstants.Brand.ImageUrlMinLength)]
-        [MaxLength(ModelConstants.Brand.ImageUrlMaxLength)]
-        public string? ImageUrl { get; set; }
+        [Required]
+        public IFormFile Image { get; set; }
+        public string? OldImageUrl { get; set; }
     }
 }

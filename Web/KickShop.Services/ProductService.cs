@@ -5,6 +5,9 @@ using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Drawing;
+using KickShop.ViewModels.Product;
+using System.Security.Policy;
 namespace KickShop.Services
 {
     public class ProductService:IProductService
@@ -18,7 +21,7 @@ namespace KickShop.Services
 
         public async Task<Product> AddProductAsync(ProductAddViewModel model)
         {
-            Product product = new Product
+            Product product = new Product()
             {
                 ProductId = model.ProductId,
                 Name = model.Name,
@@ -28,9 +31,45 @@ namespace KickShop.Services
                 CategoryId = model.CategoryId,
                 BrandId = model.BrandId,
                 Sizes = model.Sizes
+       .Where(s => s.IsSelected) 
+       .Select(ps => new ProductSize
+       {
+           ProductSizeId = Guid.NewGuid(),
+           Size = Enum.Parse<Sizes>(ps.Size), 
+           ProductId = model.ProductId,
+           Quantity = ps.Quantity
+       })
+       .ToList() 
             };
 
+            if (model.Images != null && model.Images.Any())
+            {
+                foreach (var image in model.Images)
+                {
+                    if (image.Length > 0)
+                    {
+                        string fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                        string filePath = Path.Combine("wwwroot/images/products", fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+                        ProductImage productImage = new ProductImage()
+                        {
+                            ProductId = product.ProductId,
+                            ImageUrl = "/images/products/" + fileName
+                        };
+                        context.ProductsImages.Add(productImage);
+                        product.Images.Add(productImage);
+                    }
+                }
+            }
+          
+            product.MainImageUrl = product.Images.First().ImageUrl;
+
             await context.Products.AddAsync(product);
+            await context.ProductsSizes.AddRangeAsync(product.Sizes);
             await context.SaveChangesAsync();
 
             return product;
@@ -45,13 +84,13 @@ namespace KickShop.Services
                 return null;
             }
 
-            Product? product = await context.Products.AsNoTracking().FirstOrDefaultAsync(p=>p.ProductId==guidId);
+            Product? product = await context.Products.Include(p=>p.Sizes).Include(p=>p.Images).FirstOrDefaultAsync(p=>p.ProductId==guidId);
 
             if (product is null || product.IsDeleted)
             {
                 return null;
             }
-
+            var sizes = Enum.GetValues(typeof(Sizes)).Cast<Sizes>();
             return new ProductEditViewModel
             {
                 ProductId = product.ProductId,
@@ -60,14 +99,22 @@ namespace KickShop.Services
                 BrandId = product.BrandId,
                 CategoryId = product.CategoryId,
                 Price = product.Price,
-                Sizes = product.Sizes,
+                Sizes  =sizes.Select(size => new ProductSizeViewModel
+                {
+                    Size = size.ToString(),
+                    IsSelected = product.Sizes.Any(ps => ps.Size == size),
+                    Quantity = product.Sizes.FirstOrDefault(ps => ps.Size == size)?.Quantity ?? 0
+                }).ToList(),
                 StockQuantity = product.StockQuantity,
+                ExistingImages = product.Images.Select(pi=>pi.ImageUrl).ToList()
             };
         }
 
         public async Task<bool> UpdateProductAsync(ProductEditViewModel model)
         {
-            Product? product = await context.Products.FindAsync(model.ProductId);
+            Product? product = await context.Products.Include(p=>p.Images).Include(p=>p.Sizes)
+                .FirstOrDefaultAsync(p=>p.ProductId==model.ProductId);
+
 
             if (product is null||product.IsDeleted)
             {
@@ -79,8 +126,60 @@ namespace KickShop.Services
             product.BrandId = model.BrandId;
             product.CategoryId = model.CategoryId;
             product.Price = model.Price;
-            product.Sizes = model.Sizes;
             product.StockQuantity = model.StockQuantity;
+            if (model.Images != null && model.Images.Any())
+            {
+                foreach (var image in model.Images)
+                {
+                    if (image.Length > 0)
+                    {
+                        string fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                        string filePath = Path.Combine("wwwroot/images/products", fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+                        ProductImage productImage = new ProductImage()
+                        {
+                            ProductId = product.ProductId,
+                            ImageUrl = "/images/products/" + fileName
+                        };
+                        context.ProductsImages.Add(productImage);
+                        product.Images.Add(productImage);
+                    }
+                }
+            }
+            var selectedSizes = model.Sizes.Where(s => s.IsSelected).ToList();
+
+            var sizesToRemove = product.Sizes
+                .Where(ps => !selectedSizes.Any(s => Enum.Parse<Sizes>(s.Size) == ps.Size))
+                .ToList();
+
+            context.ProductsSizes.RemoveRange(sizesToRemove);
+
+            foreach (var selectedSize in selectedSizes)
+            {
+                var existingSize = product.Sizes
+                    .FirstOrDefault(ps => ps.Size == Enum.Parse<Sizes>(selectedSize.Size));
+
+                if (existingSize != null)
+                {
+                    existingSize.Quantity = selectedSize.Quantity;
+                }
+                else
+                {
+                    ProductSize ps = new ProductSize()
+                    {
+                        ProductSizeId = Guid.NewGuid(),
+                        Size = Enum.Parse<Sizes>(selectedSize.Size),
+                        Quantity = selectedSize.Quantity,
+                        ProductId = product.ProductId
+                    };
+                    product.Sizes.Add(ps);
+                    context.ProductsSizes.Add(ps);
+                }
+            }
 
             await context.SaveChangesAsync();
             return true;
@@ -91,6 +190,7 @@ namespace KickShop.Services
             List<Product> products = await context.Products
                 .Include(p => p.Brand)
                 .Include(p=>p.Category)
+                .Include(p=>p.Sizes)
                 .Where(p => !p.IsDeleted)
                .ToListAsync();
 
@@ -111,6 +211,7 @@ namespace KickShop.Services
             Product? product = await context.Products
                 .AsNoTracking()
                 .Include(p => p.Category)
+                .Include(p=>p.Sizes)
                 .FirstOrDefaultAsync(p => p.ProductId == guidId && !p.IsDeleted);
 
             if (product == null)
@@ -124,10 +225,11 @@ namespace KickShop.Services
                 .ToListAsync();
 
             List<SelectListItem> sizesList = product.Sizes
+                .Where(s=>s.Quantity>0)
                         .Select(s => new SelectListItem
                         {
-                            Text = s.ToString(),  
-                            Value = s.ToString() 
+                            Text = s.Size.ToString(),  
+                            Value = s.Size.ToString() 
                         }).ToList();
 
             return new ProductDetailsViewModel
@@ -140,6 +242,7 @@ namespace KickShop.Services
                 MainImageUrl = product.MainImageUrl,
                 Quantity = product.StockQuantity,
                 Sizes = sizesList,
+                BrandId = product.BrandId,
                 RelatedProducts = await context.Products
                     .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId)
                     .ToListAsync()

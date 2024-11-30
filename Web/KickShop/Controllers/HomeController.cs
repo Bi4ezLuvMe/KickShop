@@ -32,10 +32,6 @@ namespace KickShop.Controllers
             {
                 return View("~/Views/Shared/Errors/NotFound.cshtml");
             }
-            if (code == 403)
-            {
-                return View("~/Views/Shared/Errors/Forbidden.cshtml");
-            }
             if(code == 500)
             {
                 return View("~/Views/Shared/Errors/InternalServerError.cshtml");

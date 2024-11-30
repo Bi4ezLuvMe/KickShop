@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Moq;
-using NUnit.Framework;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using KickShop.Services;
 using KickShop.Models;
 using KickShop.Data;
@@ -15,12 +14,12 @@ namespace KickShop.Tests
     [TestFixture]
     public class OrderServiceTests
     {
-        private DbContextOptions<KickShopDbContext> _options;
+        private DbContextOptions<KickShopDbContext> options;
 
         [SetUp]
         public void Setup()
         {
-            _options = new DbContextOptionsBuilder<KickShopDbContext>()
+            options = new DbContextOptionsBuilder<KickShopDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
         }
@@ -28,12 +27,12 @@ namespace KickShop.Tests
         [Test]
         public async Task GetOrderConfirmationAsync_ThrowsKeyNotFoundException_WhenOrderDoesNotExist()
         {
-            using var context = new KickShopDbContext(_options);
-            var orderService = new OrderService(context);
+            using KickShopDbContext context = new KickShopDbContext(options);
+            OrderService orderService = new OrderService(context);
 
             await context.SaveChangesAsync();
 
-            var exception = Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            KeyNotFoundException exception = Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 orderService.GetOrderConfirmationAsync(Guid.NewGuid()));
 
             Assert.AreEqual("Order not found!", exception.Message);
@@ -42,18 +41,35 @@ namespace KickShop.Tests
         [Test]
         public async Task GetAllOrdersAsync_ReturnsAllOrders()
         {
-            using var context = new KickShopDbContext(_options);
-            var orderService = new OrderService(context);
+            using KickShopDbContext context = new KickShopDbContext(options);
+            OrderService orderService = new OrderService(context);
 
-            var order1 = new Order { OrderId = Guid.NewGuid(), TotalAmount = 100,BillingAddress="Temp Address",BillingCity="Kn",BillingName="Luboslav",BillingPostalCode="2500" };
-            var order2 = new Order { OrderId = Guid.NewGuid(), TotalAmount = 200, BillingAddress = "Temp Address", BillingCity = "Kn", BillingName = "Luboslav", BillingPostalCode = "2500" };
+            Order order1 = new Order
+            {
+                OrderId = Guid.NewGuid(),
+                TotalAmount = 100,
+                BillingAddress = "Temp Address",
+                BillingCity = "Kn",
+                BillingName = "Luboslav",
+                BillingPostalCode = "2500"
+            };
+
+            Order order2 = new Order
+            {
+                OrderId = Guid.NewGuid(),
+                TotalAmount = 200,
+                BillingAddress = "Temp Address",
+                BillingCity = "Kn",
+                BillingName = "Luboslav",
+                BillingPostalCode = "2500"
+            };
 
             context.Orders.Add(order1);
             context.Orders.Add(order2);
             await context.SaveChangesAsync();
 
-            var orders = await orderService.GetAllOrdersAsync();
-            orders = orders.Where(o => o.OrderId == order1.OrderId || o.OrderId == order2.OrderId);
+            IEnumerable<OrderViewModel> orders = await orderService.GetAllOrdersAsync();
+            orders = orders.Where(o => o.OrderId == order1.OrderId || o.OrderId == order2.OrderId).ToList();
 
             Assert.AreEqual(2, orders.Count());
         }
@@ -61,10 +77,10 @@ namespace KickShop.Tests
         [Test]
         public async Task DeleteOrderAsync_DeletesOrderSuccessfully()
         {
-            using var context = new KickShopDbContext(_options);
-            var orderService = new OrderService(context);
+            using KickShopDbContext context = new KickShopDbContext(options);
+            OrderService orderService = new OrderService(context);
 
-            var order = new Order
+            Order order = new Order
             {
                 OrderId = Guid.NewGuid(),
                 TotalAmount = 100,
@@ -79,7 +95,7 @@ namespace KickShop.Tests
 
             await orderService.DeleteOrderAsync(order.OrderId);
 
-            var deletedOrder = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == order.OrderId&&!o.IsDeleted);
+            Order deletedOrder = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == order.OrderId && !o.IsDeleted);
             Assert.Null(deletedOrder);
         }
     }

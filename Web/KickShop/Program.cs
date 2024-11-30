@@ -44,8 +44,8 @@ namespace KickShop
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                //app.UseMigrationsEndPoint();
-                app.UseStatusCodePagesWithReExecute("/Home/StatusCode", "?code={0}");
+                app.UseMigrationsEndPoint();
+                //app.UseStatusCodePagesWithReExecute("/Home/StatusCode", "?code={0}");
             }
             else
             {

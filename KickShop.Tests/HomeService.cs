@@ -13,22 +13,22 @@ namespace KickShop.Tests.Services
     [TestFixture]
     public class HomeServiceTests
     {
-        private KickShopDbContext dbContext;
+        private KickShopDbContext context;
         private HomeService homeService;
 
         [SetUp]
         public void SetUp()
         {
-            var options = new DbContextOptionsBuilder<KickShopDbContext>()
+            DbContextOptions<KickShopDbContext> options = new DbContextOptionsBuilder<KickShopDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            dbContext = new KickShopDbContext(options);
+            context = new KickShopDbContext(options);
 
-            dbContext.Products.AddRange(
+            List<Product> products = new List<Product>
+            {
                 new Product
                 {
-                    ProductId = Guid.NewGuid(),
                     Name = "Product 1",
                     Description = "Description 1",
                     Price = 100.50m,
@@ -36,12 +36,10 @@ namespace KickShop.Tests.Services
                     MainImageUrl = "https://example.com/image1.jpg",
                     CategoryId = Guid.NewGuid(),
                     BrandId = Guid.NewGuid(),
-                    Sizes = new List<Sizes> { Sizes.S },
                     IsDeleted = false
                 },
                 new Product
                 {
-                    ProductId = Guid.NewGuid(),
                     Name = "Product 2",
                     Description = "Description 2",
                     Price = 150.75m,
@@ -49,12 +47,10 @@ namespace KickShop.Tests.Services
                     MainImageUrl = "https://example.com/image2.jpg",
                     CategoryId = Guid.NewGuid(),
                     BrandId = Guid.NewGuid(),
-                    Sizes = new List<Sizes> { Sizes.M },
                     IsDeleted = false
                 },
                 new Product
                 {
-                    ProductId = Guid.NewGuid(),
                     Name = "Product 3",
                     Description = "Description 3",
                     Price = 200.99m,
@@ -62,12 +58,10 @@ namespace KickShop.Tests.Services
                     MainImageUrl = "https://example.com/image3.jpg",
                     CategoryId = Guid.NewGuid(),
                     BrandId = Guid.NewGuid(),
-                    Sizes = new List<Sizes> { Sizes.L },
                     IsDeleted = false
                 },
                 new Product
                 {
-                    ProductId = Guid.NewGuid(),
                     Name = "Product 4",
                     Description = "Description 4",
                     Price = 300.00m,
@@ -75,27 +69,54 @@ namespace KickShop.Tests.Services
                     MainImageUrl = "https://example.com/image4.jpg",
                     CategoryId = Guid.NewGuid(),
                     BrandId = Guid.NewGuid(),
-                    Sizes = new List<Sizes> { Sizes.XL },
                     IsDeleted = false
                 }
-            );
+            };
+            List<ProductSize> productsSizes = new List<ProductSize>()
+            {
+                new ProductSize
+                {
+                    ProductId = products[0].ProductId,
+                    Size = Sizes.S,
+                    Quantity =1,
+                },
+                  new ProductSize
+                {
+                    ProductId = products[1].ProductId,
+                    Size = Sizes.S,
+                    Quantity =1,
+                },
+                    new ProductSize
+                {
+                    ProductId = products[2].ProductId,
+                    Size = Sizes.S,
+                    Quantity =1,
+                },
+                      new ProductSize
+                {
+                    ProductId = products[3].ProductId,
+                    Size = Sizes.S,
+                    Quantity =1,
+                }
+            };
+            context.ProductsSizes.AddRange(productsSizes);
+            context.Products.AddRange(products);
+            context.SaveChanges();
 
-            dbContext.SaveChanges();
-
-            homeService = new HomeService(dbContext);
+            homeService = new HomeService(context);
         }
 
         [TearDown]
         public void TearDown()
         {
-            dbContext.Database.EnsureDeleted();
-            dbContext.Dispose();
+            context.Database.EnsureDeleted();
+            context.Dispose();
         }
 
         [Test]
         public async Task GetFeaturedProducts_ReturnsFirstThreeProducts()
         {
-            var result = await homeService.GetFeaturedProducts();
+            List<Product> result = await homeService.GetFeaturedProducts();
 
             Assert.AreEqual(3, result.Count);
             Assert.AreEqual("Product 1", result[0].Name);
@@ -106,10 +127,10 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task GetFeaturedProducts_ReturnsEmptyListIfNoProducts()
         {
-            dbContext.Products.RemoveRange(dbContext.Products);
-            await dbContext.SaveChangesAsync();
+            context.Products.RemoveRange(context.Products);
+            await context.SaveChangesAsync();
 
-            var result = await homeService.GetFeaturedProducts();
+            List<Product> result = await homeService.GetFeaturedProducts();
 
             Assert.IsEmpty(result);
         }
