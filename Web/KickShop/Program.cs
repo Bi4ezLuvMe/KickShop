@@ -32,6 +32,8 @@ namespace KickShop
             builder.Services.AddScoped<IHomeService, HomeService>();
             builder.Services.AddScoped<IProfileService, ProfileService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+
 
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())

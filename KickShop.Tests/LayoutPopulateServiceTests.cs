@@ -34,9 +34,9 @@ namespace KickShop.Tests.Services
 
             List<Category> categories = new List<Category>
             {
-                new Category { CategoryId = Guid.NewGuid(), Name = "Category1", IsDeleted = false },
-                new Category { CategoryId = Guid.NewGuid(), Name = "Category2", IsDeleted = false },
-                new Category { CategoryId = Guid.NewGuid(), Name = "Category3", IsDeleted = true }
+                new Category { CategoryId = Guid.NewGuid(), Name = "Category1", IsDeleted = false,ImageUrl ="asdfasd" },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Category2", IsDeleted = false,ImageUrl ="asdfasd" },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Category3", IsDeleted = true,ImageUrl ="asdfasd" }
             };
 
             context.Brands.AddRange(brands);
@@ -54,7 +54,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetBrandsAsync_ReturnsNonDeletedBrandNames()
+        public async Task GetBrandsAsyncReturnsAllNonDeletedBrandNames()
         {
             List<string> result = await layoutPopulateService.GetBrandsAsync();
 
@@ -65,7 +65,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetBrandsAsync_ReturnsEmptyList_WhenNoBrandsAvailable()
+        public async Task GetBrandsAsyncReturnsEmptyListWhenNoBrandsAvailable()
         {
             context.Brands.RemoveRange(context.Brands);
             await context.SaveChangesAsync();
@@ -76,7 +76,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetCategoriesAsync_ReturnsNonDeletedCategoryNames()
+        public async Task GetCategoriesAsyncReturnsAllNonDeletedCategoryNames()
         {
             List<string> result = await layoutPopulateService.GetCategoriesAsync();
 
@@ -87,7 +87,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetCategoriesAsync_ReturnsEmptyList_WhenNoCategoriesAvailable()
+        public async Task GetCategoriesAsyncReturnsEmptyListWhenNoCategoriesAvailable()
         {
             context.Categories.RemoveRange(context.Categories);
             await context.SaveChangesAsync();

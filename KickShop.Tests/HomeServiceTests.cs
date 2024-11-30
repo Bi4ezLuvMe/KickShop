@@ -114,7 +114,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetFeaturedProducts_ReturnsFirstThreeProducts()
+        public async Task GetFeaturedProductsReturnsFirstThreeProducts()
         {
             List<Product> result = await homeService.GetFeaturedProducts();
 
@@ -125,7 +125,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetFeaturedProducts_ReturnsEmptyListIfNoProducts()
+        public async Task GetFeaturedProductsReturnsEmptyListIfNoProducts()
         {
             context.Products.RemoveRange(context.Products);
             await context.SaveChangesAsync();

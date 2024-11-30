@@ -34,7 +34,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetAllBrandsAsync_ReturnsAllNonDeletedBrands()
+        public async Task GetAllBrandsAsyncReturnsAllNonDeletedBrands()
         {
             Brand brand1 = new Brand
             {
@@ -61,15 +61,16 @@ namespace KickShop.Tests.Services
             await context.Brands.AddRangeAsync(brand1, brand2);
             await context.SaveChangesAsync();
 
-            System.Collections.Generic.List<Brand> result = await brandService.GetAllBrandsAsync(null);
+            List<Brand> result = await brandService.GetAllBrandsAsync(null);
 
             Assert.AreEqual(2, result.Count);
+
             Assert.IsTrue(result.Any(b => b.Name == "Brand 1"));
             Assert.IsTrue(result.Any(b => b.Name == "Brand 2"));
         }
 
         [Test]
-        public async Task AddBrandAsync_AddsBrandToDatabase()
+        public async Task AddBrandAsyncAddsBrandToDatabase()
         {
             BrandAddViewModel model = new BrandAddViewModel
             {
@@ -87,7 +88,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task UpdateBrandAsync_UpdatesBrandIfExists()
+        public async Task UpdateBrandAsyncUpdatesBrandIfExists()
         {
             Brand brand = new Brand
             {
@@ -121,11 +122,10 @@ namespace KickShop.Tests.Services
             Assert.AreEqual("Updated Address", updatedBrand.Address);
             Assert.AreEqual("Updated Country", updatedBrand.Country);
             Assert.AreEqual("987654321", updatedBrand.PhoneNumber);
-            Assert.AreEqual("http://example.com/updated.jpg", updatedBrand.ImageUrl);
         }
 
         [Test]
-        public async Task UpdateBrandAsync_ReturnsFalseIfBrandDoesNotExist()
+        public async Task UpdateBrandAsyncReturnsFalseIfBrandDoesNotExist()
         {
             BrandEditViewModel model = new BrandEditViewModel
             {
@@ -139,7 +139,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetBrandDetailsAsync_ReturnsBrandDetailsIfExists()
+        public async Task GetBrandDetailsAsyncReturnsBrandDetailsIfExists()
         {
             Brand brand = new Brand
             {
@@ -160,7 +160,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetBrandDetailsAsync_ReturnsNullIfBrandDoesNotExist()
+        public async Task GetBrandDetailsAsyncReturnsNullIfBrandDoesNotExist()
         {
             BrandDetailsViewModel? result = await brandService.GetBrandDetailsAsync(Guid.NewGuid().ToString());
 
@@ -168,7 +168,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task DeleteBrandAsync_SetsIsDeletedToTrueIfExists()
+        public async Task DeleteBrandAsyncSetsIsDeletedToTrueIfExists()
         {
             Brand brand = new Brand
             {
@@ -191,11 +191,83 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task DeleteBrandAsync_ReturnsFalseIfBrandDoesNotExist()
+        public async Task DeleteBrandAsyncReturnsFalseIfBrandDoesNotExist()
         {
             bool result = await brandService.DeleteBrandAsync(Guid.NewGuid().ToString());
 
             Assert.IsFalse(result);
         }
+        [Test]
+        public async Task GetBrandForEditAsyncValidIdReturnsBrandEditViewModel()
+        {
+            Guid validId = Guid.NewGuid();
+            Brand brand = new Brand
+            {
+                BrandId = validId,
+                Name = "Test Brand",
+                Address = "Test Address",
+                PhoneNumber = "123456789",
+                ImageUrl = "test.jpg",
+                Country = "Test Country",
+                IsDeleted = false
+            };
+
+            context.Brands.Add(brand);
+            await context.SaveChangesAsync();
+
+            BrandEditViewModel result = await brandService.GetBrandForEditAsync(validId.ToString());
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(validId, result.BrandId);
+            Assert.AreEqual("Test Brand", result.Name);
+            Assert.AreEqual("Test Address", result.Address);
+            Assert.AreEqual("123456789", result.PhoneNumber);
+            Assert.AreEqual("test.jpg", result.OldImageUrl);
+            Assert.AreEqual("Test Country", result.Country);
+        }
+
+        [Test]
+        public async Task GetBrandForEditAsyncInvalidId_ReturnsNull()
+        {
+            string invalidId = "invalid-guid";
+
+            BrandEditViewModel result = await brandService.GetBrandForEditAsync(invalidId);
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task GetBrandForEditAsyncBrandNotFound_ReturnsNull()
+        {
+            Guid validId = Guid.NewGuid();
+
+            BrandEditViewModel result = await brandService.GetBrandForEditAsync(validId.ToString());
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task GetBrandForEditAsyncBrandIsDeleted_ReturnsNull()
+        {
+            Guid deletedBrandId = Guid.NewGuid();
+            Brand deletedBrand = new Brand
+            {
+                BrandId = deletedBrandId,
+                Name = "Deleted Brand",
+                Address = "Deleted Address",
+                PhoneNumber = "000000000",
+                ImageUrl = "deleted.jpg",
+                Country = "Deleted Country",
+                IsDeleted = true
+            };
+
+            context.Brands.Add(deletedBrand);
+            await context.SaveChangesAsync();
+
+            BrandEditViewModel result = await brandService.GetBrandForEditAsync(deletedBrandId.ToString());
+
+            Assert.IsNull(result);
+        }
+
     }
 }

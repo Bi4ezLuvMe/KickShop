@@ -48,7 +48,7 @@ namespace KickShop.Tests
         }
 
         [Test]
-        public async Task GetProfileAsync_ReturnsNull_WhenUserNotFound()
+        public async Task GetProfileAsyncReturnsNullWhenUserNotFound()
         {
             string userId = Guid.NewGuid().ToString();
             userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync((ApplicationUser)null);
@@ -59,7 +59,7 @@ namespace KickShop.Tests
         }
 
         [Test]
-        public async Task GetProfileAsync_ReturnsProfile_WhenUserFound()
+        public async Task GetProfileAsyncReturnsProfileWhenUserFound()
         {
             ApplicationUser user = new ApplicationUser
             {
@@ -81,7 +81,7 @@ namespace KickShop.Tests
         }
 
         [Test]
-        public async Task GetProfileForEditAsync_ReturnsProfileEditModel_WhenUserFound()
+        public async Task GetProfileForEditAsyncReturnsProfileEditModelWhenUserFound()
         {
             ApplicationUser user = new ApplicationUser
             {
@@ -103,7 +103,7 @@ namespace KickShop.Tests
         }
 
         [Test]
-        public async Task UpdateProfileAsync_ReturnsTrue_WhenProfileUpdatedSuccessfully()
+        public async Task UpdateProfileAsyncReturnsTrueWhenProfileUpdatedSuccessfully()
         {
             ApplicationUser user = new ApplicationUser
             {

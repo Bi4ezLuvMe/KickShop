@@ -2,6 +2,7 @@
 using KickShop.Models;
 using KickShop.Models.Enums;
 using KickShop.Services;
+using KickShop.ViewModels;
 using KickShop.ViewModels.Cart;
 using KickShop.ViewModels.Order;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,96 @@ namespace KickShop.Tests.Services
             await context.SaveChangesAsync();
             await context.DisposeAsync();
         }
+        [Test]
+        public async Task GetCartViewModelAsyncWithValidUserIdReturnsCartViewModel()
+        {
+            string userId = "valid-user-id";
+            Product product = new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Name = "Test Product",
+                Price = 100,
+                MainImageUrl = "test.jpg",
+                Description ="ASDFFFFFFFFFFFFFFFFFFFF"
+            };
+
+            ShoppingCart cart = new ShoppingCart
+            {
+                ShoppingCartId = Guid.NewGuid(),
+                CustomerId = userId
+            };
+
+            CartItem cartItem = new CartItem
+            {
+                CartItemId = Guid.NewGuid(),
+                ProductId = product.ProductId,
+                Quantity = 2,
+                Size = "M",
+                Product = product,
+                ShoppingCart = cart
+            };
+
+            cart.CartItems = new List<CartItem> { cartItem };
+
+            context.ShoppingCarts.Add(cart);
+            context.Products.Add(product);
+            await context.SaveChangesAsync();
+
+            CartViewModel result = await cartService.GetCartViewModelAsync(userId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.CartItems.Count);
+            Assert.AreEqual("Test Product", result.CartItems[0].ProductName);
+            Assert.AreEqual(200, result.CartTotal);
+        }
 
         [Test]
-        public async Task AddToCartAsync_AddsItemToCart()
+        public async Task GetCartViewModelAsyncWithEmptyCartReturnsEmptyCartViewModel()
+        {
+            string userId = "valid-user-id";
+
+            ShoppingCart cart = new ShoppingCart
+            {
+                ShoppingCartId = Guid.NewGuid(),
+                CustomerId = userId
+            };
+
+            context.ShoppingCarts.Add(cart);
+            await context.SaveChangesAsync();
+
+            CartViewModel result = await cartService.GetCartViewModelAsync(userId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.CartItems.Count);
+            Assert.AreEqual(0, result.CartTotal);
+        }
+
+        [Test]
+        public async Task GetCartViewModelAsyncWithUserHasNoCartReturnsEmptyCartViewModel()
+        {
+            string userId = "valid-user-id";
+
+            CartViewModel result = await cartService.GetCartViewModelAsync(userId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.CartItems.Count);
+            Assert.AreEqual(0, result.CartTotal);
+        }
+
+        [Test]
+        public async Task GetCartViewModelAsyncWithInvalidUserIdReturnsEmptyCartViewModel()
+        {
+            string userId = "invalid-user-id";
+
+            CartViewModel result = await cartService.GetCartViewModelAsync(userId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.CartItems.Count);
+            Assert.AreEqual(0, result.CartTotal);
+        }
+
+        [Test]
+        public async Task AddToCartAsyncAddsItemToCart()
         {
             string userId = "test-user";
             string productId = Guid.NewGuid().ToString();
@@ -78,7 +166,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task RemoveFromCartAsync_RemovesItemFromCart()
+        public async Task RemoveFromCartAsyncRemovesItemFromCart()
         {
             string userId = "test-user";
             string productId = Guid.NewGuid().ToString();
@@ -121,7 +209,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task GetCheckoutSummaryAsync_ReturnsCorrectSummary()
+        public async Task GetCheckoutSummaryAsyncReturnsCorrectSummary()
         {
             string userId = "test-user";
             string productId = Guid.NewGuid().ToString();
@@ -166,7 +254,7 @@ namespace KickShop.Tests.Services
         }
 
         [Test]
-        public async Task PlaceOrderAsync_PlacesOrderAndClearsCart()
+        public async Task PlaceOrderAsyncPlacesOrderAndClearsCart()
         {
             string userId = "test-user";
             string productId = Guid.NewGuid().ToString();

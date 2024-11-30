@@ -8,6 +8,7 @@ using KickShop.Services;
 using KickShop.Models;
 using KickShop.Data;
 using KickShop.ViewModels;
+using KickShop.Services.Service_Interfaces;
 
 namespace KickShop.Tests
 {
@@ -15,6 +16,8 @@ namespace KickShop.Tests
     public class OrderServiceTests
     {
         private DbContextOptions<KickShopDbContext> options;
+        private KickShopDbContext context;
+        private IOrderService orderService;
 
         [SetUp]
         public void Setup()
@@ -22,16 +25,21 @@ namespace KickShop.Tests
             options = new DbContextOptionsBuilder<KickShopDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
+
+            context = new KickShopDbContext(options);
+
+            orderService = new OrderService(context);
+        }
+        [TearDown]
+        public void TearDown()
+        {
+            context.Database.EnsureDeleted();
+            context.Dispose();
         }
 
         [Test]
-        public async Task GetOrderConfirmationAsync_ThrowsKeyNotFoundException_WhenOrderDoesNotExist()
+        public async Task GetOrderConfirmationAsyncThrowsWhenOrderDoesNotExist()
         {
-            using KickShopDbContext context = new KickShopDbContext(options);
-            OrderService orderService = new OrderService(context);
-
-            await context.SaveChangesAsync();
-
             KeyNotFoundException exception = Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 orderService.GetOrderConfirmationAsync(Guid.NewGuid()));
 
@@ -39,11 +47,8 @@ namespace KickShop.Tests
         }
 
         [Test]
-        public async Task GetAllOrdersAsync_ReturnsAllOrders()
+        public async Task GetAllOrdersAsyncReturnsAllOrders()
         {
-            using KickShopDbContext context = new KickShopDbContext(options);
-            OrderService orderService = new OrderService(context);
-
             Order order1 = new Order
             {
                 OrderId = Guid.NewGuid(),
@@ -51,7 +56,8 @@ namespace KickShop.Tests
                 BillingAddress = "Temp Address",
                 BillingCity = "Kn",
                 BillingName = "Luboslav",
-                BillingPostalCode = "2500"
+                BillingPostalCode = "2500",
+                Status = "Sent"
             };
 
             Order order2 = new Order
@@ -61,7 +67,8 @@ namespace KickShop.Tests
                 BillingAddress = "Temp Address",
                 BillingCity = "Kn",
                 BillingName = "Luboslav",
-                BillingPostalCode = "2500"
+                BillingPostalCode = "2500",
+                Status = "Sent"
             };
 
             context.Orders.Add(order1);
@@ -75,11 +82,8 @@ namespace KickShop.Tests
         }
 
         [Test]
-        public async Task DeleteOrderAsync_DeletesOrderSuccessfully()
+        public async Task DeleteOrderAsyncDeletesOrderSuccessfully()
         {
-            using KickShopDbContext context = new KickShopDbContext(options);
-            OrderService orderService = new OrderService(context);
-
             Order order = new Order
             {
                 OrderId = Guid.NewGuid(),
@@ -87,7 +91,8 @@ namespace KickShop.Tests
                 BillingAddress = "Temp Address",
                 BillingCity = "Kn",
                 BillingName = "Luboslav",
-                BillingPostalCode = "2500"
+                BillingPostalCode = "2500",
+                Status = "Sent"
             };
 
             context.Orders.Add(order);

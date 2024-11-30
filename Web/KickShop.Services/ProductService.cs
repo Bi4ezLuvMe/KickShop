@@ -280,8 +280,6 @@ namespace KickShop.Services
             }
 
             return await context.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => !p.IsDeleted && p.ProductId == guid);
         }
 

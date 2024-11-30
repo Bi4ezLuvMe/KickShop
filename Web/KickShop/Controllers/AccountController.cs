@@ -3,17 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 
 public class AccountController : Controller
 {
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly SignInManager<ApplicationUser> signInManager;
+    private readonly IAccountService accountService;
 
-    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AccountController(IAccountService accountService)
     {
-        this.userManager = userManager;
-        this.signInManager = signInManager;
+        this.accountService = accountService;
     }
 
-    public IActionResult Login() => View();
-    public IActionResult Register() => View();
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    public IActionResult Register()
+    {
+        return View();
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -21,21 +26,20 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var result = await userManager.CreateAsync(user, model.Password);
-            var result2 = await userManager.AddToRoleAsync(user, "User");
+            IdentityResult result = await accountService.RegisterUserAsync(model);
 
-            if (result.Succeeded&&result2.Succeeded)
+            if (result.Succeeded)
             {
-                await signInManager.SignInAsync(user, isPersistent: false);
-                
+                await accountService.SignInUserAsync(model);
                 return RedirectToAction("Index", "Home");
             }
-            foreach (var error in result.Errors)
+
+            foreach (IdentityError error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
+
         return View(model);
     }
 
@@ -45,17 +49,16 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
-            if (user != null)
+            Microsoft.AspNetCore.Identity.SignInResult result = await accountService.SignInUserAsync(model);
+
+            if (result.Succeeded)
             {
-                var result = await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                return RedirectToAction("Index", "Home");
             }
+
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         }
+
         return View(model);
     }
 }
