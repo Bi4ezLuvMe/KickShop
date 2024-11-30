@@ -8,9 +8,7 @@ public class ProfileController : Controller
 {
     private readonly IProfileService profileService;
     private readonly UserManager<ApplicationUser> userManager;
-    private readonly RoleManager<IdentityRole> roleManager;
-
-    public ProfileController(IProfileService profileService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public ProfileController(IProfileService profileService, UserManager<ApplicationUser> userManager)
     {
         this.profileService = profileService;
         this.userManager = userManager;
@@ -21,36 +19,13 @@ public class ProfileController : Controller
     {
         var userId = userManager.GetUserId(User);
         var model = await profileService.GetProfileAsync(userId);
-        if (model == null) return NotFound();
 
-        var user = await userManager.FindByIdAsync(userId);
-        model.Roles = await userManager.GetRolesAsync(user);
-
-        return View(model);
-    }
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AssignRoleToUser(string userId, string roleName)
-    {
-        var user = await userManager.FindByIdAsync(userId);
-        if (user == null)
+        if (model == null)
         {
             return NotFound();
         }
 
-        var roleExist = await roleManager.RoleExistsAsync(roleName);
-        if (!roleExist)
-        {
-            return BadRequest("Role does not exist.");
-        }
-
-        var result = await userManager.AddToRoleAsync(user, roleName);
-        if (result.Succeeded)
-        {
-            return RedirectToAction("Index", "Profile");
-        }
-
-        return BadRequest("Failed to assign role.");
+        return View(model);
     }
     [HttpGet]
     public async Task<IActionResult> Edit()

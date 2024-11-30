@@ -121,6 +121,23 @@ namespace KickShop.Services
             if (!cart.CartItems.Any())
                 throw new InvalidOperationException("Cart is empty!");
 
+            foreach (CartItem item in cart.CartItems)
+            {
+                Product product = await context.Products.Include(p=>p.Sizes).FirstOrDefaultAsync(p=>p.ProductId==item.ProductId);
+
+                ProductSize ps = product.Sizes.FirstOrDefault(ps => ps.Size.ToString() == item.Size.ToString());
+
+                if (ps.Quantity == 1)
+                {
+                    context.ProductsSizes.Remove(ps);
+                    product.Sizes.Remove(ps);
+                }
+                else
+                {
+                    ps.Quantity--;
+                }
+
+            }
             var order = new Order
             {
                 TotalAmount = cart.CartItems.Sum(ci => ci.Quantity * ci.Product.Price),

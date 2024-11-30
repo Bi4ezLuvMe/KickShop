@@ -14,5 +14,6 @@ namespace KickShop.Services.Service_Interfaces
         Task<Product?> GetProductByIdAsync(string id);
         Task<List<Product>> GetProductsByCategoryAsync(string category,string? sortOrder,string? query);
         Task<List<Product>> GetProductsByBrandAsync(string brand, string? sortOrder, string? query);
+        Task<bool> RemoveImageAsync(string imageUrl, Guid productId);
     }
 }

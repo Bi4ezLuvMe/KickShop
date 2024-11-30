@@ -308,6 +308,30 @@ namespace KickShop.Services
 
             return SortOrder(productsByBrand, sortOrder);
         }
+        public async Task<bool> RemoveImageAsync(string imageUrl, Guid productId)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return false;
+            }
+
+            var filePath = Path.Combine("wwwroot", imageUrl.TrimStart('/'));
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            var productImage = await context.ProductsImages
+                .FirstOrDefaultAsync(pi => pi.ImageUrl == imageUrl && pi.ProductId == productId);
+
+            if (productImage != null)
+            {
+                context.ProductsImages.Remove(productImage);
+                await context.SaveChangesAsync();
+            }
+
+            return true;
+        }
 
         private Guid? IsIdValid(string id)
         {

@@ -11,5 +11,4 @@ public class ProfileViewModel
     public IFormFile ImageFile { get; set; } 
     public string Image { get; set; }
     public List<Order> Orders { get; set; } = new List<Order>();
-    public IList<string> Roles { get; set; } = new List<string>();
 }
