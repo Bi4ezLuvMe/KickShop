@@ -15,22 +15,23 @@ namespace KickShop.ViewModels
             ProductId = Guid.NewGuid();
         }
         public Guid ProductId { get; set; }
-        [Required]
-        [MinLength(ModelConstants.Product.NameMinLength)]
-        [MaxLength(ModelConstants.Product.NameMaxLength)]
+        [Required(ErrorMessage = "The Product Name Is Required!")]
+        [MinLength(ModelConstants.Product.NameMinLength, ErrorMessage = "The Product Name Is Too Short!")]
+        [MaxLength(ModelConstants.Product.NameMaxLength, ErrorMessage = "The Product Name Is Too Long!")]
         public string Name { get; set; } = null!;
-        [Required]
-        [MinLength(ModelConstants.Product.DescriptionMinLength)]
-        [MaxLength(ModelConstants.Product.DescriptionMaxLength)]
+
+        [Required(ErrorMessage ="The Product Description Is Required!")]
+        [MinLength(ModelConstants.Product.DescriptionMinLength,ErrorMessage ="The Product Description Is Too Short!")]
+        [MaxLength(ModelConstants.Product.DescriptionMaxLength, ErrorMessage = "The Product Description Is Too Long!")]
         public string Description { get; set; } = null!;
         [Required]
-        [Range(ModelConstants.Product.PriceRangeMin, ModelConstants.Product.PriceRangeMax)]
+        [Range(ModelConstants.Product.PriceRangeMin, ModelConstants.Product.PriceRangeMax,ErrorMessage ="Invalid Price!")]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
         [Required]
-        [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax)]
+        [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax,ErrorMessage ="Invalid Stock Quantity!")]
         public int StockQuantity { get; set; }
-        [Required]
+        [Required(ErrorMessage = "The Product Image Is Required!")]
         public List<IFormFile> Images { get; set; }
         [Required]
         public Guid CategoryId { get; set; }

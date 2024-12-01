@@ -293,15 +293,33 @@ namespace KickShop.Tests
         public async Task GetProductByIdAsyncReturnsProductWhenProductExists()
         {
             Guid productId = Guid.NewGuid();
+            Category cat = new Category()
+            {
+                Name = "asdfasdfasdf",
+                ImageUrl = "asdfasdfasdf"
+            };
+            Brand brand = new Brand()
+            {
+                Name = "asdfasdfasdf",
+                Address = "asdfasdfasdf",
+                Country = "asdfasdfasdfasdfasdf",
+                Description = "asdfasdfasdfasdf",
+                PhoneNumber = "asdfasdfasdf",
+                ImageUrl = "asdfasdfasdfasdf"
+            };
             Product product = new Product
             {
                 ProductId = productId,
                 Name = "Product 1",
                 IsDeleted = false,
-                Description = "asdfasdfasdfasdf"
+                Description = "asdfasdfasdfasdf",
+                CategoryId = cat.CategoryId,
+                BrandId =brand.BrandId
             };
 
-            context.Products.Add(product);
+            await context.Categories.AddAsync(cat);
+            await context.Brands.AddAsync(brand);
+            await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
 
             Product result = await productService.GetProductByIdAsync(productId.ToString());

@@ -11,6 +11,7 @@
         <div class="form-group">
             <label for="Image">Category Image</label>
             <input type="file" class="form-control" id="Image" name="Image" />
+            <span asp-validation-for="Image" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">Add</button>
     </form>

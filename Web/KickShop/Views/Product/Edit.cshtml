@@ -12,37 +12,37 @@
         <input type="hidden" asp-for="ProductId" />
 
         <div class="mb-3">
-            <label asp-for="Name" class="form-label">Product Name</label>
+            <label asp-for="Name" class="form-label">Product Name*</label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Description" class="form-label">Description</label>
+            <label asp-for="Description" class="form-label">Description*</label>
             <textarea asp-for="Description" class="form-control" rows="3"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Price" class="form-label">Price (лв.)</label>
+            <label asp-for="Price" class="form-label">Price (лв.)*</label>
             <input asp-for="Price" class="form-control" type="number" step="0.01" />
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="StockQuantity" class="form-label">Stock Quantity</label>
+            <label asp-for="StockQuantity" class="form-label">Stock Quantity*</label>
             <input asp-for="StockQuantity" class="form-control" type="number" />
             <span asp-validation-for="StockQuantity" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="CategoryId" class="form-label">Category</label>
+            <label asp-for="CategoryId" class="form-label">Category*</label>
             <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
             <span asp-validation-for="CategoryId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="BrandId" class="form-label">Brand</label>
+            <label asp-for="BrandId" class="form-label">Brand*</label>
             <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brands"></select>
             <span asp-validation-for="BrandId" class="text-danger"></span>
         </div>
@@ -84,14 +84,9 @@
                     @foreach (var imageUrl in Model.ExistingImages)
                     {
                         <div class="col-md-3 mb-2 position-relative">
-                            <form method="post" action="@Url.Action("RemoveImage", "Product")" class="d-inline-block">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="imageUrl" value="@imageUrl" />
-                                <input type="hidden" name="productId" value="@Model.ProductId" />
-                                <button type="submit" class="btn btn-danger btn-sm" style="font-size: 16px;">
+                                <button type="submit" asp-controller="Product" asp-action="RemoveImage" asp-route-productId="@Model.ProductId" asp-route-imageUrl="@imageUrl" class="btn btn-danger btn-sm" style="font-size: 16px;">
                                     <i class="bi bi-x-circle"></i> Remove
                                 </button>
-                            </form>
                             <img src="@imageUrl" class="img-thumbnail" alt="Product Image" />
                         </div>
                     }

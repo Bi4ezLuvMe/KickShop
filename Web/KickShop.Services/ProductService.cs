@@ -181,6 +181,11 @@ namespace KickShop.Services
                 }
             }
 
+            if (product.Images.Count>0)
+            {
+                product.MainImageUrl = product.Images[0].ImageUrl;
+            }
+
             await context.SaveChangesAsync();
             return true;
         }
@@ -280,6 +285,8 @@ namespace KickShop.Services
             }
 
             return await context.Products
+                .Include(p=>p.Brand)
+                .Include(p=>p.Category)
                 .FirstOrDefaultAsync(p => !p.IsDeleted && p.ProductId == guid);
         }
 

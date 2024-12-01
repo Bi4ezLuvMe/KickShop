@@ -6,27 +6,27 @@ namespace KickShop.ViewModels
 {
     public class BrandAddViewModel
     {
-        [Required]
-        [MinLength(ModelConstants.Brand.NameMinLength)]
-        [MaxLength(ModelConstants.Brand.NameMaxLength)]
+        [Required(ErrorMessage ="The Brand Name Is Required!")]
+        [MinLength(ModelConstants.Brand.NameMinLength,ErrorMessage ="The Brand Name Is Too Short!")]
+        [MaxLength(ModelConstants.Brand.NameMaxLength,ErrorMessage ="The Brand Name Is Too Long!")]
         public string Name { get; set; }
 
-        [Required]
-        [MinLength(ModelConstants.Brand.CountryMinLength)]
-        [MaxLength(ModelConstants.Brand.CountryMaxLength)]
+        [Required(ErrorMessage ="The Brand Country Is Required!")]
+        [MinLength(ModelConstants.Brand.CountryMinLength,ErrorMessage ="The Brand Country Is Too Short!")]
+        [MaxLength(ModelConstants.Brand.CountryMaxLength,ErrorMessage ="The Brand Country Is Too Long!")]
         public string Country { get; set; }
 
-        [Required]
-        [MinLength(ModelConstants.Brand.AddressMinLength)]
-        [MaxLength(ModelConstants.Brand.AddressMaxLength)]
+        [Required(ErrorMessage ="The Brand Address Is Required!")]
+        [MinLength(ModelConstants.Brand.AddressMinLength,ErrorMessage ="The Brand Address Is Too Short!")]
+        [MaxLength(ModelConstants.Brand.AddressMaxLength,ErrorMessage ="The Brand Address Is Too Long!")]
         public string Address { get; set; }
 
-        [Required]
-        [MinLength(ModelConstants.Brand.PhoneNumberMinLength)]
-        [MaxLength(ModelConstants.Brand.PhoneNumberMaxLength)]
+        [Required(ErrorMessage ="The Brand Phone Number Is REquired!")]
+        [MinLength(ModelConstants.Brand.PhoneNumberMinLength,ErrorMessage ="The Brand Phone Number Is Too Short!")]
+        [MaxLength(ModelConstants.Brand.PhoneNumberMaxLength,ErrorMessage ="The Brand Phone Number Is Too Long!")]
         public string PhoneNumber { get; set; }
 
-        [Required]
-        public IFormFile Image { get; set; }
+        [Required(ErrorMessage = "The Brand Image Is Required")]
+        public IFormFile Image { get; set; } = null!;
     }
 }

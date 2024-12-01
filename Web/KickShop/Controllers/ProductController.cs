@@ -134,6 +134,7 @@ namespace KickShop.Controllers
         public async Task<IActionResult> Manage(string query)
         {
             List<Product> products = await productService.GetAllProductsAsync(null,query);
+            ViewBag.Query = query;
             return View(products);
         }
 
@@ -168,14 +169,7 @@ namespace KickShop.Controllers
                 return RedirectToAction("Edit", new { id = productId });
             }
 
-            var model = await productService.GetProductForEditAsync(productId.ToString());
-
-            if (model == null)
-            {
-                return NotFound();
-            }
-
-            return View("Edit", model);
+            return RedirectToAction("Edit", new { id = productId });
         }
 
         private async Task PopulateDropdowns()

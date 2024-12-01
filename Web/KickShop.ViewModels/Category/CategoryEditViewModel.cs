@@ -9,12 +9,11 @@ namespace KickShop.ViewModels
         [Required]
         public Guid CategoryId { get; set; }
 
-        [Required]
-        [MinLength(ModelConstants.Category.NameMinLength)]
-        [MaxLength(ModelConstants.Category.NameMaxLength)]
+        [Required(ErrorMessage = "The Category Name Is Required!")]
+        [MinLength(ModelConstants.Category.NameMinLength, ErrorMessage = "Category Name Is Too Short!")]
+        [MaxLength(ModelConstants.Category.NameMaxLength, ErrorMessage = "Category Name Is Too Long!")]
         public string Name { get; set; } = null!;
-        [Required(ErrorMessage ="Kur")]
-        public IFormFile Image { get; set; } = null!;
+        public IFormFile? Image { get; set; }
        
     }
 }
