@@ -12,7 +12,7 @@ namespace KickShop.ViewModels
         public required decimal Price { get; set; }
         public required int Quantity { get; set; }
         public string? MainImageUrl { get; set; }
-        public string SelectedSize { get; set; }
+        public string SelectedSize { get; set; } = null!;
         public Guid BrandId { get; set; }
         public required List<SelectListItem> Sizes { get; set; } = new List<SelectListItem>();
         public required List<ProductImage> Images { get; set; } = new List<ProductImage>();

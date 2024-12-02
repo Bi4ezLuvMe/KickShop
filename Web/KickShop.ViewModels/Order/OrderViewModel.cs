@@ -3,12 +3,12 @@
     public class OrderViewModel
     {
         public Guid OrderId { get; set; }
-        public string OrderDate { get; set; }
+        public string OrderDate { get; set; } = null!;
         public decimal TotalAmount { get; set; }
-        public string CustomerEmail { get; set; }
-        public string BillingName { get; set; }
-        public string BillingAddress { get; set; }
-        public string BillingCity { get; set; }
-        public string BillingPostalCode { get; set; }
+        public string CustomerEmail { get; set; } = null!;
+        public string BillingName { get; set; } = null!;
+        public string BillingAddress { get; set; } = null!;
+        public string BillingCity { get; set; } = null!;
+        public string BillingPostalCode { get; set; } = null!;
     }
 }

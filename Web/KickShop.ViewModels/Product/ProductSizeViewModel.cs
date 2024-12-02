@@ -10,7 +10,7 @@ namespace KickShop.ViewModels.Product
 {
     public class ProductSizeViewModel
     {
-        public string Size { get; set; }
+        public string Size { get; set; } = null!;
         public int Quantity { get; set; }
         public bool IsSelected { get; set; }
         public bool IsValid()

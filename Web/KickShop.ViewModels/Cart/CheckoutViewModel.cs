@@ -11,6 +11,6 @@ namespace KickShop.ViewModels.Cart
     {
         public int ProductCount { get; set; }
         public decimal TotalPrice { get; set; }
-        public BillingAddressViewModel BillingAddress { get; set; }
+        public BillingAddressViewModel BillingAddress { get; set; } = null!;
     }
 }

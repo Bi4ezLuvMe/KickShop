@@ -7,11 +7,11 @@ namespace KickShop.ViewModels
 {
     public class CategoryAddViewModel
     {
-        [Required(ErrorMessage ="The Category Name Is Required!")]
-        [MinLength(ModelConstants.Category.NameMinLength,ErrorMessage ="Category Name Is Too Short!")]
-        [MaxLength(ModelConstants.Category.NameMaxLength,ErrorMessage ="Category Name Is Too Long!")]
+        [Required(ErrorMessage =ModelConstants.Category.NameRequiredError)]
+        [MinLength(ModelConstants.Category.NameMinLength,ErrorMessage =ModelConstants.Category.NameMinLengthError)]
+        [MaxLength(ModelConstants.Category.NameMaxLength,ErrorMessage =ModelConstants.Category.NameMaxLengthError)]
         public string Name { get; set; } = null!;
-        [Required(ErrorMessage ="The Category Image Is Required!")]
+        [Required(ErrorMessage =ModelConstants.Category.ImageRequiredError)]
         public IFormFile Image { get; set; } = null!;
        
     }

@@ -1,21 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using KickShop.Common;
+using System.ComponentModel.DataAnnotations;
 
 public class RegisterViewModel
 {
     [Required]
     [EmailAddress]
-    [Display(Name = "Email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
 
     [Required]
-    [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+    [MinLength(ModelConstants.Account.PassowordMinLength,ErrorMessage = ModelConstants.Account.PassowordMinLengthError)]
+    [MaxLength(ModelConstants.Account.PasswordMaxLength, ErrorMessage = ModelConstants.Account.PasswordMaxLengthError)]
     [DataType(DataType.Password)]
-    [Display(Name = "Password")]
-    public string Password { get; set; }
+    public string Password { get; set; } = null!;
 
     [Required]
     [DataType(DataType.Password)]
     [Display(Name = "Confirm Password")]
-    [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-    public string ConfirmPassword { get; set; }
+    [Compare("Password", ErrorMessage = ModelConstants.Account.PasswordsDontMatchError)]
+    public string ConfirmPassword { get; set; } = null!;
 }

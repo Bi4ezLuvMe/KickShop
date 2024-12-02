@@ -10,26 +10,25 @@ namespace KickShop.ViewModels
         [Required]
         public Guid BrandId { get; set; }
 
+        [Required(ErrorMessage = ModelConstants.Brand.NameRequiredError)]
+        [MinLength(ModelConstants.Brand.NameMinLength, ErrorMessage = ModelConstants.Brand.NameMinLengthError)]
+        [MaxLength(ModelConstants.Brand.NameMaxLength, ErrorMessage = ModelConstants.Brand.NameMaxLengthError)]
+        public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage = "The Brand Name Is Required!")]
-        [MinLength(ModelConstants.Brand.NameMinLength, ErrorMessage = "The Brand Name Is Too Short!")]
-        [MaxLength(ModelConstants.Brand.NameMaxLength, ErrorMessage = "The Brand Name Is Too Long!")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = ModelConstants.Brand.CountryRequiredError)]
+        [MinLength(ModelConstants.Brand.CountryMinLength, ErrorMessage = ModelConstants.Brand.CountryMinLengthError)]
+        [MaxLength(ModelConstants.Brand.CountryMaxLength, ErrorMessage = ModelConstants.Brand.CountryMaxLengthError)]
+        public string Country { get; set; } = null!;
 
-        [Required(ErrorMessage = "The Brand Country Is Required!")]
-        [MinLength(ModelConstants.Brand.CountryMinLength, ErrorMessage = "The Brand Country Is Too Short!")]
-        [MaxLength(ModelConstants.Brand.CountryMaxLength, ErrorMessage = "The Brand Country Is Too Long!")]
-        public string Country { get; set; }
+        [Required(ErrorMessage = ModelConstants.Brand.AddressRequiredError)]
+        [MinLength(ModelConstants.Brand.AddressMinLength, ErrorMessage = ModelConstants.Brand.AddressMinLengthError)]
+        [MaxLength(ModelConstants.Brand.AddressMaxLength, ErrorMessage = ModelConstants.Brand.AddressMaxLengthError)]
+        public string Address { get; set; } = null!;
 
-        [Required(ErrorMessage = "The Brand Address Is Required!")]
-        [MinLength(ModelConstants.Brand.AddressMinLength, ErrorMessage = "The Brand Address Is Too Short!")]
-        [MaxLength(ModelConstants.Brand.AddressMaxLength, ErrorMessage = "The Brand Address Is Too Long!")]
-        public string Address { get; set; }
-
-        [Required(ErrorMessage = "The Brand Phone Number Is REquired!")]
-        [MinLength(ModelConstants.Brand.PhoneNumberMinLength, ErrorMessage = "The Brand Phone Number Is Too Short!")]
-        [MaxLength(ModelConstants.Brand.PhoneNumberMaxLength, ErrorMessage = "The Brand Phone Number Is Too Long!")]
-        public string PhoneNumber { get; set; }
+        [Required(ErrorMessage = ModelConstants.Brand.PhoneNumberRequiredError)]
+        [MinLength(ModelConstants.Brand.PhoneNumberMinLength, ErrorMessage = ModelConstants.Brand.PhoneNumberMinLengthError)]
+        [MaxLength(ModelConstants.Brand.PhoneNumberMaxLength, ErrorMessage = ModelConstants.Brand.PhoneNumberMaxLengthError)]
+        public string PhoneNumber { get; set; } = null!:
 
         public IFormFile? Image { get; set; }
         public string? OldImageUrl { get; set; }

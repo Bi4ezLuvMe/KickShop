@@ -13,7 +13,7 @@ namespace KickShop.ViewModels
         public required string Address { get; set; }
 
         public required string PhoneNumber { get; set; }
-        public string Description { get; set; }
+        public  required string Description { get; set; }
 
         public string? ImageUrl { get; set; }
     }

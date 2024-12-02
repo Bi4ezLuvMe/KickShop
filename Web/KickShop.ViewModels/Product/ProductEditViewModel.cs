@@ -12,20 +12,20 @@ namespace KickShop.ViewModels
     public class ProductEditViewModel
     {
         public Guid ProductId { get; set; }
-        [Required(ErrorMessage = "The Product Name Is Required!")]
-        [MinLength(ModelConstants.Product.NameMinLength, ErrorMessage = "The Product Name Is Too Short!")]
-        [MaxLength(ModelConstants.Product.NameMaxLength, ErrorMessage = "The Product Name Is Too Long!")]
+        [Required(ErrorMessage = ModelConstants.Product.NameRequiredError)]
+        [MinLength(ModelConstants.Product.NameMinLength, ErrorMessage = ModelConstants.Product.NameMinLengthError)]
+        [MaxLength(ModelConstants.Product.NameMaxLength, ErrorMessage = ModelConstants.Product.NameMaxLengthError)]
         public string Name { get; set; } = null!;
-        [Required(ErrorMessage = "The Product Description Is Required!")]
-        [MinLength(ModelConstants.Product.DescriptionMinLength, ErrorMessage = "The Product Description Is Too Short!")]
-        [MaxLength(ModelConstants.Product.DescriptionMaxLength, ErrorMessage = "The Product Description Is Too Long!")]
+        [Required(ErrorMessage = ModelConstants.Product.DescriptionRequiredError)]
+        [MinLength(ModelConstants.Product.DescriptionMinLength, ErrorMessage = ModelConstants.Product.DescriptionMinLengthError)]
+        [MaxLength(ModelConstants.Product.DescriptionMaxLength, ErrorMessage = ModelConstants.Product.DescriptionMaxLengthError)]
         public string Description { get; set; } = null!;
         [Required]
-        [Range(ModelConstants.Product.PriceRangeMin, ModelConstants.Product.PriceRangeMax, ErrorMessage = "Invalid Price!")]
+        [Range(ModelConstants.Product.PriceRangeMin, ModelConstants.Product.PriceRangeMax, ErrorMessage = ModelConstants.Product.InvalidPriceError)]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
         [Required]
-        [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax, ErrorMessage = "Invalid Stock Quantity!")]
+        [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax, ErrorMessage = ModelConstants.Product.InvalidQuantityError)]
         public int StockQuantity { get; set; }
         public string? MainImageUrl { get; set; }
         public List<IFormFile>? Images { get; set; }
