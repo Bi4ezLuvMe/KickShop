@@ -164,7 +164,7 @@ namespace KickShop.Services
             return order.OrderId;
         }
 
-        private async Task<ShoppingCart> GetUserCartAsync(string userId)
+        public async Task<ShoppingCart> GetUserCartAsync(string userId)
         {
             ShoppingCart? cart = await context.ShoppingCarts.Include(c => c.CartItems)
                               .ThenInclude(ci => ci.Product)

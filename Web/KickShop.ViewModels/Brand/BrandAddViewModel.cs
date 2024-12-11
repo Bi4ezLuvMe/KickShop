@@ -27,6 +27,7 @@ namespace KickShop.ViewModels
         public string PhoneNumber { get; set; } = null!;
 
         [Required(ErrorMessage =ModelConstants.Brand.ImageRequiredError)]
+        //[FileExtensions(Extensions = ModelConstants.Common.ImageFileExtentions,ErrorMessage =ModelConstants.Common.ImageFileExtentionError)]
         public IFormFile Image { get; set; } = null!;
     }
 }

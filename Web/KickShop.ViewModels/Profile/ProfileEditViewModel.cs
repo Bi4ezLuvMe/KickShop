@@ -24,7 +24,7 @@ namespace KickShop.ViewModels
 
         [Phone(ErrorMessage = ModelConstants.Profile.InvalidPhoneNumberError)]
         public string Phone { get; set; } = null!;
-
+        //[FileExtensions(Extensions = ModelConstants.Common.ImageFileExtentions, ErrorMessage = ModelConstants.Common.ImageFileExtentionError)]
         public IFormFile? ImageFile { get; set; }
         public string? Image { get; set; }
     }

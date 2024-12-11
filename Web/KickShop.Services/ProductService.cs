@@ -46,6 +46,7 @@ namespace KickShop.Services
             {
                 foreach (var image in model.Images)
                 {
+                    await Console.Out.WriteLineAsync(image.FileName);
                     if (image.Length > 0)
                     {
                         string fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
@@ -347,7 +348,7 @@ namespace KickShop.Services
             return Guid.TryParse(id, out var guidId) ? guidId : null;
         }
 
-        private List<Product> SortOrder(List<Product> productModels, string? sortOrder)
+        protected List<Product> SortOrder(List<Product> productModels, string? sortOrder)
         {
             return sortOrder switch
             {
@@ -356,7 +357,7 @@ namespace KickShop.Services
                 null => productModels
             };
         }
-        private List<Product> QuerySearch(List<Product>productModels,string? query)
+        protected List<Product> QuerySearch(List<Product>productModels,string? query)
         {
             if(query is null)
             {

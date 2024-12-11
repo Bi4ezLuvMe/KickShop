@@ -13,6 +13,7 @@ namespace KickShop.ViewModels
         [MinLength(ModelConstants.Category.NameMinLength, ErrorMessage = ModelConstants.Category.NameMinLengthError)]
         [MaxLength(ModelConstants.Category.NameMaxLength, ErrorMessage = ModelConstants.Category.NameMaxLengthError)]
         public string Name { get; set; } = null!;
+        //[FileExtensions(Extensions = ModelConstants.Common.ImageFileExtentions)]
         public IFormFile? Image { get; set; }
        
     }

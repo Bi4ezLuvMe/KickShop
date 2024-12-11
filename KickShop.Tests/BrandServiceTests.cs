@@ -268,6 +268,123 @@ namespace KickShop.Tests.Services
 
             Assert.IsNull(result);
         }
+        [Test]
+        public async Task GetAllBrandsAsyncFiltersBrandsBasedOnQuery()
+        {
+            Brand brand1 = new Brand { Name = "Nike", IsDeleted = false,Address = "asdfasdf",Country = "Blalala",PhoneNumber = "088888888" };
+            Brand brand2 = new Brand { Name = "Adidas", IsDeleted = false, Address = "asdfasdf", Country = "Blalala", PhoneNumber = "088888888" };
+            await context.Brands.AddRangeAsync(brand1, brand2);
+            await context.SaveChangesAsync();
+
+            List<Brand> result = await brandService.GetAllBrandsAsync("Nike");
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("Nike", result.First().Name);
+        }
+        [Test]
+        public async Task AddBrandAsyncHandlesNullImage()
+        {
+            BrandAddViewModel model = new BrandAddViewModel
+            {
+                Name = "Brand Without Image",
+                Address = "Address",
+                PhoneNumber = "1234567890",
+                Country = "Country",
+                Image = null
+            };
+
+            await brandService.AddBrandAsync(model);
+
+            Brand brand = await context.Brands.FirstOrDefaultAsync();
+            Assert.NotNull(brand);
+            Assert.IsNull(brand.ImageUrl);
+        }
+        [Test]
+        public async Task UpdateBrandAsyncRetainsOldImageIfNoNewImageProvided()
+        {
+            Brand brand = new Brand
+            {
+                BrandId = Guid.NewGuid(),
+                Name = "Brand",
+                Address = "Address",
+                PhoneNumber = "123456789",
+                ImageUrl = "/images/Categories/old.jpg",
+                Country = "Country",
+                IsDeleted = false
+            };
+            await context.Brands.AddAsync(brand);
+            await context.SaveChangesAsync();
+
+            BrandEditViewModel model = new BrandEditViewModel
+            {
+                BrandId = brand.BrandId,
+                Name = "Updated Brand",
+                Address = "Updated Address",
+                PhoneNumber = "987654321"
+            };
+
+            bool result = await brandService.UpdateBrandAsync(model);
+
+            Assert.IsTrue(result);
+            Brand updatedBrand = await context.Brands.FindAsync(brand.BrandId);
+            Assert.AreEqual("/images/Categories/old.jpg", updatedBrand.ImageUrl);
+        }
+        [Test]
+        public async Task GetBrandDetailsAsyncReturnsNullForInvalidGuid()
+        {
+            BrandDetailsViewModel? result = await brandService.GetBrandDetailsAsync("invalid-guid");
+
+            Assert.IsNull(result);
+        }
+        [Test]
+        public async Task DeleteBrandAsyncReturnsFalseForInvalidGuid()
+        {
+            bool result = await brandService.DeleteBrandAsync("invalid-guid");
+
+            Assert.IsFalse(result);
+        }
+        [Test]
+        public void IsIdValidReturnsNullForNullOrEmptyString()
+        {
+            var privateMethod = typeof(BrandService)
+                .GetMethod("IsIdValid", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            Assert.IsNull(privateMethod.Invoke(brandService, new object[] { null }));
+            Assert.IsNull(privateMethod.Invoke(brandService, new object[] { "" }));
+        }
+        [Test]
+        public void QuerySearchReturnsAllBrandsIfQueryIsNull()
+        {
+            List<Brand> brands = new List<Brand>
+    {
+        new Brand { Name = "Nike" },
+        new Brand { Name = "Adidas" }
+    };
+
+            var privateMethod = typeof(BrandService)
+                .GetMethod("QuerySearch", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            List<Brand> result = (List<Brand>)privateMethod.Invoke(brandService, new object[] { brands, null });
+
+            Assert.AreEqual(2, result.Count);
+        }
+        [Test]
+        public void QuerySearchPerformsCaseInsensitiveSearch()
+        {
+            List<Brand> brands = new List<Brand>
+    {
+        new Brand { Name = "Nike" },
+        new Brand { Name = "adidas" }
+    };
+
+            var privateMethod = typeof(BrandService)
+                .GetMethod("QuerySearch", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            List<Brand> result = (List<Brand>)privateMethod.Invoke(brandService, new object[] { brands, "ADIDAS" });
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("adidas", result.First().Name);
+        }
 
     }
 }

@@ -30,6 +30,8 @@ namespace KickShop.Common
             public const string PhoneNumberMinLengthError = "The Brand Phone Number Is Too Short!";
             public const string PhoneNumberMaxLengthError = "The Brand Phone Number Is Too Long!";
 
+            public const int ImageUrlMinLength = 5;
+            public const int ImageUrlMaxLength = 100;
             public const string ImageRequiredError = "The Brand Image Is Required!";
 
             public const int DescriptionMaxLength = 1000;
@@ -48,6 +50,8 @@ namespace KickShop.Common
             public const string NameMaxLengthError = "Category Name Is Too Long!";
 
             public const string ImageRequiredError = "Category Image Is Required!";
+            public const int ImageUrlMinLength = 5;
+            public const int ImageUrlMaxLength = 100;
         }
         public static class Order
         {
@@ -117,6 +121,11 @@ namespace KickShop.Common
             public const string NameMaxLengthError = "Name Is Too Long!";
 
             public const string InvalidPhoneNumberError = "Invalid Phone Number!";
+        }
+        public class Common
+        {
+            public const string ImageFileExtentions = "PNG,JPG,JPEG";
+            public const string ImageFileExtentionError = "Please Upload Image With (PNG,JPG or JPEG) File Extention!";
         }
     }
 }

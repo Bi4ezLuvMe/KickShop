@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KickShop.Data;
@@ -9,7 +10,6 @@ using KickShop.Services;
 using KickShop.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using KickShop.Services.Service_Interfaces;
 
 namespace KickShop.Tests.Services
 {
@@ -29,9 +29,9 @@ namespace KickShop.Tests.Services
             context = new KickShopDbContext(options);
 
             context.Categories.AddRange(
-                new Category { CategoryId = Guid.NewGuid(), Name = "Boxing", IsDeleted = false,ImageUrl = "asdfasdf" },
-                new Category { CategoryId = Guid.NewGuid(), Name = "MMA", IsDeleted = false,ImageUrl = "asdfasdf" },
-                new Category { CategoryId = Guid.NewGuid(), Name = "Muay Thai", IsDeleted = true, ImageUrl = "asdfasdf" }
+                new Category { CategoryId = Guid.NewGuid(), Name = "Boxing", IsDeleted = false, ImageUrl = "image1.png" },
+                new Category { CategoryId = Guid.NewGuid(), Name = "MMA", IsDeleted = false, ImageUrl = "image2.png" },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Muay Thai", IsDeleted = true, ImageUrl = "image3.png" }
             );
             context.SaveChanges();
 
@@ -77,13 +77,13 @@ namespace KickShop.Tests.Services
             Assert.AreEqual(4, categories.Count);
             Assert.IsTrue(categories.Any(c => c.Name == "Kickboxing"));
         }
-
         [Test]
         public async Task UpdateCategoryAsyncUpdatesExistingCategory()
         {
             Guid categoryId = context.Categories.First().CategoryId;
-            CategoryEditViewModel model = new CategoryEditViewModel { 
-                CategoryId = categoryId, 
+            CategoryEditViewModel model = new CategoryEditViewModel
+            {
+                CategoryId = categoryId,
                 Name = "Updated Boxing",
                 Image = Mock.Of<IFormFile>(file =>
                     file.Length == 1 &&
@@ -99,7 +99,7 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task UpdateCategoryAsyncReturnsFalseIfCategoryNotFound()
         {
-            CategoryEditViewModel model = new CategoryEditViewModel { CategoryId = Guid.NewGuid(), Name = "Non-existent"};
+            CategoryEditViewModel model = new CategoryEditViewModel { CategoryId = Guid.NewGuid(), Name = "Non-existent" };
             bool result = await categoryService.UpdateCategoryAsync(model);
             Assert.IsFalse(result);
         }
@@ -112,6 +112,14 @@ namespace KickShop.Tests.Services
             Category deletedCategory = await context.Categories.FindAsync(categoryId);
             Assert.IsTrue(result);
             Assert.IsTrue(deletedCategory.IsDeleted);
+        }
+
+        [Test]
+        public async Task DeleteCategoryAsyncFailsIfAlreadyDeleted()
+        {
+            Guid categoryId = context.Categories.First(c => c.IsDeleted).CategoryId;
+            bool result = await categoryService.DeleteCategoryAsync(categoryId);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -129,6 +137,14 @@ namespace KickShop.Tests.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(categoryId, result.CategoryId);
         }
+
+        [Test]
+        public async Task GetCategoryDetailsAsyncReturnsNullForInvalidId()
+        {
+            CategoryViewModel result = await categoryService.GetCategoryDetailsAsync("invalid-id");
+            Assert.IsNull(result);
+        }
+
         [Test]
         public async Task GetCategoryForEditAsyncReturnsCategoryWhenCategoryExists()
         {
@@ -138,7 +154,7 @@ namespace KickShop.Tests.Services
                 CategoryId = validCategoryId,
                 Name = "Kickboxing",
                 IsDeleted = false,
-                ImageUrl = "asdfasdfa"
+                ImageUrl = "image4.png"
             };
 
             context.Categories.Add(category);
@@ -170,7 +186,7 @@ namespace KickShop.Tests.Services
                 CategoryId = deletedCategoryId,
                 Name = "Deleted Category",
                 IsDeleted = true,
-                ImageUrl = "asdfasdf"
+                ImageUrl = "image5.png"
             };
 
             context.Categories.Add(deletedCategory);
@@ -191,5 +207,44 @@ namespace KickShop.Tests.Services
             Assert.IsNull(result);
         }
 
+        [Test]
+        public void IsIdValidHandlesNull()
+        {
+            Assert.IsNull(categoryService.IsIdValid(null));
+        }
+
+        [Test]
+        public void IsIdValidHandlesEmptyString()
+        {
+            Assert.IsNull(categoryService.IsIdValid(string.Empty));
+        }
+
+        [Test]
+        public void IsIdValidHandlesValidGuid()
+        {
+            Guid guid = Guid.NewGuid();
+            Assert.IsTrue(categoryService.IsIdValid(guid.ToString()) == guid);
+        }
+
+        [Test]
+        public async Task GetAllCategoriesAsyncHandlesEmptyDatabase()
+        {
+            await context.Database.EnsureDeletedAsync();
+            List<Category> result = await categoryService.GetAllCategoriesAsync(null);
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [Test]
+        public async Task GetAllCategoriesAsyncHandlesLargeDataset()
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                context.Categories.Add(new Category { CategoryId = Guid.NewGuid(), Name = $"Category {i}", IsDeleted = false,ImageUrl ="IMAGEURL.COM" });
+            }
+            await context.SaveChangesAsync();
+
+            List<Category> result = await categoryService.GetAllCategoriesAsync(null);
+            Assert.AreEqual(1002, result.Count); 
+        }
     }
 }

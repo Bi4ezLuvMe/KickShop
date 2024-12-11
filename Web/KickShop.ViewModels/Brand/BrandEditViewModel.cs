@@ -28,8 +28,8 @@ namespace KickShop.ViewModels
         [Required(ErrorMessage = ModelConstants.Brand.PhoneNumberRequiredError)]
         [MinLength(ModelConstants.Brand.PhoneNumberMinLength, ErrorMessage = ModelConstants.Brand.PhoneNumberMinLengthError)]
         [MaxLength(ModelConstants.Brand.PhoneNumberMaxLength, ErrorMessage = ModelConstants.Brand.PhoneNumberMaxLengthError)]
-        public string PhoneNumber { get; set; } = null!:
-
+        public string PhoneNumber { get; set; } = null!;
+        //[FileExtensions(Extensions = ModelConstants.Common.ImageFileExtentions, ErrorMessage = ModelConstants.Common.ImageFileExtentionError)]
         public IFormFile? Image { get; set; }
         public string? OldImageUrl { get; set; }
     }

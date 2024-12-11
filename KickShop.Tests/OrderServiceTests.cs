@@ -9,6 +9,7 @@ using KickShop.Models;
 using KickShop.Data;
 using KickShop.ViewModels;
 using KickShop.Services.Service_Interfaces;
+using Castle.Core.Resource;
 
 namespace KickShop.Tests
 {
@@ -30,6 +31,7 @@ namespace KickShop.Tests
 
             orderService = new OrderService(context);
         }
+
         [TearDown]
         public void TearDown()
         {
@@ -44,6 +46,40 @@ namespace KickShop.Tests
                 orderService.GetOrderConfirmationAsync(Guid.NewGuid()));
 
             Assert.AreEqual("Order not found!", exception.Message);
+        }
+
+        [Test]
+        public async Task GetOrderConfirmationAsyncReturnsCorrectOrderDetails()
+        {
+            Order order = new Order
+            {
+                OrderId = Guid.NewGuid(),
+                OrderDate = DateTime.Now.ToString(),
+                TotalAmount = 250,
+                BillingAddress = "asdfasdfasdf",
+                BillingCity = "asdfasdfasdfa",
+                BillingName = "ASDFF",
+                BillingPostalCode = "2500",
+                Status = "SENTTT"
+            };
+
+            context.Orders.Add(order);
+            await context.SaveChangesAsync();
+
+            OrderConfirmationViewModel result = await orderService.GetOrderConfirmationAsync(order.OrderId);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(order.OrderId, result.OrderId);
+            Assert.AreEqual(order.TotalAmount, result.TotalAmount);
+        }
+
+        [Test]
+        public async Task GetOrderConfirmationAsyncThrowsForInvalidGuid()
+        {
+            Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            {
+                await orderService.GetOrderConfirmationAsync(Guid.Empty);
+            });
         }
 
         [Test]
@@ -76,11 +112,17 @@ namespace KickShop.Tests
             await context.SaveChangesAsync();
 
             IEnumerable<OrderViewModel> orders = await orderService.GetAllOrdersAsync();
-            orders = orders.Where(o => o.OrderId == order1.OrderId || o.OrderId == order2.OrderId).ToList();
 
             Assert.AreEqual(2, orders.Count());
         }
 
+        [Test]
+        public async Task GetAllOrdersAsyncReturnsEmptyWhenNoOrdersExist()
+        {
+            IEnumerable<OrderViewModel> orders = await orderService.GetAllOrdersAsync();
+
+            Assert.IsEmpty(orders);
+        }
         [Test]
         public async Task DeleteOrderAsyncDeletesOrderSuccessfully()
         {
@@ -100,8 +142,40 @@ namespace KickShop.Tests
 
             await orderService.DeleteOrderAsync(order.OrderId);
 
-            Order deletedOrder = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == order.OrderId && !o.IsDeleted);
+            Order deletedOrder = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == order.OrderId);
             Assert.Null(deletedOrder);
+        }
+
+        [Test]
+        public void DeleteOrderAsyncThrowsWhenOrderNotFound()
+        {
+            Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            {
+                await orderService.DeleteOrderAsync(Guid.NewGuid());
+            });
+        }
+
+        [Test]
+        public async Task DeleteOrderAsyncRemovesAssociatedCustomerOrders()
+        {
+            Order order = new Order
+            {
+                OrderId = Guid.NewGuid(),
+                TotalAmount = 150,
+                BillingAddress = "Test Address",
+                BillingCity = "Test City",
+                BillingName = "Test Name",
+                BillingPostalCode = "12345",
+                Status = "Pending",
+            };
+
+            context.Orders.Add(order);
+            await context.SaveChangesAsync();
+
+            await orderService.DeleteOrderAsync(order.OrderId);
+
+            bool hasCustomerOrders = context.CustomersOrders.Any(co => co.OrderId == order.OrderId);
+            Assert.IsFalse(hasCustomerOrders);
         }
     }
 }

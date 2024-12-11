@@ -152,7 +152,7 @@ namespace KickShop.Services
             };
         }
 
-        private Guid? IsIdValid(string id)
+        public Guid? IsIdValid(string id)
         {
             if (string.IsNullOrEmpty(id))
             {

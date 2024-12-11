@@ -6,6 +6,7 @@ using KickShop.ViewModels;
 using KickShop.ViewModels.Cart;
 using KickShop.ViewModels.Order;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace KickShop.Tests.Services
 {
@@ -309,6 +310,124 @@ namespace KickShop.Tests.Services
                                              .FirstOrDefaultAsync(c => c.CustomerId == userId);
 
             Assert.AreEqual(0, updatedCart.CartItems.Count);
+        }
+        [Test]
+        public void AddToCartAsyncThrowsExceptionForInvalidProductId()
+        {
+            string userId = "test-user";
+            string invalidProductId = "invalid-guid";
+
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                cartService.AddToCartAsync(userId, invalidProductId, 1, "M"));
+        }
+        [Test]
+        public async Task GetUserCartAsyncCreatesCartForInvalidUserId()
+        {
+            string userId = "nonexistent-user";
+
+            ShoppingCart cart = await cartService.GetUserCartAsync(userId);
+
+            Assert.IsNotNull(cart);
+            Assert.AreEqual(userId, cart.CustomerId);
+        }
+        [Test]
+        public async Task RemoveFromCartAsyncDoesNotThrowForEmptyCart()
+        {
+            string userId = "test-user";
+            string productId = Guid.NewGuid().ToString();
+
+            Assert.DoesNotThrowAsync(() =>
+                cartService.RemoveFromCartAsync(userId, productId));
+        }
+        [Test]
+        public void RemoveFromCartAsync_ShouldThrowArgumentException_WhenProductIdIsInvalid()
+        {
+            string userId = "test-user";
+            string invalidProductId = "invalid-guid";
+
+            Assert.ThrowsAsync<ArgumentException>(async () =>
+                await cartService.RemoveFromCartAsync(userId, invalidProductId));
+        }
+
+        [Test]
+        public void PlaceOrderAsyncThrowsExceptionForEmptyCart()
+        {
+            string userId = "test-user";
+
+            CheckoutViewModel checkoutModel = new CheckoutViewModel
+            {
+                BillingAddress = new BillingAddressViewModel
+                {
+                    Address = "123 Test St",
+                    City = "Test City",
+                    FullName = "Test User",
+                    ZipCode = "12345"
+                }
+            };
+
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                cartService.PlaceOrderAsync(userId, checkoutModel));
+        }
+        [Test]
+        public async Task PlaceOrderAsyncSavesCorrectOrderDetails()
+        {
+            string userId = "test-user";
+            string productId = Guid.NewGuid().ToString();
+
+            Product product = new Product
+            {
+                ProductId = Guid.Parse(productId),
+                Name = "Test Product",
+                Price = 100,
+                Sizes = new List<ProductSize>
+        {
+            new ProductSize { ProductId = Guid.Parse(productId), Size = Sizes.M, Quantity = 1 }
+        },Description = "test DESCRIPTIOOOn"
+            };
+
+            await context.Products.AddAsync(product);
+            await context.SaveChangesAsync();
+
+            await cartService.AddToCartAsync(userId, productId, 2, "M");
+
+            CheckoutViewModel checkoutModel = new CheckoutViewModel
+            {
+                BillingAddress = new BillingAddressViewModel
+                {
+                    Address = "123 Test St",
+                    City = "Test City",
+                    FullName = "Test User",
+                    ZipCode = "12345"
+                }
+            };
+
+            Guid orderId = await cartService.PlaceOrderAsync(userId, checkoutModel);
+
+            Order order = await context.Orders.FindAsync(orderId);
+            Assert.IsNotNull(order);
+            Assert.AreEqual(200, order.TotalAmount);
+            Assert.AreEqual("Test User", order.BillingName);
+
+            ShoppingCart cart = await context.ShoppingCarts.Include(c => c.CartItems)
+                                   .FirstOrDefaultAsync(c => c.CustomerId == userId);
+
+            Assert.AreEqual(0, cart.CartItems.Count);
+        }
+        [Test]
+        public async Task GetCheckoutSummaryAsyncShouldThrowInvalidOperationExceptionWhenCartIsEmpty()
+        {
+            string userId = Guid.NewGuid().ToString();
+
+            ShoppingCart emptyCart = new ShoppingCart
+            {
+                CustomerId = userId,
+                CartItems = new List<CartItem>()
+            };
+
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+                await cartService.GetCheckoutSummaryAsync(userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Cart is empty!"));
         }
     }
 }

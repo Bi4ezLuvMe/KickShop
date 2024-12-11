@@ -12,6 +12,7 @@ namespace KickShop.ViewModels
         [MaxLength(ModelConstants.Category.NameMaxLength,ErrorMessage =ModelConstants.Category.NameMaxLengthError)]
         public string Name { get; set; } = null!;
         [Required(ErrorMessage =ModelConstants.Category.ImageRequiredError)]
+        //[FileExtensions(Extensions = ModelConstants.Common.ImageFileExtentions,ErrorMessage =ModelConstants.Common.ImageFileExtentionError)]
         public IFormFile Image { get; set; } = null!;
        
     }
