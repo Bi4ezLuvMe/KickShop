@@ -31,11 +31,9 @@ namespace KickShop.ViewModels
         [Required]
         [Range(ModelConstants.Product.QuantityRangeMin, ModelConstants.Product.QuantityRangeMax,ErrorMessage =ModelConstants.Product.InvalidQuantityError)]
         public int StockQuantity { get; set; }
-        [Required(ErrorMessage = ModelConstants.Product.ImageRequiredError)]
-        //[FileExtensions(Extensions = ModelConstants.Common.ImageFileExtentions,ErrorMessage = ModelConstants.Common.ImageFileExtentionError)]
-        public IFormFile Image { get; set; } = null!;
+        //public IFormFile Image { get; set; } = null!;
 
-        public List<IFormFile> Images { get; set; }
+        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
         [Required]
         public Guid CategoryId { get; set; }
         [Required]
