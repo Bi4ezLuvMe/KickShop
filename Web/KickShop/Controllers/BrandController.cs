@@ -4,6 +4,7 @@ using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using X.PagedList;
 
 namespace KickShop.Controllers
 {
@@ -39,9 +40,11 @@ namespace KickShop.Controllers
         }
         [HttpGet]
         [Authorize(Roles ="Admin,Manager")]
-        public async Task<IActionResult> Manage(string query)
+        public async Task<IActionResult> Manage(string query,int? page)
         {
-            List<Brand> brands = await brandService.GetAllBrandsAsync(query);
+            int pageSize = 5;
+            int pageNumber = page ?? 1;
+            IPagedList<Brand> brands = await brandService.GetAllBrandsPaginatedAsync(query,pageNumber,pageSize);
             return View(brands);
         }
         [HttpGet]

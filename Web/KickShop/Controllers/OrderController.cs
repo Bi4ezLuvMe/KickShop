@@ -1,6 +1,8 @@
 ﻿using KickShop.Services.Service_Interfaces;
+using KickShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using X.PagedList;
 
 public class OrderController : Controller
 {
@@ -12,10 +14,12 @@ public class OrderController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? page)
     {
-        var orders = await orderService.GetAllOrdersAsync();
-        return View(orders);
+        int pageSize = 5;
+        int pageNumber = page??1;
+        IPagedList<OrderViewModel> paginatedOrders = await orderService.GetAllOrdersAsync(pageSize,pageNumber);
+        return View(paginatedOrders);
     }
 
     [HttpPost]

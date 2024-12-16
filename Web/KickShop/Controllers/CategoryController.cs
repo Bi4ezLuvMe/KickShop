@@ -3,6 +3,7 @@ using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using X.PagedList;
 
 namespace KickShop.Controllers
 {
@@ -39,10 +40,12 @@ namespace KickShop.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> Manage(string query)
+        public async Task<IActionResult> Manage(string query,int? page)
         {
-            List<Category> categories = await categoryService.GetAllCategoriesAsync(query);
-            return View(categories);
+            int pageSize = 5;
+            int pageNumber = page ?? 1;
+            IPagedList<Category> pagedCategories = await categoryService.GetAllCategoriesPagedAsync(query,pageNumber,pageSize);
+            return View(pagedCategories);
         }
         [HttpGet]
         [Authorize(Roles = "Admin,Manager")]

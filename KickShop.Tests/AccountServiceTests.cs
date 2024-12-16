@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 [TestFixture]
@@ -17,12 +20,22 @@ public class AccountServiceTests
 
         IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>();
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory = Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        var httpContextAccessorMock = Mock.Of<IHttpContextAccessor>();
+        var userClaimsPrincipalFactoryMock = Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        var identityOptionsMock = Mock.Of<IOptions<IdentityOptions>>();
+        var loggerMock = Mock.Of<ILogger<SignInManager<ApplicationUser>>>();
+        var authenticationSchemeProviderMock = Mock.Of<IAuthenticationSchemeProvider>();
+        var userConfirmationMock = Mock.Of<IUserConfirmation<ApplicationUser>>();
+
         signInManagerMock = new Mock<SignInManager<ApplicationUser>>(
             userManagerMock.Object,
-            httpContextAccessor,
-            userClaimsPrincipalFactory,
-            null, null, null);
-
+            httpContextAccessorMock,
+            userClaimsPrincipalFactoryMock,
+            identityOptionsMock,
+            loggerMock,
+            authenticationSchemeProviderMock,
+            userConfirmationMock
+        );
         accountService = new AccountService(userManagerMock.Object, signInManagerMock.Object);
     }
 

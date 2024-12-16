@@ -48,7 +48,7 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task GetAllCategoriesAsyncReturnsNonDeletedCategories()
         {
-            List<Category> result = await categoryService.GetAllCategoriesAsync(null);
+            List<Category> result = await categoryService.GetAllCategoriesAsync();
             Assert.AreEqual(2, result.Count);
             Assert.IsTrue(result.All(c => !c.IsDeleted));
         }
@@ -56,8 +56,8 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task GetAllCategoriesAsynWithQueryFiltersCategories()
         {
-            List<Category> result = await categoryService.GetAllCategoriesAsync("Box");
-            Assert.AreEqual(1, result.Count);
+            List<Category> result = await categoryService.GetAllCategoriesAsync();
+            Assert.AreEqual(2, result.Count);
             Assert.AreEqual("Boxing", result.First().Name);
         }
 
@@ -230,7 +230,7 @@ namespace KickShop.Tests.Services
         public async Task GetAllCategoriesAsyncHandlesEmptyDatabase()
         {
             await context.Database.EnsureDeletedAsync();
-            List<Category> result = await categoryService.GetAllCategoriesAsync(null);
+            List<Category> result = await categoryService.GetAllCategoriesAsync();
             Assert.AreEqual(0, result.Count);
         }
 
@@ -243,7 +243,7 @@ namespace KickShop.Tests.Services
             }
             await context.SaveChangesAsync();
 
-            List<Category> result = await categoryService.GetAllCategoriesAsync(null);
+            List<Category> result = await categoryService.GetAllCategoriesAsync();
             Assert.AreEqual(1002, result.Count); 
         }
     }

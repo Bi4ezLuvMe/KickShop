@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Drawing;
 using KickShop.ViewModels.Product;
 using System.Security.Policy;
+using X.PagedList.Extensions;
+using X.PagedList;
 namespace KickShop.Services
 {
     public class ProductService:IProductService
@@ -191,7 +193,7 @@ namespace KickShop.Services
             return true;
         }
 
-        public async Task<List<Product>> GetAllProductsAsync(string? sortOrder,string? query)
+        public async Task<IPagedList<Product>> GetAllProductsPaginatedAsync(string? sortOrder,string? query,int pageNumber = 1,int pageSize = 5)
         {
             List<Product> products = await context.Products
                 .Include(p => p.Brand)
@@ -202,7 +204,11 @@ namespace KickShop.Services
 
             products = QuerySearch(products, query);
 
-            return SortOrder(products, sortOrder);
+            products = SortOrder(products, sortOrder);
+
+            IPagedList<Product> pagedProducts = products.ToPagedList(pageNumber, pageSize);
+
+            return pagedProducts;
         }
 
         public async Task<ProductDetailsViewModel?> GetProductDetailsAsync(string id)
@@ -250,7 +256,7 @@ namespace KickShop.Services
                 Sizes = sizesList,
                 BrandId = product.BrandId,
                 RelatedProducts = await context.Products
-                    .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId)
+                    .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId&& !p.IsDeleted)
                     .ToListAsync()
             };
         }
@@ -314,6 +320,37 @@ namespace KickShop.Services
 
             return SortOrder(productsByBrand, sortOrder);
         }
+        public async Task<IPagedList<Product>> GetProductsByCategoryPaginatedAsync(string category, string? sortOrder, string? query, int pageNumber,int pageSize)
+        {
+            List<Product> productsByCategory = await context.Products
+                .Include(p => p.Category)
+                .Where(p => !p.IsDeleted && p.Category.Name == category)
+                .ToListAsync();
+
+            productsByCategory = QuerySearch(productsByCategory, query);
+
+            productsByCategory = SortOrder(productsByCategory, sortOrder);
+
+            IPagedList<Product> productsByCategoryPaged = productsByCategory.ToPagedList(pageNumber, pageSize); 
+
+            return productsByCategoryPaged;
+        }
+
+        public async Task<IPagedList<Product>> GetProductsByBrandPaginatedAsync(string brand, string? sortOrder, string? query, int pageNumber, int pageSize)
+        {
+            List<Product> productsByBrand = await context.Products
+                .Include(p => p.Brand)
+                .Where(p => !p.IsDeleted && p.Brand.Name == brand)
+                .ToListAsync();
+
+            productsByBrand = QuerySearch(productsByBrand, query);
+
+            productsByBrand = SortOrder(productsByBrand, sortOrder);
+
+            IPagedList<Product> productsByBrandPaged = productsByBrand.ToPagedList(pageNumber,pageSize);
+
+            return productsByBrandPaged;
+        }
         public async Task<bool> RemoveImageAsync(string imageUrl, Guid productId)
         {
             if (string.IsNullOrEmpty(imageUrl))
@@ -339,6 +376,15 @@ namespace KickShop.Services
             return true;
         }
 
+        public async Task<List<Product>> GetAllProductsAsync()
+        {
+           return await context.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .Include(p => p.Sizes)
+                .Where(p => !p.IsDeleted)
+               .ToListAsync();
+        }
         private Guid? IsIdValid(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -365,5 +411,6 @@ namespace KickShop.Services
             }
             return productModels.Where(p => p.Name.ToLower().Contains(query.ToLower())).ToList();
         }
+
     }
 }

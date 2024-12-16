@@ -6,7 +6,6 @@ using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using KickShop.ViewModels.Product;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow.Analytics.UserId;
+using X.PagedList;
 
 namespace KickShop.Tests
 {
@@ -221,7 +221,7 @@ namespace KickShop.Tests
             await context.Categories.AddAsync(category);
             await context.SaveChangesAsync();
 
-            List<Product> products = await productService.GetAllProductsAsync(null, "Product Query");
+            IPagedList<Product> products = await productService.GetAllProductsPaginatedAsync(null, "Product Query",1,5);
 
             Assert.NotNull(products);
             Assert.AreEqual(2, products.Count());

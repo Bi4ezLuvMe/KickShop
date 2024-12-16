@@ -10,6 +10,8 @@ using KickShop.ViewModels.Product;
 using Microsoft.EntityFrameworkCore;
 using KickShop.Data;
 using KickShop.Services;
+using X.PagedList.Extensions;
+using X.PagedList;
 
 namespace KickShop.Controllers
 {
@@ -88,25 +90,31 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(string sortOrder,string query)
+        public async Task<IActionResult> All(string sortOrder,string query,int? page)
         {
-            List<Product> products = await productService.GetAllProductsAsync(sortOrder,query);
+            int pageSize = 6;
+            int pageNumber = page ?? 1;
+            IPagedList<Product> products = await productService.GetAllProductsPaginatedAsync(sortOrder,query,pageNumber,pageSize);
             ViewBag.Action = nameof(All);
             ViewBag.Query = query;
             return View(products);
         }
         [HttpGet]
-        public async Task<IActionResult>ByCategory(string category,string sortOrder,string query)
+        public async Task<IActionResult>ByCategory(string category,string sortOrder,string query, int? page)
         {
-            List<Product> productsByCategory = await productService.GetProductsByCategoryAsync(category,sortOrder,query);
+            int pageSize = 2;
+            int pageNumber = page ?? 1;
+            IPagedList<Product> productsByCategory = await productService.GetProductsByCategoryPaginatedAsync(category,sortOrder,query, pageNumber, pageSize);
             ViewBag.Action= category;
             ViewBag.Query = query;
             return View(productsByCategory);
         }
         [HttpGet]
-        public async Task<IActionResult> ByBrand(string brand, string sortOrder, string query)
+        public async Task<IActionResult> ByBrand(string brand, string sortOrder, string query, int? page)
         {
-            List<Product> productsByBrand = await productService.GetProductsByBrandAsync(brand, sortOrder,query);
+            int pageSize = 1;
+            int pageNumber = page ?? 1;
+            IPagedList<Product> productsByBrand = await productService.GetProductsByBrandPaginatedAsync(brand, sortOrder,query, pageNumber, pageSize);
             ViewBag.Action = brand;
             ViewBag.Query = query;
             return View(productsByBrand);
@@ -131,9 +139,11 @@ namespace KickShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> Manage(string query)
+        public async Task<IActionResult> Manage(string query,int? page)
         {
-            List<Product> products = await productService.GetAllProductsAsync(null,query);
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
+            IPagedList<Product> products = await productService.GetAllProductsPaginatedAsync(null,query,pageNumber,pageSize);
             ViewBag.Query = query;
             return View(products);
         }
@@ -174,8 +184,8 @@ namespace KickShop.Controllers
 
         private async Task PopulateDropdowns()
         {
-            ViewBag.Categories = new SelectList(await categoryService.GetAllCategoriesAsync(null), "CategoryId", "Name");
-            ViewBag.Brands = new SelectList(await brandService.GetAllBrandsAsync(null), "BrandId", "Name");
+            ViewBag.Categories = new SelectList(await categoryService.GetAllCategoriesAsync(), "CategoryId", "Name");
+            ViewBag.Brands = new SelectList(await brandService.GetAllBrandsAsync(), "BrandId", "Name");
             ViewBag.Sizes = Enum.GetNames(typeof(Sizes)).ToList();
         }
     }

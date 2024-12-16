@@ -2,9 +2,12 @@
 using KickShop.Services;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -28,11 +31,19 @@ namespace KickShop.Tests
 
             IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>();
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory = Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>();
+            var identityOptionsMock = new Mock<IOptions<IdentityOptions>>();
+            var loggerMock = new Mock<ILogger<SignInManager<ApplicationUser>>>();
+            var authenticationSchemeProviderMock = new Mock<IAuthenticationSchemeProvider>();
+            var userConfirmationMock = new Mock<IUserConfirmation<ApplicationUser>>();
             signInManager = new SignInManager<ApplicationUser>(
-                userManagerMock.Object,
-                httpContextAccessor,
-                userClaimsPrincipalFactory,
-                null, null, null);
+     userManagerMock.Object,
+     httpContextAccessor,
+     userClaimsPrincipalFactory,
+     identityOptionsMock.Object,
+     loggerMock.Object,
+     authenticationSchemeProviderMock.Object,
+     userConfirmationMock.Object
+ );
 
             DbContextOptions<KickShopDbContext> options = new DbContextOptionsBuilder<KickShopDbContext>()
               .UseInMemoryDatabase(Guid.NewGuid().ToString())

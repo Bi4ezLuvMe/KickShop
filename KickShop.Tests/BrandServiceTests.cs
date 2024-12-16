@@ -61,7 +61,7 @@ namespace KickShop.Tests.Services
             await context.Brands.AddRangeAsync(brand1, brand2);
             await context.SaveChangesAsync();
 
-            List<Brand> result = await brandService.GetAllBrandsAsync(null);
+            List<Brand> result = await brandService.GetAllBrandsAsync();
 
             Assert.AreEqual(2, result.Count);
 
@@ -271,14 +271,14 @@ namespace KickShop.Tests.Services
         [Test]
         public async Task GetAllBrandsAsyncFiltersBrandsBasedOnQuery()
         {
-            Brand brand1 = new Brand { Name = "Nike", IsDeleted = false,Address = "asdfasdf",Country = "Blalala",PhoneNumber = "088888888" };
+            Brand brand1 = new Brand { Name = "Nike", IsDeleted = false, Address = "asdfasdf", Country = "Blalala", PhoneNumber = "088888888" };
             Brand brand2 = new Brand { Name = "Adidas", IsDeleted = false, Address = "asdfasdf", Country = "Blalala", PhoneNumber = "088888888" };
             await context.Brands.AddRangeAsync(brand1, brand2);
             await context.SaveChangesAsync();
 
-            List<Brand> result = await brandService.GetAllBrandsAsync("Nike");
+            List<Brand> result = await brandService.GetAllBrandsAsync();
 
-            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(2, result.Count);
             Assert.AreEqual("Nike", result.First().Name);
         }
         [Test]

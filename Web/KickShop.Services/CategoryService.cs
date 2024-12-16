@@ -4,6 +4,8 @@ using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Mvc;
+using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace KickShop.Services
 {
@@ -16,14 +18,22 @@ namespace KickShop.Services
             this.context = _context;
         }
 
-        public async Task<List<Category>> GetAllCategoriesAsync(string? query)
+        public async Task<IPagedList<Category>> GetAllCategoriesPagedAsync(string? query,int pageNumber,int pageSize)
         {
             List<Category> categories = await context.Categories
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
-            return QuerySearch(categories,query);
+            categories = QuerySearch(categories, query);
+
+            IPagedList<Category> pagedCategories = categories.ToPagedList(pageNumber,pageSize);
+
+            return pagedCategories;
+        }
+        public async Task<List<Category>> GetAllCategoriesAsync()
+        {
+            return await context.Categories.Where(c => !c.IsDeleted).ToListAsync();
         }
 
         public async Task AddCategoryAsync(CategoryAddViewModel model)
@@ -168,5 +178,6 @@ namespace KickShop.Services
             }
             return categoryModels.Where(p => p.Name.ToLower().Contains(query.ToLower())).ToList();
         }
+
     }
 }

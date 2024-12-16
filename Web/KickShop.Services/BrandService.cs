@@ -1,9 +1,12 @@
-﻿using KickShop.Data;
+﻿using Azure;
+using KickShop.Data;
 using KickShop.Models;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Mvc;
+using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace KickShop.Services
 {
@@ -16,14 +19,22 @@ namespace KickShop.Services
             this.context = _context;
         }
 
-        public async Task<List<Brand>> GetAllBrandsAsync(string? query)
+        public async Task<IPagedList<Brand>> GetAllBrandsPaginatedAsync(string? query,int pageNumber = 1,int pageSize =10)
         {
             List<Brand> brands = await context.Brands
                 .AsNoTracking()
                 .Where(b => !b.IsDeleted)
                 .ToListAsync();
 
-            return QuerySearch(brands,query);
+            brands = QuerySearch(brands, query);
+
+            IPagedList<Brand> paginatedBrands = brands.ToPagedList(pageNumber, pageSize);
+
+            return paginatedBrands;
+        }
+        public async Task<List<Brand>> GetAllBrandsAsync()
+        {
+            return context.Brands.Where(b => !b.IsDeleted).ToList();
         }
 
         public async Task AddBrandAsync(BrandAddViewModel model)
@@ -192,5 +203,6 @@ namespace KickShop.Services
             }
             return brandModels.Where(p => p.Name.ToLower().Contains(query.ToLower())).ToList();
         }
+
     }
 }

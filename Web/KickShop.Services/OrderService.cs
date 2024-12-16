@@ -3,6 +3,10 @@ using KickShop.Models;
 using KickShop.Services.Service_Interfaces;
 using KickShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using X.PagedList;
+using X.PagedList.Extensions;
+using static KickShop.Common.ModelConstants;
 
 namespace KickShop.Services
 {
@@ -15,24 +19,27 @@ namespace KickShop.Services
             this.context = context;
         }
 
-        public async Task<IEnumerable<OrderViewModel>> GetAllOrdersAsync()
+        public async Task<IPagedList<OrderViewModel>> GetAllOrdersAsync(int pageSize = 10,int pageNumber = 1)
         {
-            var orders = await context.Orders
+            List<OrderViewModel> orders = await context.Orders
                 .Include(o => o.CustomerOrders)
                 .ThenInclude(co => co.Customer)
+                .Select(order => new OrderViewModel
+                {
+                    OrderId = order.OrderId,
+                    OrderDate = order.OrderDate,
+                    TotalAmount = order.TotalAmount,
+                    CustomerEmail = order.CustomerOrders.FirstOrDefault().Customer.Email,
+                    BillingName = order.BillingName,
+                    BillingAddress = order.BillingAddress,
+                    BillingCity = order.BillingCity,
+                    BillingPostalCode = order.BillingPostalCode,
+                })
                 .ToListAsync();
 
-            return orders.Select(order => new OrderViewModel
-            {
-                OrderId = order.OrderId,
-                OrderDate = order.OrderDate,
-                TotalAmount = order.TotalAmount,
-                CustomerEmail = order.CustomerOrders.FirstOrDefault()?.Customer.Email,
-                BillingName = order.BillingName,
-                BillingAddress = order.BillingAddress,
-                BillingCity = order.BillingCity,
-                BillingPostalCode = order.BillingPostalCode,
-            });
+            IPagedList<OrderViewModel> paginatedOrders = orders.ToPagedList(pageNumber,pageSize);
+
+            return paginatedOrders;
         }
 
         public async Task<OrderConfirmationViewModel> GetOrderConfirmationAsync(Guid orderId)
@@ -61,6 +68,25 @@ namespace KickShop.Services
 
             context.Orders.Remove(order);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<OrderViewModel>> GetAllOrdersAsync()
+        {
+            return await context.Orders
+                 .Include(o => o.CustomerOrders)
+                 .ThenInclude(co => co.Customer)
+                 .Select(order => new OrderViewModel
+                 {
+                     OrderId = order.OrderId,
+                     OrderDate = order.OrderDate,
+                     TotalAmount = order.TotalAmount,
+                     CustomerEmail = order.CustomerOrders.FirstOrDefault().Customer.Email,
+                     BillingName = order.BillingName,
+                     BillingAddress = order.BillingAddress,
+                     BillingCity = order.BillingCity,
+                     BillingPostalCode = order.BillingPostalCode,
+                 })
+                 .ToListAsync();
         }
     }
 }

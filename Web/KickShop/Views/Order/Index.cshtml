@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KickShop.ViewModels.OrderViewModel>
+﻿@model IPagedList<OrderViewModel>
 
 @{
     ViewData["Title"] = "Orders";
@@ -46,6 +46,29 @@
         }
     </tbody>
 </table>
+    <div class="pagination-container">
+        @if (Model.PageCount > 1)
+        {
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li><a href="@Url.Action("Index", new { page = 1 })" class="page-link">First</a></li>
+                <li><a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })" class="page-link">Previous</a></li>
+                }
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <li class="@(i == Model.PageNumber ? "active" : "")">
+                    <a href="@Url.Action("Index", new { page = i })" class="page-link">@i</a>
+                    </li>
+                }
+                @if (Model.HasNextPage)
+                {
+                <li><a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })" class="page-link">Next</a></li>
+                <li><a href="@Url.Action("Index", new { page = Model.PageCount })" class="page-link">Last</a></li>
+                }
+            </ul>
+        }
+    </div>
 
 <style>
     .table {
@@ -70,5 +93,50 @@
 
     h2 {
         margin-bottom: 20px;
+    }
+
+    .pagination-container {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .pagination {
+        list-style-type: none;
+        padding: 0;
+        display: inline-flex;
+        justify-content: center;
+    }
+
+        .pagination li {
+            margin: 0 8px;
+        }
+
+    .page-link {
+        text-decoration: none;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        border: 1px solid #007bff;
+        font-weight: bold;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .pagination li.active .page-link {
+        background-color: #28a745;
+        color: white;
+        border-color: #28a745;
+    }
+
+    .page-link:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .page-link:disabled {
+        background-color: #e0e0e0;
+        color: #a0a0a0;
+        border-color: #e0e0e0;
+        cursor: not-allowed;
     }
 </style>
