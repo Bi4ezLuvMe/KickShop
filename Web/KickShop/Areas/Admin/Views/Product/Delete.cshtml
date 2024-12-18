@@ -64,6 +64,6 @@
     <form asp-action="DeleteConfirmed" method="post">
         <input type="hidden" asp-for="ProductId" />
         <button type="submit" class="btn btn-danger">Delete</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        <a asp-controller="Manage" asp-action="ManageProducts" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

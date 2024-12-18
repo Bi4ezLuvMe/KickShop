@@ -7,7 +7,7 @@
 
 <div class="mb-3 d-flex align-items-center justify-content-between">
 
-    <form method="get" asp-controller="Brand" asp-action="Manage" class="d-flex w-75">
+    <form method="get" asp-area="Admin"asp-controller="Manage" asp-action="ManageBrands" class="d-flex w-75">
         <div class="d-flex w-50">
             <input type="text" name="query" class="form-control search-bar me-2" placeholder="Search for products..." value="@query" />
             <button type="submit" class="btn btn-primary search-button">
@@ -16,7 +16,7 @@
         </div>
     </form>
 
-    <a asp-action="Add" class="btn btn-success ms-auto">Add New Brand</a>
+    <a asp-area="Admin" asp-controller="Brand" asp-action="Add" class="btn btn-success ms-auto">Add New Brand</a>
 </div>
 
 <table class="table table-striped">
@@ -40,13 +40,13 @@
                 <td>@brand.Address</td>
                 <td>
                     <div class="mb-1">
-                        <a asp-controller="Brand" asp-action="Details" asp-route-id="@brand.BrandId" class="btn btn-info btn-sm">Details</a>
+                        <a asp-area="" asp-controller="Brand" asp-action="Details" asp-route-id="@brand.BrandId" class="btn btn-info btn-sm">Details</a>
                     </div>
                     <div class="mb-1">
-                        <a asp-controller="Brand" asp-action="Edit" asp-route-id="@brand.BrandId" class="btn btn-primary btn-sm">Edit</a>
+                        <a asp-area="Admin" asp-controller="Brand" asp-action="Edit" asp-route-id="@brand.BrandId" class="btn btn-primary btn-sm">Edit</a>
                     </div>
 
-                    <form asp-controller="Brand" asp-action="Delete" asp-route-id="@brand.BrandId" method="get" onsubmit="return confirm('Are you sure you want to delete this product?');" class="mb-2">
+                    <form asp-area="Admin" asp-controller="Brand" asp-action="Delete" asp-route-id="@brand.BrandId" method="get" onsubmit="return confirm('Are you sure you want to delete this product?');" class="mb-2">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>
@@ -60,19 +60,19 @@
         <ul class="pagination">
             @if (Model.HasPreviousPage)
             {
-                <li><a href="@Url.Action("Manage", new { query = query, page = 1 })" class="page-link">First</a></li>
-                <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageNumber - 1 })" class="page-link">Previous</a></li>
+                <li><a href="@Url.Action("ManageBrands", new { query = query, page = 1 })" class="page-link">First</a></li>
+                <li><a href="@Url.Action("ManageBrands", new { query = query, page = Model.PageNumber - 1 })" class="page-link">Previous</a></li>
             }
             @for (int i = 1; i <= Model.PageCount; i++)
             {
                 <li class="@(i == Model.PageNumber ? "active" : "")">
-                    <a href="@Url.Action("Manage", new { query = query, page = i })" class="page-link">@i</a>
+                    <a href="@Url.Action("ManageBrands", new { query = query, page = i })" class="page-link">@i</a>
                 </li>
             }
             @if (Model.HasNextPage)
             {
-                <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageNumber + 1 })" class="page-link">Next</a></li>
-                <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageCount })" class="page-link">Last</a></li>
+                <li><a href="@Url.Action("ManageBrands", new { query = query, page = Model.PageNumber + 1 })" class="page-link">Next</a></li>
+                <li><a href="@Url.Action("ManageBrands", new { query = query, page = Model.PageCount })" class="page-link">Last</a></li>
             }
         </ul>
     }

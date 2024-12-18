@@ -1,4 +1,6 @@
-﻿@model IPagedList<Product>
+﻿@using KickShop.Models
+@using X.PagedList
+@model IPagedList<Product>
 @{
     string? query = ViewBag.Query?.ToString();
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
@@ -7,7 +9,7 @@
 
 <div class="mb-3 d-flex align-items-center justify-content-between">
 
-    <form method="get" asp-controller="Product" asp-action="Manage" class="d-flex w-75">
+    <form method="get" asp-controller="Manage" asp-action="ManageProducts" class="d-flex w-75">
         <div class="d-flex w-50">
             <input type="text" name="query" class="form-control search-bar me-2" placeholder="Search for products..." value="@query" />
             <button type="submit" class="btn btn-primary search-button">
@@ -16,7 +18,7 @@
         </div>
     </form>
 
-    <a asp-action="Add" class="btn btn-success ms-auto">Add New Product</a>
+    <a asp-controller="Product" asp-action="Add" class="btn btn-success ms-auto">Add New Product</a>
 </div>
 
 
@@ -39,18 +41,18 @@
         @foreach (var product in Model)
         {
             <tr>
-                <td><img class="img"src="@product.MainImageUrl" alt="@product.Name" /></td>
+                <td><img class="img" src="@product.MainImageUrl" alt="@product.Name" /></td>
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>@product.Price</td>
                 <td>@product.StockQuantity</td>
                 <td>@product.Category.Name</td>
                 <td>@product.Brand.Name</td>
-                <td>@string.Join(", ", product.Sizes.Select(s=>s.Size.ToString()))</td>
+                <td>@string.Join(", ", product.Sizes.Select(s => s.Size.ToString()))</td>
 
                 <td>
                     <div class="mb-1">
-                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId" class="btn btn-info btn-sm">Details</a>
+                        <a href="@Url.Action("Details", "Product", new { id = product.ProductId, area = "" })" class="btn btn-info btn-sm">Details</a>
                     </div>
                     <div class="mb-1">
                         <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-primary btn-sm">Edit</a>
@@ -70,32 +72,33 @@
         <ul class="pagination">
             @if (Model.HasPreviousPage)
             {
-                <li><a href="@Url.Action("Manage", new { query = query, page = 1 })" class="page-link">First</a></li>
-                <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageNumber - 1 })" class="page-link">Previous</a></li>
+                <li><a href="@Url.Action("ManageProducts", new { query = query, page = 1 })" class="page-link">First</a></li>
+                <li><a href="@Url.Action("ManageProducts", new { query = query, page = Model.PageNumber - 1 })" class="page-link">Previous</a></li>
             }
             @for (int i = 1; i <= Model.PageCount; i++)
             {
                 <li class="@(i == Model.PageNumber ? "active" : "")">
-                    <a href="@Url.Action("Manage", new { query = query, page = i })" class="page-link">@i</a>
+                    <a href="@Url.Action("ManageProducts", new { query = query, page = i })" class="page-link">@i</a>
                 </li>
             }
             @if (Model.HasNextPage)
             {
-                <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageNumber + 1 })" class="page-link">Next</a></li>
-                <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageCount })" class="page-link">Last</a></li>
+                <li><a href="@Url.Action("ManageProducts", new { query = query, page = Model.PageNumber + 1 })" class="page-link">Next</a></li>
+                <li><a href="@Url.Action("ManageProducts", new { query = query, page = Model.PageCount })" class="page-link">Last</a></li>
             }
         </ul>
     }
 </div>
 <style>
-   .img{
-       height:100px;
-       width:auto;
-   }
-   .btn-sm{
-       width:100px;
-       text-align:center;
-   }
+    .img {
+        height: 100px;
+        width: auto;
+    }
+
+    .btn-sm {
+        width: 100px;
+        text-align: center;
+    }
 
     .pagination-container {
         margin-top: 30px;

@@ -7,7 +7,7 @@
     <h2 class="text-center">Manage Categories</h2>
     <div class="mb-3 d-flex align-items-center justify-content-between">
 
-        <form method="get" asp-controller="Category" asp-action="Manage" class="d-flex w-75">
+        <form method="get" asp-area="Admin" asp-action="ManageCategories" class="d-flex w-75">
             <div class="d-flex w-50">
                 <input type="text" name="query" class="form-control search-bar me-2" placeholder="Search for products..." value="@query" />
                 <button type="submit" class="btn btn-primary search-button">
@@ -16,7 +16,7 @@
             </div>
         </form>
 
-        <a asp-action="Add" class="btn btn-success ms-auto">Add New Category</a>
+        <a asp-area="Admin" asp-controller="Category" asp-action="Add" class="btn btn-success ms-auto">Add New Category</a>
     </div>
     <table class="table table-bordered">
         <thead>
@@ -38,8 +38,8 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@category.CategoryId" class="btn btn-danger">Delete</a>
+                        <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-warning">Edit</a>
+                        <a asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@category.CategoryId" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             }
@@ -51,19 +51,19 @@
             <ul class="pagination">
                 @if (Model.HasPreviousPage)
                 {
-                    <li><a href="@Url.Action("Manage", new { query = query, page = 1 })" class="page-link">First</a></li>
-                    <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageNumber - 1 })" class="page-link">Previous</a></li>
+                    <li><a href="@Url.Action("ManageCategories", new { query = query, page = 1 })" class="page-link">First</a></li>
+                    <li><a href="@Url.Action("ManageCategories", new { query = query, page = Model.PageNumber - 1 })" class="page-link">Previous</a></li>
                 }
                 @for (int i = 1; i <= Model.PageCount; i++)
                 {
                     <li class="@(i == Model.PageNumber ? "active" : "")">
-                        <a href="@Url.Action("Manage", new { query = query, page = i })" class="page-link">@i</a>
+                        <a href="@Url.Action("ManageCategories", new { query = query, page = i })" class="page-link">@i</a>
                     </li>
                 }
                 @if (Model.HasNextPage)
                 {
-                    <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageNumber + 1 })" class="page-link">Next</a></li>
-                    <li><a href="@Url.Action("Manage", new { query = query, page = Model.PageCount })" class="page-link">Last</a></li>
+                    <li><a href="@Url.Action("ManageCategories", new { query = query, page = Model.PageNumber + 1 })" class="page-link">Next</a></li>
+                    <li><a href="@Url.Action("ManageCategories", new { query = query, page = Model.PageCount })" class="page-link">Last</a></li>
                 }
             </ul>
         }

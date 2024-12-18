@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList;
 
-namespace KickShop.Controllers
+namespace KickShop.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin,Manager")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService categoryService;
@@ -17,7 +19,6 @@ namespace KickShop.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add()
         {
             CategoryAddViewModel model = new CategoryAddViewModel();
@@ -27,7 +28,6 @@ namespace KickShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Add(CategoryAddViewModel model)
         {
             if (!ModelState.IsValid)
@@ -36,48 +36,44 @@ namespace KickShop.Controllers
             }
 
             await categoryService.AddCategoryAsync(model);
-            return RedirectToAction(nameof(Manage));
+            return RedirectToAction("ManageCategories","Manage");
         }
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> Manage(string query,int? page)
+        public async Task<IActionResult> Manage(string query, int? page)
         {
             int pageSize = 5;
             int pageNumber = page ?? 1;
-            IPagedList<Category> pagedCategories = await categoryService.GetAllCategoriesPagedAsync(query,pageNumber,pageSize);
+            IPagedList<Category> pagedCategories = await categoryService.GetAllCategoriesPagedAsync(query, pageNumber, pageSize);
             return View(pagedCategories);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(string id)
         {
             CategoryViewModel? category = await categoryService.GetCategoryDetailsAsync(id);
 
             if (category == null)
             {
-                return RedirectToAction(nameof(Manage));
+                return RedirectToAction("ManageCategories", "Manage");
             }
 
             return View(category);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(CategoryViewModel model)
         {
             await categoryService.DeleteCategoryAsync(model.CategoryId);
-            return RedirectToAction(nameof(Manage));
+            return RedirectToAction("ManageCategories", "Manage");
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin,Manager")]
+            [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             CategoryEditViewModel? model = await categoryService.GetCategoryForEditAsync(id);
 
             if (model == null)
             {
-                return RedirectToAction(nameof(Manage));
+                return RedirectToAction("ManageCategories", "Manage");
             }
 
             return View(model);
@@ -85,7 +81,6 @@ namespace KickShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(CategoryEditViewModel model)
         {
             if (!ModelState.IsValid)
@@ -97,10 +92,10 @@ namespace KickShop.Controllers
 
             if (!updated)
             {
-                return RedirectToAction(nameof(Manage));
+                return RedirectToAction("ManageCategories", "Manage");
             }
 
-            return RedirectToAction(nameof(Manage));
+            return RedirectToAction("ManageCategories", "Manage");
         }
     }
 }
